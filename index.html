@@ -953,7 +953,7 @@ async function resendConfirmationEmail(){
  finally{if(btn){btn.disabled=false;btn.textContent='Reenviar correo de confirmación'}}
 }
 async function logoutLocal(){await invDb.auth.signOut();invUser=null;invProfile=null;invListsCache=[];authMode='login';renderAccount();renderFavorites();refreshAccountNav()}
-async function startSocialAuth(provider){const m=document.getElementById('authMessage');if(m){m.className='auth-message';m.textContent='Conectando con Google…'}try{const {error}=await invDb.auth.signInWithOAuth({provider,options:{redirectTo:window.location.origin}});if(error)throw error}catch(e){if(m){m.className='auth-message';m.textContent=e.message||'No se ha podido iniciar el acceso con Google. Comprueba que Google esté activado en Supabase.'}}}
+async async function startSocialAuth(provider){const m=document.getElementById('authMessage');if(m){m.className='auth-message';m.textContent='Conectando con Google…'}try{const {error}=await invDb.auth.signInWithOAuth({provider,options:{redirectTo:window.location.origin}});if(error)throw error}catch(e){if(m){m.className='auth-message';m.textContent=e.message||'No se ha podido iniciar el acceso con Google. Comprueba que Google esté activado en Supabase.'}}}
 // Keep the legacy screen transitions, but load cloud data before presenting account/favorites/community.
 const invOriginalShowView=showView;
 showView=function(id){invOriginalShowView(id);if(id==='favorites'&&invUser)invLoadLists().then(renderFavorites).catch(e=>console.error(e));if(id==='community')renderCommunity()};
