@@ -396,37 +396,84 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 </style>
 
 <style id="inversora-header-refresh">
-.inv-header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:26px;padding:11px 18px}
+.inv-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:11px 18px;min-height:66px}
+.header-brand-group{display:flex;align-items:center;gap:16px}
 .inv-header .logo{margin:0;gap:10px}
 .inv-header .logo:before{content:"";background-image:url('/icon-192.svg');background-size:cover;background-position:center;box-shadow:0 4px 12px #155eef25}
-.inv-header .nav{justify-self:center;max-width:100%}
-.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px}
-.header-icon-btn,.profile-nav-btn{height:42px;border:1px solid #e4e7ec;border-radius:13px;background:#fff;color:#344054;display:inline-flex;align-items:center;justify-content:center;transition:background .18s,border-color .18s,transform .18s}
-.header-icon-btn{width:42px;font-size:25px;line-height:1}
-.header-icon-btn:hover,.profile-nav-btn:hover{background:#f5f8ff;border-color:#c7d7fe;transform:translateY(-1px)}
-.header-icon-btn:focus-visible,.profile-nav-btn:focus-visible,.logo:focus-visible{outline:3px solid #b2ccff;outline-offset:2px}
-.profile-nav-btn{gap:9px;padding:4px 12px 4px 5px;font-size:13px;font-weight:750;color:#344054;white-space:nowrap}
-.profile-nav-avatar,.profile-nav-avatar-fallback{width:32px;height:32px;flex:0 0 32px;border-radius:50%;object-fit:cover;background:#eef2f7;border:1px solid #e4e7ec}
+.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:18px}
+.header-icon-btn{width:34px;height:42px;border:0;border-radius:0;background:transparent;color:#344054;display:inline-flex;align-items:center;justify-content:center;transition:color .18s,transform .18s;font-size:27px;line-height:1;padding:0}
+.header-icon-btn:hover{background:transparent;color:#155eef;transform:translateY(-1px)}
+.header-icon-btn:focus-visible,.profile-nav-btn:focus-visible,.logo:focus-visible,.menu-toggle:focus-visible{outline:3px solid #b2ccff;outline-offset:3px;border-radius:8px}
+.menu-toggle{width:40px;height:40px;border:0;border-radius:11px;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:background .18s}
+.menu-toggle:hover{background:#f2f4f7}
+.menu-toggle span{display:block;width:19px;height:2px;border-radius:2px;background:#344054;transition:transform .2s,opacity .2s}
+.menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(7px) rotate(45deg)}
+.menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-7px) rotate(-45deg)}
+.profile-nav-btn{height:42px;border:0;border-radius:22px;background:transparent;color:#344054;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:4px 3px 4px 8px;font-size:13px;font-weight:750;white-space:nowrap;transition:color .18s}
+.profile-nav-btn:hover{background:transparent;color:#155eef}
+.profile-nav-avatar,.profile-nav-avatar-fallback{width:34px;height:34px;flex:0 0 34px;border-radius:50%;object-fit:cover;background:#eef2f7;border:1px solid #e4e7ec}
 .profile-nav-avatar-fallback{display:grid;place-items:center;color:#155eef;font-size:13px;font-weight:850}
 .profile-nav-label{display:inline}
-@media(max-width:900px){.inv-header{gap:12px;padding:11px 12px}.inv-header .nav{justify-self:stretch}.nav button{padding:9px 11px}.profile-nav-label{display:none}.profile-nav-btn{padding:4px}}
-@media(max-width:800px){.inv-header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;position:static}.inv-header .logo{margin:0 auto 0 0}.header-actions{order:2;margin-left:auto}.inv-header .nav{order:3;width:100%;justify-self:auto}.header-icon-btn{width:39px;height:39px}.profile-nav-btn{height:39px}.profile-nav-label{display:none}}
-@media(max-width:390px){.inv-header{padding:10px}.inv-header .logo{font-size:22px}.inv-header .logo:before{width:30px;height:30px;flex-basis:30px}.header-actions{gap:5px}.header-icon-btn{width:36px;height:36px}.nav button{padding:8px 9px;font-size:11px}}
+.inv-menu-backdrop{position:fixed;inset:0;background:rgba(16,24,40,.38);backdrop-filter:blur(2px);z-index:49;opacity:0;visibility:hidden;transition:opacity .24s,visibility .24s}
+.inv-menu-backdrop.is-open{opacity:1;visibility:visible}
+.inv-sidebar{position:fixed;z-index:50;inset:0 auto 0 0;width:min(350px,88vw);background:#fff;border-right:1px solid #eaecf0;box-shadow:18px 0 55px rgba(16,24,40,.14);display:flex;flex-direction:column;transform:translateX(-105%);transition:transform .28s cubic-bezier(.22,.8,.25,1);visibility:hidden}
+.inv-sidebar.is-open{transform:translateX(0);visibility:visible}
+.inv-sidebar-head{display:flex;align-items:center;justify-content:space-between;padding:25px 23px 19px;border-bottom:1px solid #f0f2f5}
+.inv-sidebar-eyebrow,.inv-sidebar-group-title{font-size:10px;letter-spacing:1.05px;font-weight:800;color:#98a2b3}
+.inv-sidebar-head h2{margin:7px 0 0;font-size:20px;letter-spacing:-.5px;color:#101828}
+.inv-sidebar-close{width:34px;height:34px;border:0;border-radius:10px;background:#f2f4f7;color:#667085;font-size:24px;line-height:1}
+.inv-sidebar-content{padding:18px 15px 25px;overflow:auto;flex:1}
+.inv-sidebar-group{padding:0 0 17px;margin:0 0 14px;border-bottom:1px solid #f2f4f7}
+.inv-sidebar-group:last-child{border:0;margin-bottom:0}
+.inv-sidebar-group-title{display:block;padding:0 11px 8px}
+.inv-sidebar-link{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:11px 12px;margin:2px 0;border:0;border-radius:11px;background:transparent;color:#475467;font-size:14px;font-weight:600;transition:background .16s,color .16s}
+.inv-sidebar-link:hover{background:#f5f8ff;color:#155eef}
+.inv-sidebar-link.active{background:#eef4ff;color:#155eef;font-weight:750}
+.inv-sidebar-icon{width:22px;height:22px;display:grid;place-items:center;flex:0 0 22px;color:inherit;font-size:19px;font-weight:650}
+.inv-sidebar-foot{display:flex;align-items:center;gap:10px;padding:16px 22px;border-top:1px solid #f0f2f5;color:#98a2b3;font-size:11px}
+.inv-sidebar-foot-mark{width:25px;height:25px;display:grid;place-items:center;border-radius:8px;background:#eef4ff;color:#155eef;font-weight:850;font-size:14px}
+@media(max-width:800px){.inv-header{padding:10px 12px;min-height:60px}.header-brand-group{gap:10px}.header-actions{gap:13px}.header-icon-btn{width:30px;height:38px;font-size:25px}.profile-nav-label{display:none}.profile-nav-btn{padding:3px}.profile-nav-avatar,.profile-nav-avatar-fallback{width:32px;height:32px;flex-basis:32px}}
+@media(max-width:390px){.inv-header{padding:9px 10px}.inv-header .logo{font-size:22px}.inv-header .logo:before{width:30px;height:30px;flex-basis:30px}.header-brand-group{gap:7px}.header-actions{gap:9px}.header-icon-btn{width:27px;font-size:23px}}
 </style>
 </head>
 <body>
 <div class="app">
 <header class="inv-header">
+<div class="header-brand-group">
 <button class="logo" type="button" onclick="showView('home')" aria-label="Inversora, volver al inicio"><span class="brand-word">Invers<span>ora</span></span></button>
-<nav class="nav" id="mainNav" aria-label="Navegación principal"><span class="nav-indicator" aria-hidden="true"></span>
-<button class="active" data-view="home">Inicio</button><button data-view="explore">Explorar</button><button data-view="tools">Herramientas</button><button data-view="community">Comunidad</button>
-</nav>
+<button class="menu-toggle" type="button" onclick="invToggleMenu()" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="invSidebar"><span></span><span></span><span></span></button>
+</div>
 <div class="header-actions" aria-label="Accesos rápidos">
 <button class="header-icon-btn" type="button" onclick="showView('favorites')" aria-label="Mis favoritos" title="Mis favoritos"><span aria-hidden="true">♡</span></button>
 <button class="header-icon-btn" type="button" onclick="invHeaderSearch()" aria-label="Buscar inversiones" title="Buscar"><span aria-hidden="true">⌕</span></button>
 <button class="profile-nav-btn" type="button" id="accountNav" onclick="showView('account')" aria-label="Mi perfil" title="Mi perfil"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span></button>
 </div>
 </header>
+<div class="inv-menu-backdrop" id="invMenuBackdrop" onclick="invToggleMenu(false)" aria-hidden="true"></div>
+<aside class="inv-sidebar" id="invSidebar" aria-label="Menú principal de Inversora" aria-hidden="true">
+<div class="inv-sidebar-head"><div><span class="inv-sidebar-eyebrow">NAVEGACIÓN</span><h2>Explora Inversora</h2></div><button class="inv-sidebar-close" type="button" onclick="invToggleMenu(false)" aria-label="Cerrar menú">×</button></div>
+<div class="inv-sidebar-content">
+<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">INICIO</span>
+<button class="inv-sidebar-link" data-view="home" onclick="invMenuNavigate('home')"><span class="inv-sidebar-icon">⌂</span><span>Inicio</span></button>
+</div>
+<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">DESCUBRIR INVERSIONES</span>
+<button class="inv-sidebar-link" data-view="explore" onclick="invMenuNavigate('explore')"><span class="inv-sidebar-icon">⌕</span><span>Explorar inversiones</span></button>
+<button class="inv-sidebar-link" data-view="compare" onclick="invMenuNavigate('compare')"><span class="inv-sidebar-icon">⇄</span><span>Comparar inversiones</span></button>
+<button class="inv-sidebar-link" data-view="glossary" onclick="invMenuNavigate('glossary')"><span class="inv-sidebar-icon">Aa</span><span>Glosario financiero</span></button>
+</div>
+<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">HERRAMIENTAS</span>
+<button class="inv-sidebar-link" data-view="tools" onclick="invMenuNavigate('tools')"><span class="inv-sidebar-icon">▦</span><span>Herramientas</span></button>
+<button class="inv-sidebar-link" data-view="sim" onclick="invMenuNavigate('sim')"><span class="inv-sidebar-icon">◷</span><span>Simulador</span></button>
+</div>
+<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">COMUNIDAD Y TU ESPACIO</span>
+<button class="inv-sidebar-link" data-view="community" onclick="invMenuNavigate('community')"><span class="inv-sidebar-icon">◎</span><span>Comunidad</span></button>
+<button class="inv-sidebar-link" data-view="favorites" onclick="invMenuNavigate('favorites')"><span class="inv-sidebar-icon">♡</span><span>Mis favoritos</span></button>
+<button class="inv-sidebar-link" data-view="account" onclick="invMenuNavigate('account')"><span class="inv-sidebar-icon">◉</span><span>Mi perfil</span></button>
+</div>
+</div>
+<div class="inv-sidebar-foot"><span class="inv-sidebar-foot-mark">I</span><span>Tu espacio para entender tus inversiones.</span></div>
+</aside>
 
 <div id="invGlobalNotice" role="status" hidden style="position:fixed;z-index:1000;bottom:18px;left:50%;transform:translateX(-50%);max-width:min(92vw,620px);padding:13px 18px;background:#101828;color:white;border-radius:12px;box-shadow:0 8px 30px #0003"></div>
 <main id="home" class="view">
@@ -584,25 +631,24 @@ function updateSubtypeFilter(){let c=document.getElementById('cat').value,el=doc
 function renderHome(){renderCategoryNavigation();document.getElementById('homeGrid').innerHTML=[...investments].sort((a,b)=>b.score-a.score).slice(0,6).map(card).join('')}
 function renderExplore(){let val=id=>document.getElementById(id)?.value||'',q=val('exploreSearch').toLowerCase(),c=val('cat'),sub=val('subcat'),r=val('risk'),inc=val('incomeFilter'),liq=+(val('liquidityFilter')||0),cash=+(val('cashFilter')||0),capital=+(val('capitalFilter')||0),effort=val('effortFilter');let a=investments.filter(i=>(!q||(`${i.name} ${i.cat} ${i.sub} ${i.desc} ${i.profile} ${subtypeFor(i)}`).toLowerCase().includes(q))&&(!c||i.cat===c)&&(!sub||subtypeFor(i)===sub)&&(!r||i.riskBand===r)&&(!inc||(inc==='high'?i.cash>=5:i.cash<5))&&(!liq||i.liq>=liq)&&(!cash||i.cash>=cash)&&(!capital||((+(String(i.capital).match(/(?:Desde|~|orientativo)?\s*([\d.,]+)/i)||[])[1]?.replace(/\./g,'').replace(',','.'))<=capital))&&(!effort||(effort==='low'?parseFloat(i.management||99)<=2:parseFloat(i.management||99)<=10)));let sort=val('sortBy')||'score';a.sort((x,y)=>sort==='risk'?x.risk-y.risk:sort==='liq'?y.liq-x.liq:sort==='cash'?y.cash-x.cash:sort==='name'?x.name.localeCompare(y.name,'es'):y.score-x.score);document.getElementById('count').textContent=a.length+' de '+investments.length+' inversiones';document.getElementById('resultsSummary').textContent=a.length===investments.length?'Todas las alternativas':`Resultados que coinciden: ${a.length}`;let chips=[];if(q)chips.push('Búsqueda: '+q);if(c)chips.push(c);if(sub)chips.push(sub);if(r)chips.push('Riesgo '+r.toLowerCase());if(inc)chips.push(inc==='high'?'Ingresos periódicos':'Poco cash flow');if(liq)chips.push('Liquidez ≥ '+liq);if(cash)chips.push('Cash flow ≥ '+cash);if(capital)chips.push('Capital ≤ '+capital.toLocaleString('es-ES')+' €');if(effort)chips.push('Gestión '+(effort==='low'?'baja':'moderada'));document.getElementById('activeFilters').innerHTML=chips.map(x=>`<span class="active-filter">${x}</span>`).join('');document.getElementById('exploreGrid').innerHTML=a.length?a.map(card).join(''):'<div class="empty">No encontramos inversiones con esa combinación. Prueba a quitar algún filtro.</div>'}
 function clearFilters(){['exploreSearch','cat','subcat','risk','incomeFilter','liquidityFilter','cashFilter','capitalFilter','effortFilter'].forEach(id=>{let e=document.getElementById(id);if(e)e.value=''});selectedCategory='';updateSubtypeFilter();document.querySelectorAll('.category-tile').forEach(b=>b.classList.remove('selected'));renderSubtypeChips();renderExplore()}
+function invToggleMenu(force){
+ const panel=document.getElementById('invSidebar'),backdrop=document.getElementById('invMenuBackdrop'),toggle=document.querySelector('.menu-toggle');
+ if(!panel||!backdrop)return;
+ const open=typeof force==='boolean'?force:!panel.classList.contains('is-open');
+ panel.classList.toggle('is-open',open);backdrop.classList.toggle('is-open',open);
+ panel.setAttribute('aria-hidden',String(!open));if(toggle){toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Cerrar menú de navegación':'Abrir menú de navegación');}
+ document.body.style.overflow=open?'hidden':'';
+ if(open){const active=panel.querySelector('.inv-sidebar-link.active');(active||panel.querySelector('.inv-sidebar-link'))?.focus({preventScroll:true});}
+}
+function invMenuNavigate(id){showView(id);invToggleMenu(false);}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')invToggleMenu(false);});
 function invHeaderSearch(){showView('explore');const field=document.getElementById('exploreSearch');if(field){field.focus();field.scrollIntoView({behavior:'smooth',block:'center'});}}
 function updateNavIndicator(){const nav=document.getElementById('mainNav'),active=nav?.querySelector('button.active');if(!nav||!active)return;nav.style.setProperty('--nav-x',active.offsetLeft+'px');nav.style.setProperty('--nav-w',active.offsetWidth+'px')}
-function showView(id){const target=document.getElementById(id);if(!target)return;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));target.classList.remove('hidden');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));updateNavIndicator();const active=document.querySelector('.nav button.active');if(active&&window.matchMedia('(max-width: 800px)').matches){try{active.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}catch(err){active.scrollIntoView(false);}}if(id==='explore')renderExplore();if(id==='tools'){}if(id==='compare')renderCompare();if(id==='glossary')renderGlossary();if(id==='favorites')renderFavorites();if(id==='community')renderCommunity();if(id==='account')renderAccount();try{window.scrollTo({top:0,behavior:'smooth'})}catch(err){window.scrollTo(0,0)}}
+function showView(id){const target=document.getElementById(id);if(!target)return;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));target.classList.remove('hidden');document.querySelectorAll('.inv-sidebar-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));if(id==='explore')renderExplore();if(id==='tools'){}if(id==='compare')renderCompare();if(id==='glossary')renderGlossary();if(id==='favorites')renderFavorites();if(id==='community')renderCommunity();if(id==='account')renderAccount();try{window.scrollTo({top:0,behavior:'smooth'})}catch(err){window.scrollTo(0,0)}}
 // Navegación por botones: usar el evento click nativo, que los navegadores
 // móviles convierten correctamente desde el toque. No cancelar touchend,
 // porque en Safari/iOS puede impedir que se genere el click posterior.
-const mainNav=document.getElementById('mainNav');
-if(mainNav){
-  mainNav.addEventListener('click',function(e){
-    const b=e.target.closest('button[data-view]');
-    if(!b || !mainNav.contains(b)) return;
-    showView(b.dataset.view);
-  });
-  // Recalcular el indicador después de que Safari termine de medir la barra.
-  mainNav.addEventListener('scroll',function(){
-    const active=mainNav.querySelector('button.active');
-    if(active){mainNav.style.setProperty('--nav-x',active.offsetLeft+'px');mainNav.style.setProperty('--nav-w',active.offsetWidth+'px');}
-  },{passive:true});
-}
+// La navegación principal se encuentra ahora en el menú lateral desplegable.
 const assetDefinitions={
 "Fondos indexados":"Un fondo indexado reúne el dinero de muchas personas y lo invierte siguiendo un índice de mercado, por ejemplo uno que agrupa cientos de empresas. Busca replicar el mercado con costes generalmente bajos, en lugar de elegir acciones una a una.",
 "Fondos de inversión de gestión activa":"Un fondo reúne el dinero de distintos inversores y un equipo gestor decide qué activos comprar y vender con la intención de lograr un resultado mejor que su referencia o seguir una estrategia concreta.",
