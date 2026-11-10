@@ -1,0 +1,15 @@
+{
+  "id": "/",
+  "name": "Inversora",
+  "short_name": "Inversora",
+  "description": "Entiende, compara y simula inversiones.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#155eef",
+  "icons": [
+    {"src": "/icon-192.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+    {"src": "/icon-512.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
