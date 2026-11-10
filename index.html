@@ -394,12 +394,39 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
  .nav button,.nav-indicator,.category-tile-v2,.category-tile-v2:after,.subtype-chip{transition:none!important}
 }
 </style>
+
+<style id="inversora-header-refresh">
+.inv-header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:26px;padding:11px 18px}
+.inv-header .logo{margin:0;gap:10px}
+.inv-header .logo:before{content:"";background-image:url('/icon-192.svg');background-size:cover;background-position:center;box-shadow:0 4px 12px #155eef25}
+.inv-header .nav{justify-self:center;max-width:100%}
+.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.header-icon-btn,.profile-nav-btn{height:42px;border:1px solid #e4e7ec;border-radius:13px;background:#fff;color:#344054;display:inline-flex;align-items:center;justify-content:center;transition:background .18s,border-color .18s,transform .18s}
+.header-icon-btn{width:42px;font-size:25px;line-height:1}
+.header-icon-btn:hover,.profile-nav-btn:hover{background:#f5f8ff;border-color:#c7d7fe;transform:translateY(-1px)}
+.header-icon-btn:focus-visible,.profile-nav-btn:focus-visible,.logo:focus-visible{outline:3px solid #b2ccff;outline-offset:2px}
+.profile-nav-btn{gap:9px;padding:4px 12px 4px 5px;font-size:13px;font-weight:750;color:#344054;white-space:nowrap}
+.profile-nav-avatar,.profile-nav-avatar-fallback{width:32px;height:32px;flex:0 0 32px;border-radius:50%;object-fit:cover;background:#eef2f7;border:1px solid #e4e7ec}
+.profile-nav-avatar-fallback{display:grid;place-items:center;color:#155eef;font-size:13px;font-weight:850}
+.profile-nav-label{display:inline}
+@media(max-width:900px){.inv-header{gap:12px;padding:11px 12px}.inv-header .nav{justify-self:stretch}.nav button{padding:9px 11px}.profile-nav-label{display:none}.profile-nav-btn{padding:4px}}
+@media(max-width:800px){.inv-header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;position:static}.inv-header .logo{margin:0 auto 0 0}.header-actions{order:2;margin-left:auto}.inv-header .nav{order:3;width:100%;justify-self:auto}.header-icon-btn{width:39px;height:39px}.profile-nav-btn{height:39px}.profile-nav-label{display:none}}
+@media(max-width:390px){.inv-header{padding:10px}.inv-header .logo{font-size:22px}.inv-header .logo:before{width:30px;height:30px;flex-basis:30px}.header-actions{gap:5px}.header-icon-btn{width:36px;height:36px}.nav button{padding:8px 9px;font-size:11px}}
+</style>
 </head>
 <body>
 <div class="app">
-<header><button class="logo" type="button" onclick="showView('home')" aria-label="Inversora, volver al inicio"><span class="brand-word">Invers<span>ora</span></span></button><nav class="nav" id="mainNav"><span class="nav-indicator" aria-hidden="true"></span>
-<button class="active" data-view="home">Inicio</button><button data-view="explore">Explorar</button><button data-view="favorites">Favoritos</button><button data-view="tools">Herramientas</button><button data-view="community" aria-label="Comunidad">Comunidad</button><button data-view="account" id="accountNav">Cuenta</button>
-</nav></header>
+<header class="inv-header">
+<button class="logo" type="button" onclick="showView('home')" aria-label="Inversora, volver al inicio"><span class="brand-word">Invers<span>ora</span></span></button>
+<nav class="nav" id="mainNav" aria-label="Navegación principal"><span class="nav-indicator" aria-hidden="true"></span>
+<button class="active" data-view="home">Inicio</button><button data-view="explore">Explorar</button><button data-view="tools">Herramientas</button><button data-view="community">Comunidad</button>
+</nav>
+<div class="header-actions" aria-label="Accesos rápidos">
+<button class="header-icon-btn" type="button" onclick="showView('favorites')" aria-label="Mis favoritos" title="Mis favoritos"><span aria-hidden="true">♡</span></button>
+<button class="header-icon-btn" type="button" onclick="invHeaderSearch()" aria-label="Buscar inversiones" title="Buscar"><span aria-hidden="true">⌕</span></button>
+<button class="profile-nav-btn" type="button" id="accountNav" onclick="showView('account')" aria-label="Mi perfil" title="Mi perfil"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span></button>
+</div>
+</header>
 
 <div id="invGlobalNotice" role="status" hidden style="position:fixed;z-index:1000;bottom:18px;left:50%;transform:translateX(-50%);max-width:min(92vw,620px);padding:13px 18px;background:#101828;color:white;border-radius:12px;box-shadow:0 8px 30px #0003"></div>
 <main id="home" class="view">
@@ -557,6 +584,7 @@ function updateSubtypeFilter(){let c=document.getElementById('cat').value,el=doc
 function renderHome(){renderCategoryNavigation();document.getElementById('homeGrid').innerHTML=[...investments].sort((a,b)=>b.score-a.score).slice(0,6).map(card).join('')}
 function renderExplore(){let val=id=>document.getElementById(id)?.value||'',q=val('exploreSearch').toLowerCase(),c=val('cat'),sub=val('subcat'),r=val('risk'),inc=val('incomeFilter'),liq=+(val('liquidityFilter')||0),cash=+(val('cashFilter')||0),capital=+(val('capitalFilter')||0),effort=val('effortFilter');let a=investments.filter(i=>(!q||(`${i.name} ${i.cat} ${i.sub} ${i.desc} ${i.profile} ${subtypeFor(i)}`).toLowerCase().includes(q))&&(!c||i.cat===c)&&(!sub||subtypeFor(i)===sub)&&(!r||i.riskBand===r)&&(!inc||(inc==='high'?i.cash>=5:i.cash<5))&&(!liq||i.liq>=liq)&&(!cash||i.cash>=cash)&&(!capital||((+(String(i.capital).match(/(?:Desde|~|orientativo)?\s*([\d.,]+)/i)||[])[1]?.replace(/\./g,'').replace(',','.'))<=capital))&&(!effort||(effort==='low'?parseFloat(i.management||99)<=2:parseFloat(i.management||99)<=10)));let sort=val('sortBy')||'score';a.sort((x,y)=>sort==='risk'?x.risk-y.risk:sort==='liq'?y.liq-x.liq:sort==='cash'?y.cash-x.cash:sort==='name'?x.name.localeCompare(y.name,'es'):y.score-x.score);document.getElementById('count').textContent=a.length+' de '+investments.length+' inversiones';document.getElementById('resultsSummary').textContent=a.length===investments.length?'Todas las alternativas':`Resultados que coinciden: ${a.length}`;let chips=[];if(q)chips.push('Búsqueda: '+q);if(c)chips.push(c);if(sub)chips.push(sub);if(r)chips.push('Riesgo '+r.toLowerCase());if(inc)chips.push(inc==='high'?'Ingresos periódicos':'Poco cash flow');if(liq)chips.push('Liquidez ≥ '+liq);if(cash)chips.push('Cash flow ≥ '+cash);if(capital)chips.push('Capital ≤ '+capital.toLocaleString('es-ES')+' €');if(effort)chips.push('Gestión '+(effort==='low'?'baja':'moderada'));document.getElementById('activeFilters').innerHTML=chips.map(x=>`<span class="active-filter">${x}</span>`).join('');document.getElementById('exploreGrid').innerHTML=a.length?a.map(card).join(''):'<div class="empty">No encontramos inversiones con esa combinación. Prueba a quitar algún filtro.</div>'}
 function clearFilters(){['exploreSearch','cat','subcat','risk','incomeFilter','liquidityFilter','cashFilter','capitalFilter','effortFilter'].forEach(id=>{let e=document.getElementById(id);if(e)e.value=''});selectedCategory='';updateSubtypeFilter();document.querySelectorAll('.category-tile').forEach(b=>b.classList.remove('selected'));renderSubtypeChips();renderExplore()}
+function invHeaderSearch(){showView('explore');const field=document.getElementById('exploreSearch');if(field){field.focus();field.scrollIntoView({behavior:'smooth',block:'center'});}}
 function updateNavIndicator(){const nav=document.getElementById('mainNav'),active=nav?.querySelector('button.active');if(!nav||!active)return;nav.style.setProperty('--nav-x',active.offsetLeft+'px');nav.style.setProperty('--nav-w',active.offsetWidth+'px')}
 function showView(id){const target=document.getElementById(id);if(!target)return;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));target.classList.remove('hidden');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));updateNavIndicator();const active=document.querySelector('.nav button.active');if(active&&window.matchMedia('(max-width: 800px)').matches){try{active.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}catch(err){active.scrollIntoView(false);}}if(id==='explore')renderExplore();if(id==='tools'){}if(id==='compare')renderCompare();if(id==='glossary')renderGlossary();if(id==='favorites')renderFavorites();if(id==='community')renderCommunity();if(id==='account')renderAccount();try{window.scrollTo({top:0,behavior:'smooth'})}catch(err){window.scrollTo(0,0)}}
 // Navegación por botones: usar el evento click nativo, que los navegadores
@@ -838,7 +866,13 @@ function focusComment(id){document.getElementById('comment-'+id)?.focus()}
 function copySharedList(id){const p=invCommunityCache.find(x=>x.id===id);if(!p?.listData)return;const body=`Lista «${p.listData.name}»\n${p.listData.items.join('\n')}`;navigator.clipboard?.writeText(body).then(()=>alert('Lista copiada.'))}
 function shareCommunityPost(id){const p=invCommunityCache.find(x=>x.id===id);if(!p)return;const body=`Inversora · ${p.author}\n${p.text}`;if(navigator.share)navigator.share({title:'Conversación en Inversora',text:body}).catch(()=>{});else navigator.clipboard?.writeText(body).then(()=>alert('Publicación copiada.'))}
 async function shareFavoriteListToCommunity(){if(!invUser){showView('account');return}const lists=invListsCache.filter(l=>l.items.length);if(!lists.length)return alert('Primero crea una lista con inversiones.');const choice=lists.length===1?lists[0]:lists.find(l=>l.id===selectedFavoriteList)||lists[0];const body=prompt('Añade una explicación a tu lista:','Comparto esta lista para conocer otros puntos de vista.');if(body===null)return;const {error}=await invDb.from('community_posts').insert({user_id:invUser.id,topic:'Mi cartera',body:body||`Comparto mi lista ${choice.name}`,list_snapshot:{name:choice.name,items:choice.items}});if(error)return alert(error.message);await renderCommunity();showView('community')}
-function refreshAccountNav(){const b=document.getElementById('accountNav');if(!b)return;const signed=!!invUser,name=signed?invFirstName():'';b.textContent=signed?name:'Cuenta';b.setAttribute('aria-label',signed?'Perfil de '+name:'Cuenta');b.title=signed?'Ver el perfil de '+name:'Iniciar sesión o crear una cuenta'}
+function refreshAccountNav(){
+ const b=document.getElementById('accountNav');if(!b)return;
+ const signed=!!invUser,name=signed?invFirstName():'Mi perfil',avatar=signed?(invProfile?.avatar_url||''):'';
+ const fallback=(signed?(name.trim()[0]||'U'):'M').toLocaleUpperCase('es');
+ b.innerHTML=(avatar?'<img class="profile-nav-avatar" src="'+invEsc(avatar)+'" alt="">':'<span class="profile-nav-avatar-fallback" aria-hidden="true">'+invEsc(fallback)+'</span>')+'<span class="profile-nav-label">'+(signed?invEsc(name):'Mi perfil')+'</span>';
+ b.setAttribute('aria-label',signed?'Mi perfil: '+name:'Mi perfil');b.title=signed?'Abrir mi perfil':'Iniciar sesión o crear una cuenta';
+}
 let invPendingConfirmationEmail='';
 async function renderAccount(){
  const el=document.getElementById('accountContent');if(!el)return;refreshAccountNav();
