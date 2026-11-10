@@ -582,6 +582,29 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 @media(max-width:600px){.asset-community{padding:16px}.asset-community-head{gap:10px}.community-score{flex-basis:95px;padding:10px 7px}.community-score strong{font-size:29px}.community-breakdown,.community-rating-grid{grid-template-columns:1fr}.community-review-actions{align-items:flex-start;flex-direction:column}.community-review-actions button{width:100%}}
 </style>
 
+
+<style>
+/* Valoraciones: bloque compacto junto a la nota editorial */
+.asset-overview-panel{grid-template-columns:minmax(0,1fr) 180px 190px!important;gap:12px!important;padding:18px!important}
+.asset-community-compact{align-self:stretch;display:flex;flex-direction:column;justify-content:center;min-width:0;padding:14px;border:1px solid #dbe5f5;border-radius:14px;background:#fff}
+.asset-community-compact-label{font-size:11px;font-weight:750;color:#667085;line-height:1.4}
+.asset-community-compact-score{margin:5px 0 1px;color:#155eef;font-size:30px;font-weight:850;letter-spacing:-1.2px;line-height:1.15}
+.asset-community-compact-score small{font-size:12px;color:#98a2b3;letter-spacing:0}
+.asset-community-compact-count{font-size:10px;color:#98a2b3;min-height:15px}
+.asset-community-open{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;margin-top:10px;padding:9px 10px;border:1px solid #c7d7fe;border-radius:9px;background:#f5f8ff;color:#1749a9;font-size:11px;font-weight:800;text-align:left;cursor:pointer;transition:background .18s,border .18s}
+.asset-community-open:hover{background:#eaf1ff;border-color:#9dbbfe}
+.asset-community-modal{position:fixed;inset:0;z-index:10050;display:flex;align-items:center;justify-content:center;padding:18px;background:#10182880;backdrop-filter:blur(4px)}
+.asset-community-modal[hidden]{display:none}
+.asset-community-modal-card{position:relative;width:min(680px,100%);max-height:min(88vh,850px);overflow:auto;padding:24px;border:1px solid #e4e7ec;border-radius:20px;background:#fff;box-shadow:0 24px 80px #10182835}
+.asset-community-modal-close{position:sticky;top:0;float:right;z-index:2;width:34px;height:34px;margin:-8px -8px 0 10px;border:1px solid #eaecf0;border-radius:50%;background:#fff;color:#667085;font-size:22px;cursor:pointer}
+.asset-community-modal-card .asset-community{margin:0;padding:0;border:0;background:transparent}
+.asset-community-modal-card .asset-community-head{padding-right:28px}
+.asset-community-modal-card .community-breakdown{margin-bottom:15px}
+.asset-community-modal-card .community-review-form{padding:15px}
+@media(max-width:760px){.asset-overview-panel{grid-template-columns:repeat(2,minmax(0,1fr))!important}.asset-overview-copy{grid-column:1/-1}.asset-overview-score,.asset-community-compact{min-width:0}}
+@media(max-width:480px){.asset-overview-panel{grid-template-columns:1fr!important}.asset-overview-copy{grid-column:auto}.asset-community-compact{min-height:140px}}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -900,7 +923,7 @@ function openDetail(name){
   ${assetNav}\n  <div class="detail-actions asset-actions"><button class="detail-sim-btn" onclick="simulateInvestment(${safeName})">↗ Simular esta inversión</button><button class="detail-compare-btn" onclick="startCompare([${JSON.stringify(i.name)}]);showView('compare')">⇄ Comparar</button><button class="detail-favorite ${isFavorite(i.name)?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${isFavorite(i.name)?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button></div>
   <section class="asset-section asset-overview" id="asset-summary">
 <div class="asset-section-head"><span class="asset-section-icon">◈</span><div><h2>Resumen de la inversión</h2><p>Lo importante para entenderla de un vistazo.</p></div></div>
-<div class="asset-overview-panel"><div class="asset-overview-copy"><span class="asset-overview-kicker">IDEA CLAVE</span><p>${assetDefinition(i)}</p><div class="asset-overview-tags"><span>Capital: ${i.capital||'Depende de la operación'}</span><span>Ingresos: ${i.income||'Variables'}</span></div></div><div class="asset-overview-score"><span>Valoración del catálogo <button type="button" class="score-help-btn" aria-label="Cómo se calcula esta nota" title="Cómo se calcula esta nota" onclick="showScoreBreakdown(${safeName})">?</button></span><strong>${i.score}<small>/10</small></strong><div class="asset-score-track"><i style="width:${Math.max(0,Math.min(10,Number(i.score)||0))*10}%"></i></div><small>Indicador comparativo, no recomendación</small></div></div>
+<div class="asset-overview-panel"><div class="asset-overview-copy"><span class="asset-overview-kicker">IDEA CLAVE</span><p>${assetDefinition(i)}</p><div class="asset-overview-tags"><span>Capital: ${i.capital||'Depende de la operación'}</span><span>Ingresos: ${i.income||'Variables'}</span></div></div><div class="asset-overview-score"><span>Valoración de Inversora <button type="button" class="score-help-btn" aria-label="Cómo se calcula esta nota" title="Cómo se calcula esta nota" onclick="showScoreBreakdown(${safeName})">?</button></span><strong>${i.score}<small>/10</small></strong><div class="asset-score-track"><i style="width:${Math.max(0,Math.min(10,Number(i.score)||0))*10}%"></i></div><small>Valoración editorial independiente</small></div><div class="asset-community-compact" id="asset-community-compact" data-asset="${i.name}"><div class="asset-community-compact-label">Valoración de la comunidad</div><div class="asset-community-compact-score" id="asset-community-compact-score">—<small>/10</small></div><div class="asset-community-compact-count" id="asset-community-compact-count">Sin valoraciones todavía</div><button type="button" class="asset-community-open" onclick="invOpenCommunityModal(${safeName})">Valorar esta inversión <span>→</span></button></div></div>
 <div class="asset-quick-grid"><div class="asset-quick-card"><span class="asset-quick-icon blue">↗</span><span class="asset-quick-label">Rentabilidad indicada</span><strong class="asset-quick-value">${i.ret}</strong><small>No está garantizada</small></div><div class="asset-quick-card"><span class="asset-quick-icon amber">⌁</span><span class="asset-quick-label">Riesgo</span><strong class="asset-quick-value">${i.risk}<small>/10</small></strong><small>Escala comparativa del catálogo</small></div><div class="asset-quick-card"><span class="asset-quick-icon teal">◷</span><span class="asset-quick-label">Liquidez</span><strong class="asset-quick-value">${i.liq}<small>/10</small></strong><small>Facilidad para recuperar el dinero</small></div><div class="asset-quick-card"><span class="asset-quick-icon violet">€</span><span class="asset-quick-label">Ingresos periódicos</span><strong class="asset-quick-value">${i.cash}<small>/10</small></strong><small>Potencial de generar cobros</small></div></div></section>
 <section class="asset-section" id="asset-how"><div class="asset-section-head"><span class="asset-section-icon">↗</span><div><h2>Cómo funciona</h2><p>De dónde puede venir el rendimiento y qué implica tener este activo.</p></div></div><div class="asset-explainer-grid"><div class="asset-explainer-card"><span class="asset-card-eyebrow">01 · EL MECANISMO</span><h3>¿Cómo se gana dinero?</h3><p>${i.how||i.desc}</p></div><div class="asset-explainer-card"><span class="asset-card-eyebrow">02 · LOS INGRESOS</span><h3>¿Cuándo se cobra?</h3><p>${i.income||'Depende del activo y de las condiciones de la inversión.'}</p><div class="asset-mini-fact"><span>Gestión estimada</span><b>${i.management||'Depende de la operación'}</b></div></div></div></section>
   <section class="asset-section" id="asset-features"><div class="asset-section-head"><span class="asset-section-icon">◉</span><div><h2>Características principales</h2><p>Escalas de 0 a 10 para comparar distintas alternativas. No son garantías ni probabilidades.</p></div></div><div class="asset-ratings-panel">${meter('Liquidez',i.liq,'Qué fácil puede ser convertirlo en dinero')}${meter('Potencial de rentabilidad',i.return,'Potencial orientativo de revalorización o retorno')}${meter('Potencial de ingresos pasivos',i.passive,'Cuánto puede funcionar sin gestión continua')}${meter('Facilidad de gestión',i.effort,'Más puntuación = más fácil de gestionar')}${meter('Complejidad',i.complex,'Más puntuación = más compleja de entender o gestionar',true)}${meter('Apalancamiento',i.leverage,'Posibilidad o presencia de financiación')}</div></section>
@@ -1177,6 +1200,7 @@ showView=function(id){invOriginalShowView(id);if(id==='favorites'&&invUser)invLo
 invDb.auth.onAuthStateChange((event,session)=>{
   invUser=session?.user||null;
   setTimeout(async()=>{
+    if(session&&invPendingReviewAsset)invMaybeOpenPendingReview();
     await invRefresh();
     const params=new URLSearchParams(window.location.search);
     const authError=params.get('error_description')||params.get('error');
@@ -1221,8 +1245,9 @@ function invReviewAverage(reviews,key){
  if(!reviews.length)return null;
  return Number((reviews.reduce((sum,r)=>sum+Number(r[key]||0),0)/reviews.length).toFixed(1));
 }
+
 function invRenderAssetReviews(name,reviews,profiles){
- const host=document.getElementById('asset-community-reviews');if(!host)return;
+ const host=document.getElementById('asset-community-modal-content');if(!host)return;
  const own=reviews.find(r=>r.user_id===invUser?.id)||null;
  const count=reviews.length;
  const score=count?Number((reviews.reduce((sum,r)=>sum+invReviewWeightedScore(r),0)/count).toFixed(1)):null;
@@ -1238,17 +1263,21 @@ function invRenderAssetReviews(name,reviews,profiles){
  if(invUser){
   const fields=invReviewFactors.map(f=>{
    const value=own?Number(own[f.key]):7;
-   return '<div class="community-rating-field"><label for="invReview_'+f.key+'"><span>'+f.label+'</span><output id="invReview_'+f.key+'_out">'+value+'/10</output></label><input id="invReview_'+f.key+'" name="'+f.key+'" type="range" min="1" max="10" step="1" value="'+value+'" oninput="document.getElementById(\'invReview_'+f.key+'_out\').textContent=this.value+\'/10\'"><small style="display:block;color:#98a2b3;font-size:10px;margin-top:2px">'+f.help+'</small></div>';
+   return '<div class="community-rating-field"><label for="invReview_'+f.key+'"><span>'+f.label+'</span><output id="invReview_'+f.key+'_out">'+value+'/10</output></label><input id="invReview_'+f.key+'" name="'+f.key+'" type="range" min="1" max="10" step="1" value="'+value+'" oninput="document.getElementById(\\'invReview_'+f.key+'_out\\').textContent=this.value+\\'/10\\'"><small style="display:block;color:#98a2b3;font-size:10px;margin-top:2px">'+f.help+'</small></div>';
   }).join('');
   form='<form class="community-review-form" onsubmit="submitAssetReview(event,'+JSON.stringify(name).replace(/</g,'\\u003c')+')"><h3>'+(own?'Actualiza tu valoración':'Valora este activo')+'</h3><p>Puntúa los seis apartados del 1 al 10. Puedes editar tu valoración cuando quieras; solo se cuenta una por usuario y activo.</p><div class="community-rating-grid">'+fields+'</div><textarea id="invReviewComment" maxlength="1200" placeholder="Comparte tu experiencia, ventajas, inconvenientes o cualquier aspecto que consideres útil… (opcional)">'+invEsc(own?.comment||'')+'</textarea><div class="community-review-actions"><small>Tu puntuación se combinará con la de otros usuarios.</small><button class="community-submit" type="submit">'+(own?'Guardar cambios':'Publicar valoración')+'</button></div></form>';
  }else{
-  form='<div class="community-login">Inicia sesión para puntuar los seis apartados y publicar una reseña. <button type="button" onclick="showView(\'account\')">Iniciar sesión</button></div>';
+  form='<div class="community-login">Para valorar esta inversión necesitas una cuenta de Inversora. <button type="button" onclick="invStartReviewAuth()">Registrarme o iniciar sesión</button></div>';
  }
- host.innerHTML='<div class="asset-community-head"><div><h2>Valoración de la comunidad</h2><p>Opiniones de usuarios registradas en Inversora. Se calcula con los mismos pesos de los seis criterios, pero de forma independiente a la nota editorial.</p></div><div class="community-score"><strong>'+(score===null?'—':score.toLocaleString('es-ES',{maximumFractionDigits:1})+'<small>/10</small>')+'</strong><span>'+(count?count+' '+(count===1?'valoración':'valoraciones'):'Sin valoraciones')+'</span></div></div>'+breakdown+'<div class="community-reviews-title"><h3>Reseñas de usuarios</h3><span>'+count+' '+(count===1?'opinión':'opiniones')+'</span></div><div class="community-review-list">'+list+'</div>'+form;
+ host.innerHTML='<section class="asset-community"><div class="asset-community-head"><div><h2>Valoración de la comunidad</h2><p>Media de las opiniones de usuarios, independiente de la valoración de Inversora.</p></div><div class="community-score"><strong>'+(score===null?'—':score.toLocaleString('es-ES',{maximumFractionDigits:1})+'<small>/10</small>')+'</strong><span>'+(count?count+' '+(count===1?'valoración':'valoraciones'):'Sin valoraciones')+'</span></div></div>'+breakdown+'<div class="community-reviews-title"><h3>Reseñas de usuarios</h3><span>'+count+' '+(count===1?'opinión':'opiniones')+'</span></div><div class="community-review-list">'+list+'</div>'+form+'</section>';
+ const scoreEl=document.getElementById('asset-community-compact-score'),countEl=document.getElementById('asset-community-compact-count');
+ if(scoreEl)scoreEl.innerHTML=score===null?'—<small>/10</small>':score.toLocaleString('es-ES',{maximumFractionDigits:1})+'<small>/10</small>';
+ if(countEl)countEl.textContent=count?(count+' '+(count===1?'valoración':'valoraciones')):'Sin valoraciones todavía';
 }
+
 async function invLoadAssetReviews(name){
- const host=document.getElementById('asset-community-reviews');if(!host)return;
- host.innerHTML='<div class="community-empty">Cargando valoraciones de la comunidad…</div>';
+ const host=document.getElementById('asset-community-modal-content');
+ if(host)host.innerHTML='<div class="community-empty">Cargando valoraciones de la comunidad…</div>';
  try{
   const {data,error}=await invDb.from('asset_reviews').select('*').eq('asset_key',name).eq('status','published').order('created_at',{ascending:false}).limit(200);
   if(error)throw error;
@@ -1258,7 +1287,34 @@ async function invLoadAssetReviews(name){
   invRenderAssetReviews(name,reviews,profiles);
  }catch(e){
   console.error('Asset reviews:',e);
-  host.innerHTML='<div class="community-empty">No se han podido cargar las reseñas ahora mismo. Comprueba tu conexión y vuelve a intentarlo.</div>';
+  if(host)host.innerHTML='<div class="community-empty">No se han podido cargar las reseñas ahora mismo. Comprueba tu conexión y vuelve a intentarlo.</div>';
+ }
+}
+let invPendingReviewAsset=null;
+function invEnsureReviewModal(){
+ let modal=document.getElementById('assetCommunityModal');
+ if(!modal){modal=document.createElement('div');modal.id='assetCommunityModal';modal.className='asset-community-modal';modal.hidden=true;modal.innerHTML='<section class="asset-community-modal-card" role="dialog" aria-modal="true" aria-label="Valoración de la comunidad"><button type="button" class="asset-community-modal-close" aria-label="Cerrar" onclick="invCloseCommunityModal()">×</button><div id="asset-community-modal-content"></div></section>';modal.addEventListener('click',e=>{if(e.target===modal)invCloseCommunityModal()});document.body.appendChild(modal)}
+ return modal;
+}
+function invOpenCommunityModal(name){
+ invPendingReviewAsset=name;
+ const modal=invEnsureReviewModal();modal.hidden=false;document.body.style.overflow='hidden';
+ invLoadAssetReviews(name);
+}
+function invCloseCommunityModal(){
+ const modal=document.getElementById('assetCommunityModal');if(modal)modal.hidden=true;
+ document.body.style.overflow='';
+}
+function invStartReviewAuth(){
+ const name=invPendingReviewAsset;
+ invCloseCommunityModal();
+ showView('account');
+ if(typeof setAuthMode==='function')setAuthMode('register');
+}
+function invMaybeOpenPendingReview(){
+ if(invPendingReviewAsset&&invUser){
+  const name=invPendingReviewAsset;
+  if(document.getElementById('detail')&&!document.getElementById('detail').classList.contains('hidden'))invOpenCommunityModal(name);
  }
 }
 async function submitAssetReview(event,name){
@@ -1279,14 +1335,14 @@ async function submitAssetReview(event,name){
   if(button){button.disabled=false;button.textContent='Reintentar'}
  }
 }
+// Keep the community score next to Inversora's score; the full review panel opens on demand.
 const invOpenDetailWithReviews=openDetail;
 openDetail=function(name){
  invOpenDetailWithReviews(name);
- const overview=document.getElementById('asset-summary');
- if(!overview)return;
- overview.insertAdjacentHTML('afterend','<section class="asset-section asset-community" id="asset-community-reviews" aria-live="polite"></section>');
- invLoadAssetReviews(name);
+ const compact=document.getElementById('asset-community-compact');
+ if(compact){const cached=invAssetReviewCache[name];if(cached)invRenderAssetReviews(name,cached.reviews,cached.profiles)}
 };
+
 
 </script>
 <div id="scoreMethodModal" class="score-modal" hidden onclick="if(event.target===this)closeScoreBreakdown()"><section class="score-modal-card" role="dialog" aria-modal="true" aria-labelledby="scoreModalTitle"><button type="button" class="score-modal-close" aria-label="Cerrar explicación" onclick="closeScoreBreakdown()">×</button><div id="scoreModalContent"></div></section></div>
