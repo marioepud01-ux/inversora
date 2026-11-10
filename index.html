@@ -417,7 +417,7 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 .profile-nav-label{display:inline}
 .inv-menu-backdrop{position:fixed;inset:0;background:rgba(16,24,40,.38);backdrop-filter:blur(2px);z-index:49;opacity:0;visibility:hidden;transition:opacity .24s,visibility .24s}
 .inv-menu-backdrop.is-open{opacity:1;visibility:visible}
-.inv-sidebar{position:fixed;z-index:50;inset:0 auto 0 0;width:min(350px,88vw);background:#fff;border-right:1px solid #eaecf0;box-shadow:18px 0 55px rgba(16,24,40,.14);display:flex;flex-direction:column;transform:translateX(-105%);transition:transform .28s cubic-bezier(.22,.8,.25,1);visibility:hidden}
+.inv-sidebar{position:fixed;z-index:50;inset:0 0 0 auto;width:min(350px,88vw);background:#fff;border-left:1px solid #eaecf0;border-right:0;box-shadow:-18px 0 55px rgba(16,24,40,.14);display:flex;flex-direction:column;transform:translateX(105%);transition:transform .28s cubic-bezier(.22,.8,.25,1);visibility:hidden}
 .inv-sidebar.is-open{transform:translateX(0);visibility:visible}
 .inv-sidebar-head{display:flex;align-items:center;justify-content:space-between;padding:25px 23px 19px;border-bottom:1px solid #f0f2f5}
 .inv-sidebar-eyebrow,.inv-sidebar-group-title{font-size:10px;letter-spacing:1.05px;font-weight:800;color:#98a2b3}
@@ -436,6 +436,104 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 @media(max-width:800px){.inv-header{padding:10px 12px;min-height:60px}.header-brand-group{gap:10px}.header-actions{gap:13px}.header-icon-btn{width:30px;height:38px;font-size:25px}.profile-nav-label{display:none}.profile-nav-btn{padding:3px}.profile-nav-avatar,.profile-nav-avatar-fallback{width:32px;height:32px;flex-basis:32px}}
 @media(max-width:390px){.inv-header{padding:9px 10px}.inv-header .logo{font-size:22px}.inv-header .logo:before{width:30px;height:30px;flex-basis:30px}.header-brand-group{gap:7px}.header-actions{gap:9px}.header-icon-btn{width:27px;font-size:23px}}
 </style>
+<style id="inversora-asset-redesign">
+/* Menú lateral anclado a la derecha */
+.inv-header .header-actions{display:flex;align-items:center;gap:clamp(12px,1.6vw,20px)}
+.inv-header .menu-toggle{order:2;margin-left:2px}
+.inv-header .profile-nav-btn{order:3}
+.inv-sidebar{inset:0 0 0 auto!important;transform:translateX(105%)!important;border-left:1px solid #e7edf6!important;border-right:0!important;box-shadow:-20px 0 55px rgba(16,24,40,.13)!important}
+.inv-sidebar.is-open{transform:translateX(0)!important}
+.inv-sidebar-head{padding:25px 24px 20px}
+.inv-sidebar-content{padding:20px 17px 26px}
+.inv-sidebar-group{padding-bottom:13px;margin-bottom:12px}
+.inv-sidebar-group-title{font-size:10px;letter-spacing:1.15px;color:#8492a6}
+.inv-sidebar-link{padding:12px 13px;border-radius:10px;font-size:14px}
+.inv-sidebar-link.active{background:#edf3ff;color:#155eef}
+/* Fichas: nueva jerarquía visual, más aire y menos cajas */
+.asset-detail{padding:clamp(15px,3vw,34px)!important;border:1px solid #e7edf5!important;border-radius:22px!important;box-shadow:0 8px 30px rgba(23,43,77,.045)!important}
+.asset-topline{margin-bottom:16px!important}
+.asset-top-note{background:#f5f8ff!important;border-color:#e2eaff!important;color:#2456a6!important}
+.asset-live-dot{background:#155eef!important;box-shadow:0 0 0 3px #e4edff!important}
+.asset-hero{display:block!important;padding:clamp(22px,3.5vw,38px)!important;border:1px solid #dce7fb!important;border-radius:19px!important;background:linear-gradient(115deg,#f4f7ff 0%,#fff 72%)!important;color:#172b4d!important}
+.asset-hero:after{display:none!important}
+.asset-hero-copy{max-width:850px}
+.asset-breadcrumb{color:#52709e!important;font-size:12px!important}
+.asset-breadcrumb span{color:#155eef!important}
+.asset-hero h1{margin:13px 0 10px!important;color:#172b4d!important;font-size:clamp(29px,4vw,43px)!important;letter-spacing:-1.25px!important;line-height:1.1!important}
+.asset-lead{color:#52647d!important;font-size:15px!important;line-height:1.75!important;max-width:760px}
+.asset-hero-tags{margin-top:18px!important}
+.asset-hero-tags span{background:#fff!important;border:1px solid #e0e9f7!important;color:#425875!important;border-radius:8px!important;padding:7px 10px!important}
+.asset-hero-score{display:flex!important;align-items:center!important;gap:12px!important;width:max-content!important;max-width:100%;margin-top:20px!important;padding:9px 13px!important;border:1px solid #dce7fb!important;border-radius:11px!important;background:#fff!important;color:#172b4d!important;backdrop-filter:none!important}
+.asset-hero-score>span{color:#667b98!important;font-size:11px!important}
+.asset-hero-score>strong{font-size:22px!important;letter-spacing:-.5px!important;margin:0!important;color:#155eef!important}
+.asset-hero-score>strong small{font-size:12px!important;color:#7b8ba3!important}
+.asset-hero-score .asset-score-track{width:76px;height:5px!important;background:#e9eff9!important}
+.asset-hero-score .asset-score-track i{background:#155eef!important}
+.asset-hero-score>small{margin:0!important;color:#8492a6!important;font-size:10px!important}
+.asset-detail .asset-jump-nav{position:static!important;display:flex!important;gap:5px!important;overflow-x:auto!important;padding:0 0 14px!important;margin:18px 0 20px!important;border:0!important;border-bottom:1px solid #edf0f5!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+.asset-detail .asset-jump-nav a,.asset-detail .asset-jump-nav a:visited{background:transparent!important;padding:8px 10px!important;border-radius:8px!important;color:#65758b!important;font-size:12px!important}
+.asset-detail .asset-jump-nav a:hover{background:#edf3ff!important;color:#155eef!important}
+.asset-actions{display:flex!important;flex-wrap:wrap!important;gap:9px!important;margin:0 0 25px!important;padding:0 0 23px!important;border-bottom:1px solid #edf0f5!important}
+.asset-actions button{border-radius:9px!important;min-height:41px!important;padding:10px 14px!important;font-size:12px!important}
+.asset-section{margin-top:29px!important}
+.asset-section-head{align-items:center!important;gap:11px!important;margin-bottom:14px!important}
+.asset-section-icon{width:34px!important;height:34px!important;flex-basis:34px!important;border:0!important;border-radius:10px!important;background:#edf3ff!important;color:#155eef!important;font-size:17px!important}
+.asset-section-head h2{font-size:20px!important;letter-spacing:-.55px!important;color:#172b4d!important}
+.asset-section-head p{font-size:12px!important;color:#7b8798!important;line-height:1.55!important}
+.asset-overview{padding:0!important;border:0!important;border-radius:0!important;background:transparent!important}
+.asset-overview-panel{grid-template-columns:minmax(0,1fr) 155px!important;gap:15px!important;padding:19px!important;border:1px solid #e2eaf6!important;border-radius:14px!important;background:#f8faff!important}
+.asset-overview-kicker{color:#155eef!important;font-size:9px!important;letter-spacing:.12em!important}
+.asset-overview-copy>p{font-size:14px!important;line-height:1.75!important;color:#34445c!important}
+.asset-overview-tags span{background:#fff!important;border-color:#e3eaf4!important}
+.asset-overview-score{padding:12px!important;border-radius:11px!important;box-shadow:none!important}
+.asset-overview-score>strong{font-size:32px!important;color:#155eef!important}
+.asset-quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important;margin-top:12px!important}
+.asset-quick-card{padding:14px!important;border:1px solid #edf0f5!important;border-radius:12px!important;background:#fff!important;box-shadow:none!important}
+.asset-quick-card:hover{transform:translateY(-2px)!important;box-shadow:0 5px 15px #172b4d0a!important}
+.asset-quick-icon{width:27px!important;height:27px!important;border-radius:8px!important;margin-bottom:10px!important}
+.asset-quick-label{font-size:10px!important;color:#7b8798!important}
+.asset-quick-value{font-size:21px!important;color:#172b4d!important}
+.asset-explainer-grid,.asset-pros-cons{gap:10px!important}
+.asset-explainer-card,.asset-pros-card,.asset-cons-card{padding:18px!important;border:1px solid #e9edf4!important;border-radius:13px!important;background:#fff!important;box-shadow:none!important}
+.asset-explainer-card h3,.asset-pros-title h3,.asset-cons-title h3{font-size:15px!important;color:#172b4d!important}
+.asset-explainer-card p,.asset-list li{font-size:12px!important;line-height:1.7!important;color:#53647a!important}
+.asset-card-eyebrow{font-size:9px!important;color:#155eef!important;letter-spacing:.09em!important}
+.asset-mini-fact{font-size:10px!important}
+.asset-ratings-panel{padding:15px 18px!important;border:1px solid #e9edf4!important;border-radius:13px!important;background:#fff!important;grid-template-columns:1fr 1fr!important;gap:4px 20px!important}
+.asset-meter{padding:9px 0!important}
+.asset-meter-track{height:6px!important;background:#edf1f7!important}
+.asset-meter-track i{background:#3977e8!important}
+.asset-pros-card{border-color:#dceee4!important;background:#fbfefc!important}
+.asset-cons-card{border-color:#f2e5e3!important;background:#fffdfd!important}
+.asset-info-grid{gap:10px!important}
+.asset-info-card,.asset-costs{border:1px solid #e9edf4!important;border-radius:13px!important;background:#fff!important;box-shadow:none!important}
+.asset-info-card{padding:16px!important}
+.asset-costs{padding:17px!important}
+.asset-cost-row{padding:12px 0!important;border-top:1px solid #f0f2f6!important}
+.asset-cost-row p{font-size:12px!important;line-height:1.65!important}
+.entry-overview{gap:10px!important}
+.entry-level,.entry-capital,.entry-factor{border:1px solid #e6edf7!important;border-radius:12px!important;background:#f8faff!important;box-shadow:none!important}
+.entry-subtitle{font-size:14px!important;color:#172b4d!important}
+.entry-factors{gap:9px!important}
+.entry-factor{padding:14px!important}
+.entry-takeaway{background:#f3f7ff!important;border-color:#dce7fb!important}
+.entry-takeaway>span{background:#e0eaff!important;color:#155eef!important}
+.asset-next-nav{margin-top:25px!important}
+@media(max-width:700px){
+ .asset-detail{padding:14px!important;border-radius:16px!important}
+ .asset-hero{padding:20px!important}
+ .asset-hero-score{flex-wrap:wrap!important;gap:8px!important}
+ .asset-hero-score>small{flex-basis:100%}
+ .asset-overview-panel{grid-template-columns:1fr!important}
+ .asset-overview-score{display:flex!important;align-items:center!important;gap:12px!important}
+ .asset-overview-score>strong{margin:0!important}
+ .asset-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .asset-ratings-panel{grid-template-columns:1fr!important}
+ .asset-explainer-grid,.asset-pros-cons,.asset-info-grid{grid-template-columns:1fr!important}
+ .asset-detail .asset-jump-nav{margin:14px 0 17px!important}
+ .asset-actions button{flex:1 1 100%!important}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -446,8 +544,8 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 <div class="header-actions" aria-label="Accesos rápidos">
 <button class="header-icon-btn" type="button" onclick="showView('favorites')" aria-label="Mis favoritos" title="Mis favoritos"><span aria-hidden="true">♡</span></button>
 <button class="header-icon-btn" type="button" onclick="invHeaderSearch()" aria-label="Buscar inversiones" title="Buscar"><span aria-hidden="true">⌕</span></button>
-<button class="profile-nav-btn" type="button" id="accountNav" onclick="showView('account')" aria-label="Mi perfil" title="Mi perfil"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span></button>
 <button class="menu-toggle" type="button" onclick="invToggleMenu()" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="invSidebar"><span></span><span></span><span></span></button>
+<button class="profile-nav-btn" type="button" id="accountNav" onclick="showView('account')" aria-label="Mi perfil" title="Mi perfil"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span></button>
 </div>
 </header>
 <div class="inv-menu-backdrop" id="invMenuBackdrop" onclick="invToggleMenu(false)" aria-hidden="true"></div>
