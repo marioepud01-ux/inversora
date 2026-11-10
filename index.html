@@ -442,32 +442,32 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 <header class="inv-header">
 <div class="header-brand-group">
 <button class="logo" type="button" onclick="showView('home')" aria-label="Inversora, volver al inicio"><span class="brand-word">Invers<span>ora</span></span></button>
-<button class="menu-toggle" type="button" onclick="invToggleMenu()" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="invSidebar"><span></span><span></span><span></span></button>
 </div>
 <div class="header-actions" aria-label="Accesos rápidos">
 <button class="header-icon-btn" type="button" onclick="showView('favorites')" aria-label="Mis favoritos" title="Mis favoritos"><span aria-hidden="true">♡</span></button>
 <button class="header-icon-btn" type="button" onclick="invHeaderSearch()" aria-label="Buscar inversiones" title="Buscar"><span aria-hidden="true">⌕</span></button>
 <button class="profile-nav-btn" type="button" id="accountNav" onclick="showView('account')" aria-label="Mi perfil" title="Mi perfil"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span></button>
+<button class="menu-toggle" type="button" onclick="invToggleMenu()" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="invSidebar"><span></span><span></span><span></span></button>
 </div>
 </header>
 <div class="inv-menu-backdrop" id="invMenuBackdrop" onclick="invToggleMenu(false)" aria-hidden="true"></div>
 <aside class="inv-sidebar" id="invSidebar" aria-label="Menú principal de Inversora" aria-hidden="true">
 <div class="inv-sidebar-head"><div><span class="inv-sidebar-eyebrow">NAVEGACIÓN</span><h2>Explora Inversora</h2></div><button class="inv-sidebar-close" type="button" onclick="invToggleMenu(false)" aria-label="Cerrar menú">×</button></div>
 <div class="inv-sidebar-content">
-<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">INICIO</span>
+<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">DESCUBRIR</span>
 <button class="inv-sidebar-link" data-view="home" onclick="invMenuNavigate('home')"><span class="inv-sidebar-icon">⌂</span><span>Inicio</span></button>
-</div>
-<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">DESCUBRIR INVERSIONES</span>
 <button class="inv-sidebar-link" data-view="explore" onclick="invMenuNavigate('explore')"><span class="inv-sidebar-icon">⌕</span><span>Explorar inversiones</span></button>
-<button class="inv-sidebar-link" data-view="compare" onclick="invMenuNavigate('compare')"><span class="inv-sidebar-icon">⇄</span><span>Comparar inversiones</span></button>
 <button class="inv-sidebar-link" data-view="glossary" onclick="invMenuNavigate('glossary')"><span class="inv-sidebar-icon">Aa</span><span>Glosario financiero</span></button>
 </div>
-<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">HERRAMIENTAS</span>
+<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">ANALIZAR Y DECIDIR</span>
+<button class="inv-sidebar-link" data-view="compare" onclick="invMenuNavigate('compare')"><span class="inv-sidebar-icon">⇄</span><span>Comparar inversiones</span></button>
 <button class="inv-sidebar-link" data-view="tools" onclick="invMenuNavigate('tools')"><span class="inv-sidebar-icon">▦</span><span>Herramientas</span></button>
 <button class="inv-sidebar-link" data-view="sim" onclick="invMenuNavigate('sim')"><span class="inv-sidebar-icon">◷</span><span>Simulador</span></button>
 </div>
-<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">COMUNIDAD Y TU ESPACIO</span>
+<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">COMUNIDAD</span>
 <button class="inv-sidebar-link" data-view="community" onclick="invMenuNavigate('community')"><span class="inv-sidebar-icon">◎</span><span>Comunidad</span></button>
+</div>
+<div class="inv-sidebar-group"><span class="inv-sidebar-group-title">MI ESPACIO</span>
 <button class="inv-sidebar-link" data-view="favorites" onclick="invMenuNavigate('favorites')"><span class="inv-sidebar-icon">♡</span><span>Mis favoritos</span></button>
 <button class="inv-sidebar-link" data-view="account" onclick="invMenuNavigate('account')"><span class="inv-sidebar-icon">◉</span><span>Mi perfil</span></button>
 </div>
