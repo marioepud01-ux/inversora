@@ -561,6 +561,27 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
  .asset-actions button{flex:1 1 100%!important}
 }
 </style>
+
+<style>
+/* Valoraciones y reseñas de la comunidad */
+.asset-community{margin-top:26px;padding:22px;border:1px solid #dbe5f5;border-radius:20px;background:linear-gradient(145deg,#f8faff,#fff 72%)}
+.asset-community-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:18px}
+.asset-community-head h2{margin:0;font-size:22px;letter-spacing:-.5px}.asset-community-head p{margin:6px 0 0;color:#667085;font-size:13px;line-height:1.5}
+.community-score{flex:0 0 120px;text-align:center;padding:12px;border:1px solid #dbe5f5;border-radius:16px;background:#fff}
+.community-score strong{display:block;color:#155eef;font-size:34px;letter-spacing:-1.5px;line-height:1.1}.community-score strong small{font-size:13px;color:#667085;letter-spacing:0}.community-score span{display:block;margin-top:5px;color:#667085;font-size:11px}
+.community-breakdown{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px;margin:15px 0 20px}
+.community-factor{min-width:0}.community-factor-top{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:#475467}.community-factor-top b{color:#101828}.community-factor-track{height:6px;margin-top:6px;border-radius:99px;background:#eaecf0;overflow:hidden}.community-factor-track i{display:block;height:100%;background:linear-gradient(90deg,#84adff,#155eef);border-radius:99px}
+.community-reviews-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 10px;padding-top:17px;border-top:1px solid #e4e7ec}.community-reviews-title h3{font-size:16px;margin:0}.community-reviews-title span{font-size:12px;color:#667085}
+.community-review-list{display:grid;gap:9px}.community-review{padding:14px;background:#fff;border:1px solid #eaecf0;border-radius:13px}.community-review-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.community-review-author{font-size:13px;font-weight:750;color:#344054}.community-review-date{font-size:11px;color:#98a2b3}.community-review-score{font-size:12px;font-weight:800;color:#155eef;white-space:nowrap}.community-review p{margin:9px 0 0;color:#475467;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.community-review-form{margin-top:18px;padding:17px;background:#fff;border:1px solid #dbe5f5;border-radius:15px}.community-review-form h3{margin:0 0 5px;font-size:16px}.community-review-form>p{margin:0 0 14px;color:#667085;font-size:12px;line-height:1.5}
+.community-rating-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 18px}.community-rating-field label{display:flex;justify-content:space-between;gap:8px;margin-bottom:5px;font-size:12px;font-weight:700;color:#344054}.community-rating-field output{color:#155eef;font-weight:850}.community-rating-field input{width:100%;accent-color:#155eef}
+.community-review-form textarea{width:100%;min-height:88px;resize:vertical;margin-top:14px;padding:11px 12px;border:1px solid #d0d5dd;border-radius:11px;font:inherit;font-size:13px;outline:0}.community-review-form textarea:focus{border-color:#84adff;box-shadow:0 0 0 3px #155eef12}
+.community-review-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:11px}.community-review-actions small{color:#667085;font-size:11px}.community-submit{background:#155eef;color:#fff;padding:11px 16px;border-radius:11px;font-size:13px;font-weight:750}.community-submit:disabled{opacity:.55;cursor:wait}
+.community-login{margin-top:16px;padding:15px;border:1px dashed #b2ccff;border-radius:13px;background:#fff;color:#475467;font-size:13px;line-height:1.5}.community-login button{margin-left:8px;padding:7px 11px;border-radius:9px;background:#eef4ff;color:#155eef;font-weight:750}
+.community-empty{padding:17px;text-align:center;background:#fff;border:1px dashed #d0d5dd;border-radius:13px;color:#667085;font-size:13px;line-height:1.5}
+@media(max-width:600px){.asset-community{padding:16px}.asset-community-head{gap:10px}.community-score{flex-basis:95px;padding:10px 7px}.community-score strong{font-size:29px}.community-breakdown,.community-rating-grid{grid-template-columns:1fr}.community-review-actions{align-items:flex-start;flex-direction:column}.community-review-actions button{width:100%}}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -1181,6 +1202,91 @@ window.addEventListener('online',()=>invRefresh());
 renderHome();renderExplore();populateSimulatorInvestments();applyInvestmentAssumption();simulate();
 refreshAccountNav();updateNavIndicator();window.addEventListener('resize',updateNavIndicator);
 
+
+
+/* Community asset ratings and reviews — Supabase */
+const invReviewFactors=[
+ {key:'return_potential',label:'Potencial de rentabilidad',weight:25,help:'Potencial de crecimiento o retorno total.'},
+ {key:'risk_control',label:'Control del riesgo',weight:20,help:'Cómo valoras el equilibrio entre riesgo y protección del capital.'},
+ {key:'liquidity',label:'Liquidez',weight:15,help:'Facilidad para recuperar el dinero invertido.'},
+ {key:'periodic_income',label:'Ingresos periódicos',weight:15,help:'Capacidad de generar rentas, intereses o dividendos.'},
+ {key:'management_ease',label:'Facilidad de gestión',weight:15,help:'Tiempo y esfuerzo que exige mantener la inversión.'},
+ {key:'simplicity',label:'Simplicidad',weight:10,help:'Facilidad para entender sus condiciones y funcionamiento.'}
+];
+let invAssetReviewCache={};
+function invReviewWeightedScore(r){
+ return Number((invReviewFactors.reduce((sum,f)=>sum+(Number(r[f.key])||0)*f.weight,0)/100).toFixed(1));
+}
+function invReviewAverage(reviews,key){
+ if(!reviews.length)return null;
+ return Number((reviews.reduce((sum,r)=>sum+Number(r[key]||0),0)/reviews.length).toFixed(1));
+}
+function invRenderAssetReviews(name,reviews,profiles){
+ const host=document.getElementById('asset-community-reviews');if(!host)return;
+ const own=reviews.find(r=>r.user_id===invUser?.id)||null;
+ const count=reviews.length;
+ const score=count?Number((reviews.reduce((sum,r)=>sum+invReviewWeightedScore(r),0)/count).toFixed(1)):null;
+ const averages=invReviewFactors.map(f=>({...f,avg:invReviewAverage(reviews,f.key)}));
+ const breakdown=count?'<div class="community-breakdown">'+averages.map(f=>'<div class="community-factor"><div class="community-factor-top"><span>'+f.label+'</span><b>'+f.avg.toLocaleString('es-ES',{maximumFractionDigits:1})+'/10</b></div><div class="community-factor-track"><i style="width:'+Math.max(0,Math.min(10,f.avg))*10+'%"></i></div></div>').join('')+'</div>':'';
+ const list=count?reviews.map(r=>{
+  const profile=profiles[r.user_id]||{},author=profile.display_name||'Miembro de Inversora';
+  const date=r.updated_at||r.created_at;
+  const when=date?new Date(date).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}):'';
+  return '<article class="community-review"><div class="community-review-top"><div><span class="community-review-author">'+invEsc(author)+'</span><span class="community-review-date"> · '+invEsc(when)+'</span></div><span class="community-review-score">'+invReviewWeightedScore(r).toLocaleString('es-ES',{maximumFractionDigits:1})+'/10</span></div>'+(r.comment?'<p>'+invEsc(r.comment)+'</p>':'<p style="color:#98a2b3">Ha compartido su valoración por criterios, sin añadir comentario.</p>')+'</article>';
+ }).join(''):'<div class="community-empty">Todavía no hay valoraciones de usuarios para este activo. ¡Sé el primero en compartir tu opinión!</div>';
+ let form='';
+ if(invUser){
+  const fields=invReviewFactors.map(f=>{
+   const value=own?Number(own[f.key]):7;
+   return '<div class="community-rating-field"><label for="invReview_'+f.key+'"><span>'+f.label+'</span><output id="invReview_'+f.key+'_out">'+value+'/10</output></label><input id="invReview_'+f.key+'" name="'+f.key+'" type="range" min="1" max="10" step="1" value="'+value+'" oninput="document.getElementById(\'invReview_'+f.key+'_out\').textContent=this.value+\'/10\'"><small style="display:block;color:#98a2b3;font-size:10px;margin-top:2px">'+f.help+'</small></div>';
+  }).join('');
+  form='<form class="community-review-form" onsubmit="submitAssetReview(event,'+JSON.stringify(name).replace(/</g,'\\u003c')+')"><h3>'+(own?'Actualiza tu valoración':'Valora este activo')+'</h3><p>Puntúa los seis apartados del 1 al 10. Puedes editar tu valoración cuando quieras; solo se cuenta una por usuario y activo.</p><div class="community-rating-grid">'+fields+'</div><textarea id="invReviewComment" maxlength="1200" placeholder="Comparte tu experiencia, ventajas, inconvenientes o cualquier aspecto que consideres útil… (opcional)">'+invEsc(own?.comment||'')+'</textarea><div class="community-review-actions"><small>Tu puntuación se combinará con la de otros usuarios.</small><button class="community-submit" type="submit">'+(own?'Guardar cambios':'Publicar valoración')+'</button></div></form>';
+ }else{
+  form='<div class="community-login">Inicia sesión para puntuar los seis apartados y publicar una reseña. <button type="button" onclick="showView(\'account\')">Iniciar sesión</button></div>';
+ }
+ host.innerHTML='<div class="asset-community-head"><div><h2>Valoración de la comunidad</h2><p>Opiniones de usuarios registradas en Inversora. Se calcula con los mismos pesos de los seis criterios, pero de forma independiente a la nota editorial.</p></div><div class="community-score"><strong>'+(score===null?'—':score.toLocaleString('es-ES',{maximumFractionDigits:1})+'<small>/10</small>')+'</strong><span>'+(count?count+' '+(count===1?'valoración':'valoraciones'):'Sin valoraciones')+'</span></div></div>'+breakdown+'<div class="community-reviews-title"><h3>Reseñas de usuarios</h3><span>'+count+' '+(count===1?'opinión':'opiniones')+'</span></div><div class="community-review-list">'+list+'</div>'+form;
+}
+async function invLoadAssetReviews(name){
+ const host=document.getElementById('asset-community-reviews');if(!host)return;
+ host.innerHTML='<div class="community-empty">Cargando valoraciones de la comunidad…</div>';
+ try{
+  const {data,error}=await invDb.from('asset_reviews').select('*').eq('asset_key',name).eq('status','published').order('created_at',{ascending:false}).limit(200);
+  if(error)throw error;
+  const reviews=data||[],ids=[...new Set(reviews.map(r=>r.user_id))];let profiles={};
+  if(ids.length){const {data:people,error:profileError}=await invDb.from('profiles').select('id,display_name,avatar_url').in('id',ids);if(profileError)console.warn('No se pudieron cargar los nombres de las reseñas:',profileError);(people||[]).forEach(p=>profiles[p.id]=p)}
+  invAssetReviewCache[name]={reviews,profiles};
+  invRenderAssetReviews(name,reviews,profiles);
+ }catch(e){
+  console.error('Asset reviews:',e);
+  host.innerHTML='<div class="community-empty">No se han podido cargar las reseñas ahora mismo. Comprueba tu conexión y vuelve a intentarlo.</div>';
+ }
+}
+async function submitAssetReview(event,name){
+ event.preventDefault();
+ if(!invUser){showView('account');return}
+ const form=event.currentTarget,button=form.querySelector('button[type="submit"]');
+ const payload={asset_key:name,asset_name:name,user_id:invUser.id,comment:(document.getElementById('invReviewComment')?.value||'').trim()||null,status:'published',updated_at:new Date().toISOString()};
+ invReviewFactors.forEach(f=>{payload[f.key]=Number(document.getElementById('invReview_'+f.key)?.value||7)});
+ if(button){button.disabled=true;button.textContent='Publicando…'}
+ try{
+  const {error}=await invDb.from('asset_reviews').upsert(payload,{onConflict:'asset_key,user_id'});
+  if(error)throw error;
+  await invLoadAssetReviews(name);
+  invNotice('Tu valoración se ha guardado correctamente.');
+ }catch(e){
+  console.error('Save asset review:',e);
+  invNotice('No se ha podido guardar la valoración. '+(e.message||'Inténtalo de nuevo.'));
+  if(button){button.disabled=false;button.textContent='Reintentar'}
+ }
+}
+const invOpenDetailWithReviews=openDetail;
+openDetail=function(name){
+ invOpenDetailWithReviews(name);
+ const overview=document.getElementById('asset-summary');
+ if(!overview)return;
+ overview.insertAdjacentHTML('afterend','<section class="asset-section asset-community" id="asset-community-reviews" aria-live="polite"></section>');
+ invLoadAssetReviews(name);
+};
 
 </script>
 <div id="scoreMethodModal" class="score-modal" hidden onclick="if(event.target===this)closeScoreBreakdown()"><section class="score-modal-card" role="dialog" aria-modal="true" aria-labelledby="scoreModalTitle"><button type="button" class="score-modal-close" aria-label="Cerrar explicación" onclick="closeScoreBreakdown()">×</button><div id="scoreModalContent"></div></section></div>
