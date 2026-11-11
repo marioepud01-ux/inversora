@@ -606,6 +606,95 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 @media(max-width:480px){.asset-overview-panel{grid-template-columns:1fr!important}.asset-overview-copy{grid-column:auto}.asset-community-compact{min-height:140px}}
 </style>
 
+
+<style id="inversora-home-redesign-2026">
+/* Inicio: nueva jerarquía visual. El hero azul se conserva sin cambios. */
+#home>.home-welcome{display:flex;justify-content:space-between;align-items:center;gap:24px;margin:0 0 22px;padding:22px 2px 24px;border-bottom:1px solid #e9edf4}
+#home .home-kicker{display:block;color:#155eef;font-size:10px;font-weight:850;letter-spacing:.13em;line-height:1.4}
+#home .home-welcome h2{margin:7px 0 7px;font-size:clamp(22px,2.5vw,29px);letter-spacing:-.85px;line-height:1.2;color:#172b4d}
+#home .home-welcome p{margin:0;color:#667085;font-size:14px;line-height:1.55}
+#home .home-welcome-flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+#home .home-welcome-flow span{display:flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid #e7edf7;background:#fff;border-radius:10px;color:#475467;font-size:12px;font-weight:700;white-space:nowrap}
+#home .home-welcome-flow i{display:grid;place-items:center;width:21px;height:21px;border-radius:7px;background:#edf3ff;color:#155eef;font-size:11px;font-style:normal}
+#home>.home-block{margin:0 0 23px;padding:23px 24px 22px;background:#fff;border:1px solid #e7ebf2;border-radius:19px;box-shadow:0 4px 16px rgba(16,24,40,.035)}
+#home .home-block-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:0 0 18px}
+#home .home-block-heading h2{margin:5px 0 5px;color:#172b4d;font-size:clamp(20px,2.2vw,25px);line-height:1.2;letter-spacing:-.7px}
+#home .home-block-heading p{margin:0;color:#667085;font-size:13px;line-height:1.5}
+#home .home-block-count{flex:none;padding:7px 10px;border-radius:8px;background:#f5f7fb;color:#667085;font-size:11px;font-weight:700}
+#home .home-catalog-block .category-grid{gap:12px}
+#home .home-catalog-block .category-tile-v2{min-height:208px;padding:17px;border-radius:16px;box-shadow:none;background:linear-gradient(145deg,#fff,#fafbfe);border-color:#e8edf5}
+#home .home-catalog-block .category-tile-v2:hover,#home .home-catalog-block .category-tile-v2.selected{box-shadow:0 8px 20px rgba(21,94,239,.08);transform:translateY(-2px)}
+#home .home-catalog-block .category-tile-v2 .cat-icon{width:42px;height:42px;border-radius:12px;font-size:22px}
+#home .home-catalog-block .category-tile-v2 strong{font-size:15px}
+#home .home-catalog-block .category-tile-v2 .category-description{font-size:12px}
+#home .home-catalog-block .category-examples{font-size:10.5px;padding:7px 8px}
+#home .home-subtype-panel{margin-top:15px;padding:15px 16px;border-radius:14px;background:#f8faff;border:1px solid #e8eef9;box-shadow:none}
+#home .home-subtype-panel .subtype-panel-head{margin-bottom:10px}
+#home .home-subtype-panel .subtype-panel-head b{font-size:13px}
+#home .home-subtype-panel .subtype-panel-head small{font-size:11px}
+#home .home-subtype-panel .subtype-chip{padding:7px 10px;font-size:11px;border-radius:8px;background:#fff}
+#home .home-goals-block{padding-top:21px;padding-bottom:21px}
+#home .home-block-heading.compact{margin-bottom:14px}
+#home .home-goal-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+#home .home-goal{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0;padding:13px 12px;border:1px solid #e8edf4;border-radius:12px;background:#fff;text-align:left;transition:border-color .18s,background .18s,transform .18s}
+#home .home-goal:hover{border-color:#b7ccf5;background:#f8faff;transform:translateY(-2px)}
+#home .home-goal>span{display:grid;place-items:center;width:28px;height:28px;margin-bottom:3px;border-radius:9px;background:#eef4ff;color:#155eef;font-size:17px}
+#home .home-goal b{color:#344054;font-size:12px;line-height:1.35}
+#home .home-goal small{color:#7b8494;font-size:10.5px;line-height:1.4}
+#home .home-text-link{flex:none;padding:7px 0;background:transparent;color:#155eef;font-size:12px;font-weight:750}
+#home .home-text-link span{margin-left:4px}
+#home .home-featured-block .grid{gap:12px}
+#home .home-featured-block .card{min-height:150px;padding:17px;border:1px solid #e8edf4;border-radius:14px;box-shadow:none}
+#home .home-featured-block .card:hover{border-color:#b7ccf5;box-shadow:0 8px 20px rgba(21,94,239,.07)}
+#home .home-compare-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+#home .home-compare-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-height:165px;padding:16px 17px;border:1px solid #e8edf4;border-radius:14px;background:#fbfcfe;text-align:left;transition:border-color .18s,box-shadow .18s,transform .18s}
+#home .home-compare-card:hover{border-color:#b7ccf5;background:#fff;box-shadow:0 8px 20px rgba(21,94,239,.07);transform:translateY(-2px)}
+#home .home-compare-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:#eef4ff;color:#155eef;font-size:18px}
+#home .home-compare-label{color:#7b8494;font-size:9px;font-weight:850;letter-spacing:.1em}
+#home .home-compare-card>b{padding-right:14px;color:#344054;font-size:14px;line-height:1.35}
+#home .home-compare-card>small{color:#667085;font-size:11px;line-height:1.45}
+#home .home-card-arrow{position:absolute;right:15px;top:17px;color:#98a2b3;font-size:14px}
+#home .home-learning{display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:25px;margin:0 0 22px;padding:22px 24px;border:1px solid #e4ebf7;border-radius:17px;background:linear-gradient(110deg,#f7f9ff,#fff 72%)}
+#home .home-learning h2{margin:6px 0 8px;color:#172b4d;font-size:21px;letter-spacing:-.6px}
+#home .home-learning p{max-width:660px;margin:0;color:#667085;font-size:12px;line-height:1.65}
+#home .home-learning-points{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+#home .home-learning-points span{display:flex;align-items:center;gap:7px;color:#475467;font-size:11px;line-height:1.4}
+#home .home-learning-points i{display:grid;place-items:center;flex:none;width:18px;height:18px;border-radius:50%;background:#e9f8ef;color:#039855;font-size:10px;font-style:normal;font-weight:800}
+#home .home-seo-compact{max-width:900px;margin:0 auto 12px;padding:5px 4px 10px}
+#home .home-seo-compact h2{margin:0 0 7px;color:#475467;font-size:14px;font-weight:750;letter-spacing:-.15px}
+#home .home-seo-compact p{margin:0;color:#7b8494;font-size:11px;line-height:1.65}
+@media(max-width:900px){#home .home-goal-list{grid-template-columns:repeat(3,minmax(0,1fr))}#home .home-compare-grid{grid-template-columns:1fr 1fr}#home .home-compare-card:last-child{grid-column:1/-1;min-height:130px}}
+@media(max-width:650px){
+ #home>.home-welcome{display:block;padding:17px 1px 19px;margin-bottom:16px}
+ #home .home-welcome h2{font-size:22px}
+ #home .home-welcome-flow{justify-content:flex-start;margin-top:13px}
+ #home .home-welcome-flow span{font-size:11px;padding:7px 9px}
+ #home>.home-block{padding:18px 15px 16px;margin-bottom:15px;border-radius:16px}
+ #home .home-block-heading{display:block;margin-bottom:14px}
+ #home .home-block-heading h2{font-size:20px}
+ #home .home-block-count{display:inline-block;margin-top:10px}
+ #home .home-catalog-block .category-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #home .home-catalog-block .category-tile-v2{min-height:195px;padding:12px 10px;gap:8px}
+ #home .home-catalog-block .category-tile-v2 .cat-icon{width:36px;height:36px;font-size:19px}
+ #home .home-catalog-block .category-tile-v2 strong{font-size:13px}
+ #home .home-catalog-block .category-tile-v2 .category-description{font-size:10.5px}
+ #home .home-catalog-block .category-examples{font-size:9.5px}
+ #home .home-subtype-panel{padding:12px}
+ #home .home-goal-list{grid-template-columns:1fr 1fr;gap:7px}
+ #home .home-goal{padding:11px 10px}
+ #home .home-goal b{font-size:11px}
+ #home .home-goal small{font-size:10px}
+ #home .home-compare-grid{grid-template-columns:1fr}
+ #home .home-compare-card,#home .home-compare-card:last-child{grid-column:auto;min-height:132px}
+ #home .home-learning{grid-template-columns:1fr;gap:15px;padding:18px 16px}
+ #home .home-learning h2{font-size:19px}
+ #home .home-learning-points{gap:9px}
+ #home .home-text-link{margin-top:9px}
+ #home .home-seo-compact{padding:4px 2px}
+}
+@media(prefers-reduced-motion:reduce){#home .home-goal,#home .home-compare-card{transition:none}}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -653,30 +742,42 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 <p>Explora opciones, compara sus características y simula escenarios en un solo lugar. Sin jerga innecesaria.</p>
 <div class="quick-search"><input id="heroSearch" placeholder="Prueba: fondos indexados, alquiler, dividendos, oro…" onkeydown="if(event.key==='Enter') doSearch(this.value)" aria-label="Buscar inversiones"><button onclick="doSearch(document.getElementById('heroSearch').value)">Buscar inversiones ↗</button></div><div class="hero-stats"><div class="hero-stat"><b>4</b><span>grandes categorías</span></div><div class="hero-stat"><b>20</b><span>subcategorías</span></div><div class="hero-stat"><b>70</b><span>tipos de inversión</span></div><div class="hero-stat"><b>1</b><span>sitio para explorar y comparar</span></div></div>
 </section>
-<section class="home-map-intro"><div><span class="home-map-kicker">Explora el universo de inversión</span><h2>Encuentra tu forma de invertir.</h2><p>Descubre las categorías, compara alternativas y entiende qué implica cada inversión antes de decidir.</p></div><div class="home-map-steps"><span><b>1</b> Entiende</span><span><b>2</b> Compara</span><span><b>3</b> Simula</span></div></section>
-<section class="section home-section home-section-categories"><div class="section-head"><h2>Categorías de inversión</h2><small>Explora cada categoría y descubre sus distintas formas de invertir</small></div><div id="categoryGrid" class="category-grid"></div><div class="subtype-panel"><div class="subtype-panel-head"><div><b id="subtypeTitle">Todos los tipos de inversión</b><div><small style="color:var(--muted)">Selecciona un subtipo para ver solo esas alternativas</small></div></div><button class="chip" onclick="clearCategorySelection()">Ver todas</button></div><div id="subtypeChips" class="subtype-chips"></div></div></section>
-<section class="section home-section home-section-goals"><div class="section-head"><h2>Explora por objetivo</h2></div><div class="chips">
-<button class="chip" onclick="filterGoal('Ingresos')">💶 Generar ingresos</button><button class="chip" onclick="filterGoal('Crecimiento')">📈 Hacer crecer patrimonio</button><button class="chip" onclick="filterGoal('Liquidez')">🛡️ Mantener liquidez</button><button class="chip" onclick="filterGoal('Inmobiliaria')">🏠 Invertir en inmobiliario</button><button class="chip" onclick="filterGoal('Pasiva')">⏱️ Poco mantenimiento</button>
-</div></section>
-<section class="section home-section home-section-featured"><div class="section-head"><h2>Ideas para empezar a explorar</h2><small>Selección del catálogo; no es un ranking ni una recomendación</small></div><div id="homeGrid" class="grid"></div></section>
-<section class="section home-section home-section-comparisons"><div class="section-head"><h2>Comparaciones útiles</h2></div><div class="grid">
-<div class="card" onclick="startCompare(['ETFs indexados','Viviendas para alquiler de larga duración'])"><span class="tag">Comparar</span><h3>ETF global vs vivienda en alquiler</h3><p>Liquidez, riesgo, capital, esfuerzo y potencial de rentabilidad.</p></div>
-<div class="card" onclick="startCompare(['Depósitos bancarios','Letras del Tesoro'])"><span class="tag">Comparar</span><h3>Depósito vs Letras del Tesoro</h3><p>Dos alternativas conservadoras, vistas con los mismos criterios.</p></div>
-<div class="card" onclick="showView('sim')"><span class="tag">Simular</span><h3>¿Qué pasa con 10.000 €?</h3><p>Prueba distintos escenarios de crecimiento a largo plazo.</p></div>
-</div></section>
-<section class="section" aria-labelledby="seo-inversiones-title" style="margin:34px 0 12px;padding:26px;background:#fff;border:1px solid #e4e7ec;border-radius:20px">
-<h2 id="seo-inversiones-title" style="font-size:24px;margin:0 0 12px">Aprende a invertir y compara alternativas con criterio</h2>
-<p style="color:#475467;line-height:1.75;margin:0 0 14px">Inversora es una plataforma de educación financiera diseñada para ayudarte a entender cómo funcionan las distintas inversiones. Puedes explorar sus características, conocer sus riesgos y costes, comparar alternativas y probar escenarios con herramientas de simulación. La información es educativa y no sustituye el asesoramiento financiero personalizado.</p>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px">
-<div><h3 style="font-size:16px;margin:0 0 6px">Fondos de inversión y ETF</h3><p style="font-size:14px;color:#667085;line-height:1.65;margin:0">Conoce las diferencias entre fondos y fondos cotizados, la gestión indexada y activa, la diversificación, las comisiones y los principales riesgos.</p></div>
-<div><h3 style="font-size:16px;margin:0 0 6px">Acciones y renta fija</h3><p style="font-size:14px;color:#667085;line-height:1.65;margin:0">Aprende qué implica invertir en empresas, bonos, letras y otros instrumentos de renta fija, y qué factores pueden afectar a su rentabilidad.</p></div>
-<div><h3 style="font-size:16px;margin:0 0 6px">Inmuebles y otras inversiones</h3><p style="font-size:14px;color:#667085;line-height:1.65;margin:0">Explora alternativas como viviendas en alquiler, plazas de garaje, liquidez, materias primas y otros activos, atendiendo a sus costes y riesgos.</p></div>
-<div><h3 style="font-size:16px;margin:0 0 6px">Comparador y simulador</h3><p style="font-size:14px;color:#667085;line-height:1.65;margin:0">Compara productos con criterios comunes y simula cómo podrían evolucionar tus aportaciones bajo diferentes hipótesis, sin confundir proyecciones con resultados garantizados.</p></div>
-</div>
-<p style="font-size:13px;color:#667085;line-height:1.6;margin:16px 0 0">Empieza explorando las categorías, consulta el glosario financiero o utiliza las herramientas de Inversora para comprender mejor cada alternativa.</p>
+<section class="home-welcome">
+  <div class="home-welcome-copy"><span class="home-kicker">EXPLORA A TU RITMO</span><h2>Todo el universo de inversión, más fácil de entender.</h2><p>Empieza por una categoría, descubre sus alternativas y consulta lo importante de cada una.</p></div>
+  <div class="home-welcome-flow"><span><i>1</i> Explora</span><span><i>2</i> Comprende</span><span><i>3</i> Compara</span></div>
 </section>
-</main>
-
+<section class="home-block home-catalog-block">
+  <div class="home-block-heading"><div><span class="home-kicker">EL CATÁLOGO</span><h2>¿Qué te interesa explorar?</h2><p>Cuatro grandes áreas para encontrar la inversión que buscas.</p></div><span class="home-block-count">4 categorías · 20 subcategorías · 70 tipos</span></div>
+  <div id="categoryGrid" class="category-grid"></div>
+  <div class="subtype-panel home-subtype-panel"><div class="subtype-panel-head"><div><b id="subtypeTitle">Todos los tipos de inversión</b><div><small style="color:var(--muted)">Accede directamente a un tipo de inversión</small></div></div><button class="chip" onclick="clearCategorySelection()">Ver todas</button></div><div id="subtypeChips" class="subtype-chips"></div></div>
+</section>
+<section class="home-block home-goals-block">
+  <div class="home-block-heading compact"><div><span class="home-kicker">TAMBIÉN PUEDES EMPEZAR POR AQUÍ</span><h2>¿Qué quieres conseguir?</h2><p>Encuentra alternativas según tu objetivo.</p></div></div>
+  <div class="home-goal-list">
+    <button class="home-goal" onclick="filterGoal('Ingresos')"><span>↗</span><b>Generar ingresos</b><small>Buscar rentas o cobros periódicos</small></button>
+    <button class="home-goal" onclick="filterGoal('Crecimiento')"><span>⌁</span><b>Hacer crecer mi patrimonio</b><small>Priorizar el crecimiento a largo plazo</small></button>
+    <button class="home-goal" onclick="filterGoal('Liquidez')"><span>◷</span><b>Mantener liquidez</b><small>Dar prioridad al acceso al dinero</small></button>
+    <button class="home-goal" onclick="filterGoal('Inmobiliaria')"><span>⌂</span><b>Invertir en inmuebles</b><small>Explorar opciones inmobiliarias</small></button>
+    <button class="home-goal" onclick="filterGoal('Pasiva')"><span>⏱</span><b>Dedicar poco tiempo</b><small>Buscar inversiones de baja gestión</small></button>
+  </div>
+</section>
+<section class="home-block home-featured-block">
+  <div class="home-block-heading"><div><span class="home-kicker">PARA EMPEZAR</span><h2>Algunas inversiones que puedes descubrir</h2><p>Una muestra del catálogo para dar el primer paso.</p></div><button class="home-text-link" onclick="showView('explore')">Ver todo el catálogo <span>↗</span></button></div>
+  <div id="homeGrid" class="grid"></div>
+</section>
+<section class="home-block home-compare-block">
+  <div class="home-block-heading"><div><span class="home-kicker">PONLAS EN CONTEXTO</span><h2>Compara antes de decidir</h2><p>Entiende las diferencias entre alternativas habituales.</p></div><button class="home-text-link" onclick="showView('compare')">Ir al comparador <span>↗</span></button></div>
+  <div class="home-compare-grid">
+    <button class="home-compare-card" onclick="startCompare(['ETFs indexados','Viviendas para alquiler de larga duración'])"><span class="home-compare-icon">↔</span><span class="home-compare-label">DOS FORMAS DE INVERTIR</span><b>ETF global o vivienda en alquiler</b><small>Liquidez, capital, riesgo y dedicación.</small><span class="home-card-arrow">↗</span></button>
+    <button class="home-compare-card" onclick="startCompare(['Depósitos bancarios','Letras del Tesoro'])"><span class="home-compare-icon">≋</span><span class="home-compare-label">ALTERNATIVAS CONSERVADORAS</span><b>Depósito o Letras del Tesoro</b><small>Plazos, disponibilidad y remuneración.</small><span class="home-card-arrow">↗</span></button>
+    <button class="home-compare-card" onclick="showView('sim')"><span class="home-compare-icon">⌁</span><span class="home-compare-label">PRUEBA ESCENARIOS</span><b>Simula cómo puede crecer tu dinero</b><small>Modifica capital, aportaciones y plazo.</small><span class="home-card-arrow">↗</span></button>
+  </div>
+</section>
+<section class="home-learning">
+  <div><span class="home-kicker">INFORMACIÓN CLARA, DECISIONES CON CRITERIO</span><h2>Entiende lo importante de cada inversión.</h2><p>Conoce cómo funciona cada alternativa, qué riesgos y costes tiene y qué factores pueden influir en sus resultados. Compara con criterios comunes y utiliza simulaciones para explorar distintos escenarios.</p></div>
+  <div class="home-learning-points"><span><i>✓</i> Características y funcionamiento</span><span><i>✓</i> Rentabilidad, riesgos y costes</span><span><i>✓</i> Liquidez y capital necesario</span><span><i>✓</i> Comparaciones y simulaciones</span></div>
+</section>
+<section class="home-seo-compact" aria-labelledby="seo-inversiones-title"><h2 id="seo-inversiones-title">Aprende a invertir y compara alternativas con criterio</h2><p>Inversora reúne información educativa sobre fondos, ETF, acciones, renta fija, inmuebles, negocios y otras inversiones. Explora sus características, conoce sus riesgos y costes y compara opciones antes de tomar tus propias decisiones. El contenido es informativo y no constituye asesoramiento financiero personalizado.</p></section>
 <main id="explore" class="view hidden"><section class="section tool-page"><div class="tool-hero explore-hero"><div><div class="eyebrow">Encuentra opciones que encajen contigo</div><h1>Explora el universo de inversión.</h1><p>Descubre alternativas por categoría, subtipo, nivel de riesgo, liquidez, ingresos potenciales y capital inicial.</p></div><div class="tool-hero-icon">⌕</div></div><div class="section-head"><div><h2>Catálogo de inversiones</h2><small id="count"></small></div></div><div class="explore-layout"><aside class="filters"><h3>Filtra el catálogo</h3><p class="filter-intro">Combina criterios para encontrar opciones que encajen contigo.</p><div class="filter-field"><label for="exploreSearch">Buscar por nombre o palabra clave</label><input id="exploreSearch" placeholder="Ej. alquiler, dividendos…" oninput="renderExplore()"></div><div class="filter-fields-grid"><div class="filter-field"><label for="cat">Categoría principal</label><select id="cat" onchange="updateSubtypeFilter();renderExplore()"><option value="">Todas</option><option>Mercados financieros</option><option>Inmuebles</option><option>Empresas y negocios</option><option>Alternativos</option></select></div><div class="filter-field"><label for="subcat">Subtipo</label><select id="subcat" onchange="renderExplore()"><option value="">Todos los subtipos</option></select></div><div class="filter-field"><label for="risk">Nivel de riesgo</label><select id="risk" onchange="renderExplore()"><option value="">Cualquiera</option><option>Bajo</option><option>Medio</option><option>Alto</option></select></div><div class="filter-field"><label for="incomeFilter">Ingresos periódicos</label><select id="incomeFilter" onchange="renderExplore()"><option value="">Cualquier nivel</option><option value="high">Sí, relevantes (≥ 5/10)</option><option value="low">Pocos o ninguno (&lt; 5/10)</option></select></div><div class="filter-field"><label for="liquidityFilter">Liquidez mínima</label><select id="liquidityFilter" onchange="renderExplore()"><option value="">Cualquiera</option><option value="4">Media o alta (≥ 4/10)</option><option value="7">Alta (≥ 7/10)</option></select></div><div class="filter-field"><label for="cashFilter">Cash flow mínimo</label><select id="cashFilter" onchange="renderExplore()"><option value="">Cualquiera</option><option value="3">≥ 3/10</option><option value="5">≥ 5/10</option><option value="7">≥ 7/10</option></select></div><div class="filter-field"><label for="capitalFilter">Capital inicial orientativo</label><select id="capitalFilter" onchange="renderExplore()"><option value="">Cualquier capital</option><option value="500">Hasta 500 €</option><option value="5000">Hasta 5.000 €</option><option value="20000">Hasta 20.000 €</option></select></div><div class="filter-field"><label for="effortFilter">Tiempo de gestión al mes</label><select id="effortFilter" onchange="renderExplore()"><option value="">Cualquiera</option><option value="low">Bajo (hasta 2 h)</option><option value="medium">Moderado (hasta 10 h)</option></select></div></div><div class="filter-actions"><button class="apply-filters" onclick="renderExplore()">Aplicar filtros</button><button class="clear-filters" onclick="clearFilters()">Limpiar</button></div></aside><div><div class="results-head"><strong id="resultsSummary">Todas las alternativas</strong><select id="sortBy" aria-label="Ordenar resultados" onchange="renderExplore()"><option value="score">Mejor nota orientativa</option><option value="risk">Menor riesgo</option><option value="liq">Mayor liquidez</option><option value="cash">Mayor cash flow</option><option value="name">Nombre A–Z</option></select></div><div id="activeFilters" class="active-filters"></div><div id="exploreGrid" class="grid"></div></div></div></section></main>
 
 <main id="detail" class="view hidden"></main>
