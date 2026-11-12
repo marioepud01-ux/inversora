@@ -1166,7 +1166,17 @@ async function sendInversoraMessage(ev){ev.preventDefault();const input=document
 /* Inversora production data layer — Supabase */
 const INV_SUPABASE_URL='https://uljmihttgktaidoreopk.supabase.co';
 const INV_SUPABASE_KEY='sb_publishable_oY8SaiUn6UWDs-ysKpv8ng__zZ1b1no';
-const invDb=window.supabase.createClient(INV_SUPABASE_URL,INV_SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+// La web debe seguir mostrando el catálogo aunque el CDN de Supabase no responda.
+const invSupabaseAvailable=!!(window.supabase&&typeof window.supabase.createClient==='function');
+function invUnavailableQuery(){
+ const result={data:[],error:new Error('El servicio de cuenta no está disponible. Comprueba tu conexión y recarga la página.')};
+ const query={select(){return query},insert(){return query},upsert(){return query},update(){return query},delete(){return query},eq(){return query},neq(){return query},in(){return query},order(){return query},limit(){return query},single(){return Promise.resolve(result)},maybeSingle(){return Promise.resolve(result)},then(resolve,reject){return Promise.resolve(result).then(resolve,reject)}};
+ return query;
+}
+const invDb=invSupabaseAvailable
+ ? window.supabase.createClient(INV_SUPABASE_URL,INV_SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})
+ : {auth:{onAuthStateChange(){return {data:{subscription:{unsubscribe(){}}}}},getSession:async()=>({data:{session:null},error:null}),signOut:async()=>({error:null}),signInWithPassword:async()=>({data:null,error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')}),signUp:async()=>({data:null,error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')}),signInWithOAuth:async()=>({data:null,error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')}),resend:async()=>({error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')})},from:()=>invUnavailableQuery()};
+if(!invSupabaseAvailable)console.error('Inversora: Supabase CDN no disponible; el catálogo seguirá funcionando en modo lectura.');
 let invUser=null, invProfile=null, invListsCache=[], invCommunityCache=[];
 const invEsc=escapeHtml;
 function invDisplayName(){const meta=invUser?.user_metadata||{};return String(invProfile?.display_name||meta.display_name||meta.full_name||meta.name||invUser?.email?.split('@')[0]||'Miembro').trim()||'Miembro'}
