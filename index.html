@@ -753,6 +753,11 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 .inv-footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;padding-top:16px;border-top:1px solid #ffffff24}.inv-footer-bottom>span{color:#fff;font-size:11px;font-weight:700}.inv-footer-bottom small{max-width:650px;color:#b7c5dc;font-size:10px;line-height:1.6}
 @media(max-width:700px){.inv-footer{margin:34px 0 0;padding:25px 21px 17px;border-radius:20px}.inv-footer-main{grid-template-columns:1fr 1fr;gap:25px 18px}.inv-footer-brand{grid-column:1/-1}.inv-footer-bottom{align-items:flex-start;flex-direction:column;gap:7px}.inv-footer:after{right:-10px;font-size:160px}}
 @media(prefers-reduced-motion:reduce){.inv-footer-column button{transition:none}}
+/* Igual que la cabecera: banda de lado a lado, con contenido alineado al ancho central */
+.inv-footer{width:100vw;max-width:none;margin:48px 0 0 calc(50% - 50vw);padding:34px max(22px,calc((100vw - 1500px)/2)) 18px;border-radius:0}
+.inv-footer-logo,.inv-footer-logo>span,.inv-footer-logo>span:last-child>span{color:#fff!important}
+.inv-footer-mark{color:#fff!important}
+@media(max-width:700px){.inv-footer{width:100vw;margin:34px 0 0 calc(50% - 50vw);padding:25px 21px 17px;border-radius:0}}
 </style>
 </head>
 <body>
