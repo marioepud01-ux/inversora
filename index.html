@@ -932,142 +932,35 @@ td,th{border-color:#e7eef8!important}
 }
 </style>
 
-<style id="inversora-deep-section-polish">
-/* Segunda pasada: acabado premium para los bloques interiores de todas las vistas */
-:root{
- --inv-blue-50:#f3f7ff;--inv-blue-100:#e8f1ff;--inv-blue-200:#d3e3ff;
- --inv-blue-300:#b6d0ff;--inv-blue-700:#174ea6;--inv-ink:#17345f;
- --inv-border:#dce7f7;--inv-shadow:0 9px 26px rgba(26,67,130,.065);
- --inv-shadow-hover:0 16px 34px rgba(21,75,155,.12);
+
+<style id="inversora-glossary-card-system">
+/* Un único lenguaje visual para todos los cuadros, inspirado en las tarjetas del glosario */
+:root{--inv-card-line:#dce8f8;--inv-card-accent:#8bb5f5;--inv-card-ink:#183967;--inv-card-shadow:0 5px 18px rgba(30,75,140,.055)}
+.view :is(.term,.card,.category-tile,.category-tile-v2,.home-goal,.home-compare-card,.subtype-panel,.filters,.form,.metric,.detail,.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,.asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,.asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.compare-picker,.compare-card,.compare-panel,.compare-table-wrap,.tool-card,.tool-hub-card,.sim-form,.sim-output,.sim-breakdown,.sim-report,.sim-report-item,.sim-selected-card,.disclaimer-card,.glossary-enhanced,.gloss-search-wrap,.community-compose,.community-post,.community-side-card,.community-review,.community-review-form,.community-stat,.account-panel,.account-card,.account-dashboard,.profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,.auth-form,.social-auth,.auth-success-panel,.favorites-empty,.community-empty,.empty){
+ position:relative;overflow:hidden;border:1px solid var(--inv-card-line)!important;border-radius:16px!important;
+ background-image:linear-gradient(90deg,var(--inv-card-accent) 0 3px,transparent 3px),linear-gradient(145deg,#fff 0%,#f8fbff 100%)!important;
+ box-shadow:var(--inv-card-shadow)!important;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease!important
 }
-.view:not(.hidden){animation:invViewEnter .36s ease both}
-@keyframes invViewEnter{from{opacity:.72;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-.view :is(.section-head,.tool-section-head,.compare-section-head,.asset-section-head,.community-feed-head,.profile-section-heading){
- padding-bottom:12px;border-bottom:1px solid #e7eef9;margin-bottom:17px
+.view :is(.term,.card,.category-tile,.category-tile-v2,.home-goal,.home-compare-card,.asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-mini-fact,.asset-barrier-factor,.compare-card,.tool-card,.tool-hub-card,.sim-report-item,.community-post,.community-review,.community-stat,.profile-shortcut):hover{
+ transform:translateY(-2px);border-color:#b5cff2!important;box-shadow:0 9px 23px rgba(21,94,239,.09)!important
 }
-.view :is(.section h2,.tool-section-head h2,.asset-section-head h2,.community-reviews-title h3){
- color:var(--inv-ink);font-family:Manrope,'DM Sans',sans-serif;font-weight:800;letter-spacing:-.55px
+.view :is(.term b,.card h3,.category-tile strong,.category-tile-v2 strong,.home-goal b,.home-compare-card strong,.asset-section-head h2,.asset-info-card h3,.asset-quick-value,.asset-explainer-card h3,.asset-pros-title,.asset-cons-title,.compare-card h3,.tool-card h3,.tool-hub-card h3,.community-post h3,.profile-section-heading,.account-card h3,.sim-report-item strong){
+ font-family:'Manrope','DM Sans',sans-serif!important;color:var(--inv-card-ink)!important;font-weight:800!important;letter-spacing:-.25px
 }
-.view :is(.tool-hero,.sim-hero,.glossary-hero,.community-hero,.account-hero){
- position:relative;isolation:isolate;overflow:hidden;border:1px solid #cbdfff!important;
- border-radius:24px!important;background:radial-gradient(circle at 88% 5%,#6da1ff66,transparent 32%),linear-gradient(120deg,#102b57,#155eef 72%,#4386f5)!important;
- box-shadow:0 17px 38px rgba(21,94,239,.16)!important;color:white!important
+.view :is(.term p,.card p,.category-tile small,.asset-info-card p,.asset-explainer-card p,.asset-section p,.compare-card p,.tool-card p,.tool-hub-card p,.community-post p,.community-review p,.sim-report-item p){
+ font-family:'DM Sans',sans-serif!important;line-height:1.6!important;color:#637895
 }
-.view :is(.tool-hero,.sim-hero,.glossary-hero,.community-hero,.account-hero) :is(h1,h2,h3,p,.eyebrow,.tool-hero-icon){
- color:white!important
+.view :is(.term,.card,.category-tile,.category-tile-v2,.home-goal,.home-compare-card,.asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,.asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.compare-card,.tool-card,.tool-hub-card,.sim-report-item,.community-post,.community-review,.community-stat,.profile-shortcut){padding:18px}
+.view :is(.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,.compare-picker,.compare-panel,.sim-form,.sim-output,.sim-breakdown,.sim-report,.glossary-enhanced,.community-compose,.community-side-card,.community-review-form,.account-panel,.account-card,.account-dashboard,.profile-card,.profile-editor,.profile-settings-section,.auth-form,.social-auth,.auth-success-panel){padding:20px}
+.view :is(.asset-quick-icon,.asset-info-card-icon,.asset-section-icon,.tool-hub-icon,.cat-icon,.home-goal-icon,.profile-shortcut-icon,.profile-section-icon){
+ background:#edf4ff!important;border:1px solid #dce9fb!important;color:#155eef!important;border-radius:11px!important
 }
-.view :is(.tool-hero,.sim-hero,.glossary-hero) .tool-hero-icon{
- background:#ffffff18!important;border:1px solid #ffffff35!important;border-radius:17px!important;
- box-shadow:inset 0 1px #ffffff24,0 8px 20px #071d4733
-}
-.view :is(.compare-picker,.compare-table-wrap,.compare-panel,.sim-form,.sim-output,.sim-result,.sim-breakdown,.disclaimer-card,
-.glossary-enhanced,.gloss-search-wrap,.account-panel,.account-card,.profile-card,.profile-editor,.community-side-card,
-.community-compose,.community-post,.community-review-form,.asset-overview-panel,.asset-ratings-panel,.asset-info-card,
-.asset-tax-card,.asset-pros-card,.asset-cons-card,.asset-explainer-card,.asset-quick-card,.sim-report,.sim-selected-card){
- background:linear-gradient(145deg,#fff 0%,#f8fbff 100%)!important;
- border:1px solid var(--inv-border)!important;border-radius:19px!important;
- box-shadow:var(--inv-shadow)!important
-}
-.view :is(.compare-card,.tool-hub-card,.tool-card,.home-goal,.home-compare-card,.asset-mini-fact,.asset-barrier-factor,
-.community-stat,.account-stat,.profile-shortcut,.profile-settings-section,.sim-report-item,.term){
- background:linear-gradient(145deg,#fff,#f7faff)!important;border:1px solid #dfe9f8!important;
- border-radius:16px!important;box-shadow:0 4px 15px rgba(28,72,139,.045)!important;
- transition:transform .24s ease,border-color .24s ease,box-shadow .24s ease!important
-}
-.view :is(.compare-card,.tool-hub-card,.tool-card,.home-goal,.home-compare-card,.asset-quick-card,.asset-info-card,.asset-explainer-card,.profile-shortcut):hover{
- transform:translateY(-3px);border-color:#a9c7f7!important;box-shadow:var(--inv-shadow-hover)!important
-}
-.view :is(.tool-hub-icon,.asset-section-icon,.asset-quick-icon,.asset-info-card-icon,.community-compose-avatar,
-.profile-shortcut-icon,.profile-section-icon,.community-topic-dot,.asset-intro-icon){
- background:linear-gradient(145deg,#e9f2ff,#dceaff)!important;color:#155eef!important;
- border:1px solid #d5e5ff!important;border-radius:13px!important
-}
-.view :is(.asset-hero,.asset-intro,.asset-overview){
- border:1px solid #cbdfff!important;border-radius:24px!important;overflow:hidden;
- background:radial-gradient(circle at 92% 8%,#8bb6ff55,transparent 34%),linear-gradient(130deg,#102b57,#155eef 72%,#397ff0)!important;
- box-shadow:0 16px 38px rgba(21,94,239,.15)!important;color:#fff!important
-}
-.view :is(.asset-hero,.asset-intro,.asset-overview) :is(h1,h2,h3,p,span,.asset-breadcrumb,.asset-lead,.asset-top-note,.asset-overview-kicker){
- color:inherit
-}
-.view .asset-detail{display:grid;gap:18px}
-.view :is(.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community){
- border:1px solid #d8e5f6!important;border-radius:20px!important;
- background:linear-gradient(150deg,#fff 0%,#f9fbff 100%)!important;
- box-shadow:var(--inv-shadow)!important;padding:clamp(17px,2.5vw,25px)!important
-}
-.view .asset-section:nth-of-type(even){background:linear-gradient(145deg,#fafdff,#f2f7ff)!important}
-.view :is(.asset-quick-card,.asset-info-card,.asset-mini-fact){
- padding:15px!important
-}
-.view :is(.asset-quick-label,.asset-card-eyebrow,.asset-overview-kicker){
- color:#55719b!important;font-weight:800!important;letter-spacing:.055em;text-transform:uppercase;font-size:11px
-}
-.view :is(.asset-quick-value,.asset-mini-fact strong,.asset-info-card strong){
- color:#174ea6!important;font-family:Manrope,'DM Sans',sans-serif;font-weight:800!important
-}
-.view :is(.asset-pros-card,.asset-cons-card){padding:18px!important}
-.view .asset-pros-card{background:linear-gradient(145deg,#f1fbf6,#fff)!important;border-color:#cceedd!important}
-.view .asset-cons-card{background:linear-gradient(145deg,#fff8f5,#fff)!important;border-color:#f3ded5!important}
-.view :is(.asset-list li,.asset-cost-row,.asset-tax-card,.asset-disclaimer){
- border-color:#e5edf8!important
-}
-.view :is(.asset-meter-track,.community-factor-track,.compare-track){background:#e8eff9!important;border-radius:99px!important;overflow:hidden}
-.view :is(.asset-meter-track i,.community-factor-track i){background:linear-gradient(90deg,#74a7ff,#155eef)!important;border-radius:99px}
-.view .asset-jump-nav{background:#ffffffed!important;border:1px solid #dce7f7!important;border-radius:15px!important;backdrop-filter:blur(12px)}
-.view .asset-jump-nav a{border-radius:9px!important}
-.view .asset-next-nav{border-top:1px solid #e4edf9!important;padding-top:18px!important}
-.view :is(.compare-option,.compare-option-wrap){border-color:#dce7f7!important;border-radius:13px!important}
-.view .compare-option.chosen{background:#edf4ff!important;border-color:#8eb6fa!important}
-.view .compare-score-row{background:linear-gradient(120deg,#eff5ff,#f8fbff)!important;border:1px solid #dce8fb!important;border-radius:15px!important}
-.view .compare-table-wrap{overflow:auto}
-.view .compare-table{box-shadow:none!important}
-.view :is(.sim-form,.sim-output,.sim-result,.sim-breakdown){padding:clamp(17px,2.5vw,24px)!important}
-.view .sim-result{background:radial-gradient(circle at 90% 0%,#2f5da8,transparent 38%),linear-gradient(135deg,#10264a,#174b9b)!important;color:#fff!important}
-.view .sim-result :is(h2,h3,p,span,b,strong){color:inherit}
-.view :is(.sim-report-item,.sim-selected-card){padding:14px!important}
-.view .glossary-enhanced{padding:20px!important}
-.view .term{padding:17px!important}
-.view .term b{color:#173d78!important;font-family:Manrope,'DM Sans',sans-serif;font-weight:800}
-.view .term p{line-height:1.6!important}
-.view :is(.community-post,.community-compose,.community-review,.community-side-card){padding:18px!important}
-.view .community-post{border-radius:18px!important}
-.view .community-post-head{padding-bottom:12px;border-bottom:1px solid #e8eef7}
-.view .community-stat{padding:15px!important}
-.view .community-review{background:#f8fbff!important;border:1px solid #e2ebf8!important;border-radius:14px!important;padding:14px!important;margin:9px 0!important}
-.view .community-score{background:linear-gradient(145deg,#edf4ff,#fff)!important;border:1px solid #d4e4fb!important;border-radius:17px!important}
-.view :is(.community-review-score,.community-score strong){color:#155eef!important}
-.view :is(.profile-welcome,.profile-identity){background:linear-gradient(125deg,#edf4ff,#fff)!important;border:1px solid #d8e6f9!important;border-radius:18px!important;padding:18px!important}
-.view .profile-settings-section{padding:18px!important}
-.view .profile-section-heading{color:#1a427e!important}
-.view :is(.auth-form,.auth-success-panel,.social-auth,.account-dashboard){
- background:linear-gradient(145deg,#fff,#f7faff)!important;border:1px solid #dce7f7!important;border-radius:19px!important;box-shadow:var(--inv-shadow)!important;padding:20px!important
-}
-.view .auth-submit{background:linear-gradient(135deg,#155eef,#397ff0)!important;border-radius:12px!important;box-shadow:0 7px 16px #155eef2b!important}
-.view :is(.auth-tabs button,.profile-nav-btn,.fav-list-button){border-radius:11px!important}
-.view :is(.favorites-empty,.community-empty,.empty){
- background:linear-gradient(145deg,#f8fbff,#fff)!important;border:1px dashed #bcd2f2!important;border-radius:18px!important;padding:28px!important
-}
-.view :is(.score-modal-card,.asset-community-modal-card){
- border:1px solid #d5e4fa!important;border-radius:23px!important;
- box-shadow:0 24px 70px rgba(10,35,78,.24)!important;background:linear-gradient(150deg,#fff,#f7faff)!important
-}
-.view :is(.score-modal-close,.asset-community-modal-close,.remove-compare){
- border:1px solid #dce7f7!important;border-radius:10px!important;background:#f2f6fd!important;color:#315b98!important
-}
-.view .inv-footer{margin-top:auto}
-.view :is(.asset-actions,.detail-actions,.account-actions,.profile-account-actions,.community-quick-actions,.filter-actions){
- gap:10px!important;flex-wrap:wrap
-}
-.view :is(.asset-actions button,.detail-actions button,.account-actions button,.profile-edit-cta,.profile-save-row button){
- border-radius:11px!important
-}
+.view :is(.asset-quick-label,.asset-card-eyebrow,.asset-overview-kicker){color:#6682a8!important;font-family:'DM Sans',sans-serif!important;font-weight:800!important}
 @media(max-width:800px){
- .view :is(.tool-hero,.sim-hero,.glossary-hero,.community-hero,.account-hero,.asset-hero,.asset-intro,.asset-overview){border-radius:19px!important}
- .view :is(.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community){padding:16px!important;border-radius:17px!important}
- .view :is(.compare-card,.community-post,.community-compose,.account-panel,.account-card,.profile-card){border-radius:16px!important}
+ .view :is(.term,.card,.category-tile,.category-tile-v2,.asset-info-card,.asset-quick-card,.asset-explainer-card,.compare-card,.tool-card,.tool-hub-card,.community-post,.community-review){padding:15px}
+ .view :is(.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,.compare-picker,.sim-form,.sim-output,.glossary-enhanced,.community-compose,.account-card,.profile-card,.profile-editor){padding:16px}
 }
-@media(prefers-reduced-motion:reduce){.view:not(.hidden){animation:none}}
+@media(prefers-reduced-motion:reduce){.view :is(.term,.card,.category-tile,.compare-card){transition:none!important}}
 </style>
 
 </head>
