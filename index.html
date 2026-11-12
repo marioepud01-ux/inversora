@@ -755,9 +755,27 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 @media(prefers-reduced-motion:reduce){.inv-footer-column button{transition:none}}
 /* Igual que la cabecera: banda de lado a lado, con contenido alineado al ancho central */
 .inv-footer{width:100vw;max-width:none;margin:48px 0 0 calc(50% - 50vw);padding:34px max(22px,calc((100vw - 1500px)/2)) 18px;border-radius:0}
-.inv-footer-logo,.inv-footer-logo>span,.inv-footer-logo>span:last-child>span{color:#fff!important}
-.inv-footer-mark{color:#fff!important}
+.inv-footer-logo{color:#fff!important}
+.inv-footer-logo>span:last-child{color:#fff!important}
+.inv-footer-logo>span:last-child>span{color:var(--accent)!important}
+.inv-footer-mark{background:linear-gradient(135deg,#155eef,#528bff)!important;border:0!important;color:#fff!important;box-shadow:0 5px 12px #155eef30}
 @media(max-width:700px){.inv-footer{width:100vw;margin:34px 0 0 calc(50% - 50vw);padding:25px 21px 17px;border-radius:0}}
+
+/* Navegación superior: menos opciones, más reconocibles y con jerarquía visual */
+.inv-header .desktop-main-nav{gap:clamp(4px,.45vw,9px);padding:6px 8px;background:linear-gradient(180deg,#f8faff,#f1f5fb);border-color:#e6ebf4}
+.desktop-nav-link{display:inline-flex;align-items:center;gap:8px;padding:11px clamp(10px,.9vw,15px);font-size:clamp(12px,.9vw,14px);font-weight:720;letter-spacing:-.012em;color:#475467;border-radius:12px}
+.desktop-nav-link:before{display:inline-grid;place-items:center;width:21px;height:21px;border-radius:7px;background:#e8eef8;color:#557099;font-size:14px;font-weight:800;line-height:1;transition:background .22s ease,color .22s ease,transform .22s ease}
+.desktop-nav-link[data-view="home"]:before{content:"⌂"}
+.desktop-nav-link[data-view="explore"]:before{content:"⌕"}
+.desktop-nav-link[data-view="tools"]:before{content:"✧"}
+.desktop-nav-link[data-view="community"]:before{content:"◉"}
+.desktop-nav-link[data-view="favorites"]:before{content:"♡"}
+.desktop-nav-link:hover:before{background:#e0eaff;color:#155eef;transform:scale(1.06)}
+.desktop-nav-link.active{background:linear-gradient(135deg,#eaf2ff,#dfeaff);border-color:#d2e1ff;color:#155eef;box-shadow:0 3px 10px rgba(21,94,239,.09)}
+.desktop-nav-link.active:before{background:#155eef;color:#fff}
+@media(min-width:801px){.inv-header .desktop-main-nav{gap:clamp(3px,.38vw,7px)}}
+@media(max-width:1100px) and (min-width:801px){.desktop-nav-link{gap:6px;padding:10px 9px;font-size:12px}.desktop-nav-link:before{width:19px;height:19px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){.desktop-nav-link:before{transition:none}}
 </style>
 </head>
 <body>
@@ -769,8 +787,6 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 <nav class="desktop-main-nav" id="desktopMainNav" aria-label="Navegación principal">
 <button class="desktop-nav-link active" data-view="home" onclick="showView('home')">Inicio</button>
 <button class="desktop-nav-link" data-view="explore" onclick="showView('explore')">Explorar</button>
-<button class="desktop-nav-link" data-view="glossary" onclick="showView('glossary')">Glosario</button>
-<button class="desktop-nav-link" data-view="compare" onclick="showView('compare')">Comparar</button>
 <button class="desktop-nav-link" data-view="tools" onclick="showView('tools')">Herramientas Inversora</button>
 <button class="desktop-nav-link" data-view="community" onclick="showView('community')">Comunidad</button>
 <button class="desktop-nav-link" data-view="favorites" onclick="showView('favorites')">Favoritos</button>
