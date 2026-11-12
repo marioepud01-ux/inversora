@@ -1762,6 +1762,33 @@ openDetail=function(name){
 
 
 /* Listas compartidas: enlaces públicos, lectura sin cuenta y creación guiada */
+
+let invDefaultListId=null;
+async function invLoadLists(){
+ if(!invUser){invListsCache=[];invDefaultListId=null;return}
+ const {data:lists,error}=await invDb.from('favorite_lists').select('id,name,is_public,created_at').eq('user_id',invUser.id).order('created_at');
+ if(error)throw error;
+ const ids=(lists||[]).map(x=>x.id);let items=[];
+ if(ids.length){const r=await invDb.from('favorite_items').select('id,list_id,investment_key,investment_name').in('list_id',ids);if(r.error)throw r.error;items=r.data||[]}
+ invListsCache=(lists||[]).map(l=>({...l,items:items.filter(i=>i.list_id===l.id).map(i=>i.investment_name)}));
+ if(!invListsCache.length){const {data,error:e}=await invDb.from('favorite_lists').insert({user_id:invUser.id,name:'Favoritos'}).select().single();if(e)throw e;invListsCache=[{...data,items:[]}]}
+ invDefaultListId=invListsCache[0]?.id||null;
+}
+function getFavorites(){const base=invListsCache.find(x=>x.id===invDefaultListId)||invListsCache[0];return base?.items||[]}
+async function toggleFavorite(name,detail=false){
+ if(!invUser){showView('account');authMode='register';renderAccount();const m=document.getElementById('authMessage');if(m)m.textContent='Crea una cuenta o inicia sesión para guardar tus inversiones.';return}
+ try{let base=invListsCache.find(x=>x.id===invDefaultListId)||invListsCache[0];if(!base){const r=await invDb.from('favorite_lists').insert({user_id:invUser.id,name:'Favoritos'}).select().single();if(r.error)throw r.error;base={...r.data,items:[]};invListsCache.unshift(base);invDefaultListId=base.id}
+ const exists=base.items.includes(name);if(exists){const {data:row,error:readError}=await invDb.from('favorite_items').select('id').eq('list_id',base.id).eq('investment_key',name).maybeSingle();if(readError)throw readError;if(row){const r=await invDb.from('favorite_items').delete().eq('id',row.id);if(r.error)throw r.error}base.items=base.items.filter(x=>x!==name)}else{const r=await invDb.from('favorite_items').insert({list_id:base.id,investment_key:name,investment_name:name});if(r.error)throw r.error;base.items.push(name)}
+ renderHome();renderExplore();renderFavorites();if(detail)openDetail(name)
+ }catch(e){console.error(e);invNotice('No se ha podido actualizar el favorito: '+e.message)}
+}
+async function deleteFavoriteList(){
+ const l=invListsCache.find(x=>x.id===selectedFavoriteList);if(!l||l.id===invDefaultListId)return invNotice('La lista principal no se puede eliminar.');
+ if(!confirm('¿Eliminar la lista «'+l.name+'» y todos sus elementos?'))return;
+ const {error}=await invDb.from('favorite_lists').delete().eq('id',l.id);if(error)return invNotice('No se ha podido eliminar: '+error.message);
+ invListsCache=invListsCache.filter(x=>x.id!==l.id);selectedFavoriteList=invDefaultListId;renderFavorites();invNotice('Lista eliminada.');
+}
+
 async function createFavoriteList(){
  if(!invUser){showView('account');return}
  if(document.getElementById('favCreateModal'))return;
@@ -1773,7 +1800,6 @@ async function createFavoriteList(){
 }
 async function renameFavoriteList(){
  const l=invListsCache.find(x=>x.id===selectedFavoriteList);if(!l)return;
- if(l.name==='Favoritos')return invNotice('La lista principal «Favoritos» conserva su nombre. Puedes renombrar todas las listas que crees con +.');
  const name=prompt('Nuevo nombre de la lista:',l.name)?.trim().slice(0,50);if(!name||name===l.name)return;
  const {error}=await invDb.from('favorite_lists').update({name,updated_at:new Date().toISOString()}).eq('id',l.id);
  if(error)return invNotice('No se ha podido renombrar la lista: '+error.message);
