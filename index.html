@@ -777,6 +777,17 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 @media(max-width:1100px) and (min-width:801px){.desktop-nav-link{gap:6px;padding:10px 9px;font-size:12px}.desktop-nav-link:before{width:19px;height:19px;font-size:13px}}
 @media(prefers-reduced-motion:reduce){.desktop-nav-link:before{transition:none}}
 </style>
+
+<style id="inversora-sticky-footer-layout">
+/* El pie queda pegado al fondo en pantallas cortas, sin dejar relleno blanco debajo. */
+html,body{min-height:100%;min-height:100dvh}
+body{min-height:100vh;min-height:100dvh}
+.app{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding-bottom:0!important}
+.app>.view:not(.hidden){flex:1 0 auto}
+.app>.inv-footer{margin-top:auto!important}
+@media(max-width:800px){.app{padding-bottom:0!important}}
+</style>
+
 </head>
 <body>
 <div class="app">
