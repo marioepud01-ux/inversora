@@ -695,6 +695,32 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 @media(prefers-reduced-motion:reduce){#home .home-goal,#home .home-compare-card{transition:none}}
 </style>
 
+
+<style id="inversora-full-width-header">
+/* Cabecera global a todo el ancho y navegación central en escritorio */
+.app{padding-top:0}
+.inv-header{width:100vw;max-width:none;margin:0 0 24px calc(50% - 50vw);padding:12px max(22px,calc((100vw - 1500px)/2));min-height:74px;display:grid;grid-template-columns:minmax(170px,1fr) auto minmax(170px,1fr);align-items:center;gap:clamp(12px,1.5vw,24px);position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(18px);border:0;border-bottom:1px solid #e4e7ec;border-radius:0;box-shadow:0 6px 24px rgba(16,24,40,.06)}
+.inv-header .header-brand-group{grid-column:1;justify-self:start;min-width:0}
+.inv-header .desktop-main-nav{grid-column:2;display:flex;align-items:center;justify-content:center;gap:clamp(2px,.45vw,8px);white-space:nowrap}
+.desktop-nav-link{border:1px solid transparent;background:transparent;color:#475467;border-radius:10px;padding:10px clamp(7px,.75vw,13px);font-size:clamp(11px,.86vw,13px);font-weight:700;transition:background .18s,color .18s,border-color .18s}
+.desktop-nav-link:hover{background:#f5f8ff;color:#155eef}
+.desktop-nav-link.active{background:#eef4ff;border-color:#dbe7ff;color:#155eef}
+.inv-header .header-actions{grid-column:3;justify-self:end;min-width:0}
+.inv-header .menu-toggle{display:none}
+@media(max-width:1100px) and (min-width:801px){
+ .inv-header{grid-template-columns:minmax(145px,1fr) auto minmax(145px,1fr);gap:8px;padding-left:18px;padding-right:18px}
+ .desktop-nav-link{padding:9px 6px;font-size:11px}
+ .inv-header .header-actions{gap:9px}
+}
+@media(max-width:800px){
+ .app{padding:0 14px 100px}
+ .inv-header{width:100vw;margin:0 0 18px calc(50% - 50vw);padding:10px 14px;min-height:62px;display:flex;justify-content:space-between;gap:8px;position:relative;top:auto}
+ .inv-header .desktop-main-nav{display:none}
+ .inv-header .header-actions{margin-left:auto;gap:10px}
+ .inv-header .menu-toggle{display:flex}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -702,6 +728,16 @@ header{gap:18px;padding:13px 17px;border-radius:22px;background:rgba(255,255,255
 <div class="header-brand-group">
 <button class="logo" type="button" onclick="showView('home')" aria-label="Inversora, volver al inicio"><span class="brand-word">Invers<span>ora</span></span></button>
 </div>
+<nav class="desktop-main-nav" id="desktopMainNav" aria-label="Navegación principal">
+<button class="desktop-nav-link active" data-view="home" onclick="showView('home')">Inicio</button>
+<button class="desktop-nav-link" data-view="explore" onclick="showView('explore')">Explorar</button>
+<button class="desktop-nav-link" data-view="glossary" onclick="showView('glossary')">Glosario</button>
+<button class="desktop-nav-link" data-view="compare" onclick="showView('compare')">Comparar</button>
+<button class="desktop-nav-link" data-view="tools" onclick="showView('tools')">Herramientas</button>
+<button class="desktop-nav-link" data-view="sim" onclick="showView('sim')">Simulador</button>
+<button class="desktop-nav-link" data-view="community" onclick="showView('community')">Comunidad</button>
+<button class="desktop-nav-link" data-view="favorites" onclick="showView('favorites')">Favoritos</button>
+</nav>
 <div class="header-actions" aria-label="Accesos rápidos">
 <button class="header-icon-btn" type="button" onclick="showView('favorites')" aria-label="Mis favoritos" title="Mis favoritos"><span aria-hidden="true">♡</span></button>
 <button class="header-icon-btn" type="button" onclick="invHeaderSearch()" aria-label="Buscar inversiones" title="Buscar"><span aria-hidden="true">⌕</span></button>
@@ -903,7 +939,7 @@ function invMenuNavigate(id){showView(id);invToggleMenu(false);}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')invToggleMenu(false);});
 function invHeaderSearch(){showView('explore');const field=document.getElementById('exploreSearch');if(field){field.focus();field.scrollIntoView({behavior:'smooth',block:'center'});}}
 function updateNavIndicator(){const nav=document.getElementById('mainNav'),active=nav?.querySelector('button.active');if(!nav||!active)return;nav.style.setProperty('--nav-x',active.offsetLeft+'px');nav.style.setProperty('--nav-w',active.offsetWidth+'px')}
-function showView(id){const target=document.getElementById(id);if(!target)return;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));target.classList.remove('hidden');document.querySelectorAll('.inv-sidebar-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));if(id==='explore')renderExplore();if(id==='tools'){}if(id==='compare')renderCompare();if(id==='glossary')renderGlossary();if(id==='favorites')renderFavorites();if(id==='community')renderCommunity();if(id==='account')renderAccount();try{window.scrollTo({top:0,behavior:'smooth'})}catch(err){window.scrollTo(0,0)}}
+function showView(id){const target=document.getElementById(id);if(!target)return;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));target.classList.remove('hidden');document.querySelectorAll('.inv-sidebar-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));document.querySelectorAll('.desktop-nav-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));if(id==='explore')renderExplore();if(id==='tools'){}if(id==='compare')renderCompare();if(id==='glossary')renderGlossary();if(id==='favorites')renderFavorites();if(id==='community')renderCommunity();if(id==='account')renderAccount();try{window.scrollTo({top:0,behavior:'smooth'})}catch(err){window.scrollTo(0,0)}}
 // Navegación por botones: usar el evento click nativo, que los navegadores
 // móviles convierten correctamente desde el toque. No cancelar touchend,
 // porque en Safari/iOS puede impedir que se genere el click posterior.
