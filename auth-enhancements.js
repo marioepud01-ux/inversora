@@ -21,7 +21,7 @@
   const original=window.renderAccount;
   window.renderAccount=async function(){const result=await original.apply(this,arguments);addAppleButton();return result};
  }
- function signedIn(){return !!(window.invUser);}
+ function signedIn(){return !!(typeof invUser!=='undefined'&&invUser);}
  function readTime(){const n=Number(localStorage.getItem(KEY));return Number.isFinite(n)&&n>0?n:0}
  function expireIfNeeded(){
   if(!signedIn())return false;
@@ -34,8 +34,8 @@
   if(expiring||!signedIn())return;
   expiring=true;
   try{
-   await window.invDb.auth.signOut();
-   window.invUser=null;window.invProfile=null;window.invListsCache=[];
+   await invDb.auth.signOut();
+   invUser=null;invProfile=null;invListsCache=[];
    localStorage.removeItem(KEY);
    if(typeof window.renderAccount==='function')await window.renderAccount();
    if(typeof window.renderFavorites==='function')window.renderFavorites();
@@ -53,8 +53,8 @@
  window.addEventListener('focus',expireIfNeeded);
  window.addEventListener('storage',e=>{if(e.key===KEY)expireIfNeeded()});
  setInterval(expireIfNeeded,15000);
- if(window.invDb?.auth?.onAuthStateChange){
-  window.invDb.auth.onAuthStateChange((event,session)=>{
+ if(typeof invDb!=='undefined'&&invDb?.auth?.onAuthStateChange){
+  invDb.auth.onAuthStateChange((event,session)=>{
    if(session){
     const last=readTime();
     if(last&&Date.now()-last>=IDLE_LIMIT){expireSession();return}
@@ -69,7 +69,7 @@
    const msg=document.getElementById('authMessage');
    if(msg)msg.textContent='Conectando con '+label(provider)+'…';
    try{
-    const {error}=await window.invDb.auth.signInWithOAuth({provider,options:{redirectTo:window.location.origin}});
+    const {error}=await invDb.auth.signInWithOAuth({provider,options:{redirectTo:window.location.origin}});
     if(error)throw error;
    }catch(e){
     if(msg){msg.className='auth-message';msg.textContent=/provider is not enabled/i.test(String(e?.message||''))?label(provider)+' todavía no está activado en Inversora. Hay que habilitar el proveedor y configurar sus credenciales en Supabase.':'No se ha podido iniciar el acceso con '+label(provider)+'. '+(e.message||'Inténtalo de nuevo.')}
