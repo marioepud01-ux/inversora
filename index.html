@@ -87,6 +87,12 @@ table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(-
 
 @media(max-width:800px){.app{padding:14px 14px 100px}header{position:static;display:block;padding:12px;margin-bottom:16px}.logo{margin:0 0 12px}.nav{display:flex;overflow-x:auto;max-width:100%;gap:4px}.nav button{flex:0 0 auto;padding:10px 12px}.hero{padding:28px 20px;border-radius:20px}h1{font-size:38px}.grid{grid-template-columns:1fr}.two,.sim{grid-template-columns:1fr}.glossary{grid-template-columns:1fr}.search button{padding:0 12px}.section{margin-top:24px}}
 
+
+/* Sugerencias instantáneas del buscador principal */
+.hero-search-wrap{position:relative;max-width:850px;margin-top:24px;z-index:8}.hero-search-wrap .quick-search{margin-top:0;max-width:none}.hero-search-suggestions{position:absolute;top:calc(100% + 9px);left:0;right:0;z-index:40;padding:7px;background:#fff;border:1px solid #dbe5f5;border-radius:16px;box-shadow:0 18px 42px #10182825;max-height:min(390px,55vh);overflow:auto;color:#101828}.hero-search-suggestions[hidden]{display:none}.hero-search-suggestion{width:100%;display:flex;align-items:center;gap:12px;padding:11px 12px;border:0;border-radius:11px;background:#fff;color:#101828;text-align:left;transition:background .16s ease}.hero-search-suggestion:hover,.hero-search-suggestion.active{background:#eef4ff}.hero-search-suggestion-icon{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:10px;background:#eef4ff;color:#155eef;font-size:17px}.hero-search-suggestion-copy{min-width:0;flex:1}.hero-search-suggestion-copy strong{display:block;font-size:13px;line-height:1.3}.hero-search-suggestion-copy small{display:block;margin-top:3px;color:#667085;font-size:11px;line-height:1.35}.hero-search-suggestion-arrow{color:#155eef;font-size:17px}.hero-search-empty{padding:15px 13px;color:#667085;font-size:13px}.hero-search-hint{padding:8px 12px 5px;color:#98a2b3;font-size:10px;border-top:1px solid #f2f4f7;margin-top:5px}
+@media(max-width:800px){.hero-search-suggestions{max-height:min(330px,48vh)}.hero-search-suggestion{padding:10px}}
+@media(prefers-reduced-motion:no-preference){.hero-search-suggestions:not([hidden]){animation:heroSuggestionsIn .16s ease-out}@keyframes heroSuggestionsIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}}
+
 /* Comparador visual y navegación refinada */
 .compare-hero{display:flex;align-items:center;justify-content:space-between;gap:22px;background:radial-gradient(circle at 90% 10%,#344f9c 0,transparent 34%),linear-gradient(125deg,#101828,#172b52);color:white;border-radius:25px;padding:30px 32px;margin-bottom:28px;overflow:hidden}.compare-hero .eyebrow{color:#b2ccff}.compare-hero h1{font-size:clamp(30px,4vw,46px);letter-spacing:-1.7px;margin:9px 0 10px}.compare-hero p{max-width:720px;color:#d0d5dd;line-height:1.55;margin:0}.compare-hero-mark{flex:0 0 95px;width:95px;height:95px;display:grid;place-items:center;border:1px solid #ffffff35;background:#ffffff12;border-radius:27px;font-size:54px;color:#dbeafe;transform:rotate(-7deg)}.compare-section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:0 0 14px}.compare-section-head h2{margin:0;font-size:24px;letter-spacing:-.6px}.compare-section-head p,.compare-picker p,.compare-table-title p{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.45}.compare-count,.picker-limit{font-size:12px;font-weight:800;color:#155eef;background:#eef4ff;border:1px solid #d1e0ff;border-radius:999px;padding:8px 11px;white-space:nowrap}.compare-picker{background:#fff;border:1px solid var(--line);border-radius:19px;padding:18px;margin-bottom:18px}.compare-picker-top{display:flex;align-items:start;justify-content:space-between;gap:12px}.compare-picker-top strong{font-size:16px}.compare-tools{display:grid;grid-template-columns:1.5fr 1fr;gap:9px;margin:15px 0 12px}.compare-tools input,.compare-tools select{width:100%;min-width:0;border:1px solid var(--line);background:#fbfcfe;border-radius:11px;padding:12px 13px;outline:0}.compare-tools input:focus,.compare-tools select:focus{border-color:#84adff;box-shadow:0 0 0 3px #155eef12}.compare-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-height:235px;overflow:auto;padding:2px}.compare-option{display:flex;align-items:center;gap:9px;min-width:0;text-align:left;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--text);transition:.15s}.compare-option:hover:not(:disabled){border-color:#84adff;background:#f8faff}.compare-option.chosen{background:#eff6ff;border-color:#84adff}.compare-option:disabled{opacity:.4;cursor:not-allowed}.option-check{display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border:1px solid #d0d5dd;border-radius:8px;color:#667085;font-weight:800}.chosen .option-check{background:#155eef;border-color:#155eef;color:#fff}.option-name{font-size:12px;font-weight:750;line-height:1.3;min-width:0;flex:1}.option-name small{display:block;color:var(--muted);font-size:10px;font-weight:500;margin-top:4px;line-height:1.3}.option-score{font-size:11px;font-weight:800;color:#155eef;white-space:nowrap}.compare-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}.compare-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;min-width:0;box-shadow:0 5px 18px #10182805}.remove-compare{position:absolute;right:14px;top:14px;width:30px;height:30px;border:1px solid var(--line);background:#f9fafb;border-radius:10px;color:#667085;font-size:22px;line-height:1}.remove-compare:hover{background:#fef3f2;color:#b42318}.compare-card-category{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#155eef;margin-right:35px}.compare-card h3{font-size:20px;letter-spacing:-.45px;margin:7px 30px 7px 0}.compare-card-desc{font-size:13px;color:var(--muted);line-height:1.45;min-height:37px;margin:0 0 15px}.compare-score-row{display:flex;align-items:center;justify-content:space-between;background:#f8faff;border:1px solid #e4ecff;border-radius:14px;padding:12px 14px;margin-bottom:16px}.compare-score-row span{display:block;color:var(--muted);font-size:11px}.compare-score-row strong{display:block;font-size:29px;letter-spacing:-1px;margin-top:2px}.compare-score-row strong small{font-size:12px;color:var(--muted);letter-spacing:0}.score-ring{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#155eef var(--score),#e4e7ec 0);position:relative}.score-ring:before{content:"";position:absolute;inset:5px;background:#f8faff;border-radius:50%}.score-ring span{position:relative;font-size:12px;font-weight:850}.compare-metric{margin:12px 0}.compare-metric-top{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12px;color:#475467}.compare-metric-top b{font-size:13px;color:#101828}.compare-metric-top small{font-size:10px;color:var(--muted);font-weight:600}.compare-track{height:7px;background:#eaecf0;border-radius:999px;overflow:hidden;margin-top:6px}.compare-track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#84adff,#155eef)}.compare-track i.risk-fill{background:linear-gradient(90deg,#fdb022,#f04438)}.compare-card-footer{display:flex;justify-content:space-between;gap:12px;padding-top:11px;margin-top:11px;border-top:1px solid #f0f2f5;font-size:12px}.compare-card-footer span{color:var(--muted);flex:0 0 40%}.compare-card-footer b{text-align:right;font-weight:700;line-height:1.4}.compare-table-wrap{background:white;border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-top:18px}.compare-table-title{padding:19px 20px 12px}.compare-table-title h3{margin:0;font-size:18px}.compare-table{border:0;border-radius:0;min-width:650px}.compare-table th{font-size:12px;text-transform:uppercase;letter-spacing:.03em;background:#f8fafc}.compare-table th:first-child,.compare-table td:first-child{position:sticky;left:0;background:#f8fafc;min-width:165px;z-index:1}.compare-table td{vertical-align:top;line-height:1.45;max-width:300px}.compare-table .stripe td{background:#fcfcfd}.compare-table .stripe td:first-child{background:#f2f4f7}
 @media(max-width:900px){.compare-options{grid-template-columns:repeat(2,minmax(0,1fr))}.compare-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -322,6 +328,98 @@ body.score-modal-open{overflow:hidden}
 @media(max-width:520px){.score-modal{padding:10px}.score-modal-card{padding:22px 17px;border-radius:18px}.score-modal-card h2{font-size:21px}.score-breakdown-value{min-width:87px}.score-breakdown-row{gap:8px}}
 
 /* Catálogo jerárquico completo: categoría > subcategoría > tipo de inversión */.taxonomy-category-block{margin:0 0 22px}.taxonomy-category-label{display:flex;align-items:center;gap:9px;font-size:15px;margin:3px 0 10px;color:#344054}.taxonomy-category-label>span{width:30px;height:30px;border-radius:9px;background:#eef4ff;display:grid;place-items:center}.taxonomy-subcategory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.taxonomy-subcategory{border:1px solid var(--line);border-radius:14px;background:#fbfcfe;overflow:hidden}.taxonomy-subcategory-head{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 13px;background:#f8faff;text-align:left;color:var(--text);font-weight:750;border-bottom:1px solid var(--line)}.taxonomy-subcategory-head small{font-size:11px;color:var(--accent);font-weight:700;white-space:nowrap}.taxonomy-types{display:flex;flex-wrap:wrap;gap:6px;padding:10px}.taxonomy-type{display:flex;align-items:center;gap:7px;border:1px solid #eaecf0;background:white;color:#344054;border-radius:9px;padding:7px 9px;font-size:12px;text-align:left}.taxonomy-type:hover{border-color:#84adff;background:#f5f8ff;color:#1849a9}.taxonomy-type span{color:#98a2b3}.category-count{font-size:11px;font-weight:750;color:#155eef;margin-top:auto}.category-examples{font-size:11px;color:#667085;line-height:1.4}.home-section-categories .subtype-panel{padding:20px}.taxonomy-category-block:last-child{margin-bottom:0}@media(max-width:650px){.taxonomy-subcategory-grid{grid-template-columns:1fr}.taxonomy-subcategory-head{padding:11px}.taxonomy-types{gap:5px}.taxonomy-type{font-size:11px;padding:7px 8px}}
+
+/* Fichas de activos · diseño unificado con el azul oficial de Inversora */
+.asset-return-mode{display:flex;flex-direction:column;gap:6px;margin:0 0 14px;padding:17px 20px;border:1px solid var(--asset-blue-line);border-radius:16px;background:var(--asset-blue-pale)}.asset-return-mode>span{color:var(--asset-blue);font-size:10px;font-weight:850;letter-spacing:.09em}.asset-return-mode>strong{color:#101828;font-size:19px;letter-spacing:-.35px}.asset-return-mode>small{color:#667085;font-size:11px;line-height:1.55}
+:root{--inv-brand-blue:#155EEF;--inv-brand-blue-soft:#EFF4FF;--inv-brand-blue-pale:#F5F8FF;--inv-brand-blue-line:#D1E0FF;--inv-brand-blue-mid:#84ADFF;--inv-brand-blue-dark:#1849A9}
+.asset-detail{--asset-blue:var(--inv-brand-blue);--asset-blue-soft:var(--inv-brand-blue-soft);--asset-blue-pale:var(--inv-brand-blue-pale);--asset-blue-line:var(--inv-brand-blue-line);padding:clamp(18px,3.5vw,42px);border-radius:28px;box-shadow:0 18px 52px #1018280c}
+.asset-hero{grid-template-columns:minmax(0,1fr) minmax(290px,350px);gap:28px;background:linear-gradient(135deg,#fff 0%,#f7f9ff 100%);border:1px solid var(--asset-blue-line);color:#101828;padding:clamp(24px,4vw,42px)}
+.asset-hero:after{border-color:#155eef12;box-shadow:0 0 0 25px #155eef08,0 0 0 50px #155eef05}
+.asset-breadcrumb{color:#667085;font-weight:700}.asset-breadcrumb span{color:var(--asset-blue)}
+.asset-hero h1{color:#101828;font-size:clamp(34px,4.6vw,52px);letter-spacing:-1.9px}
+.asset-lead{color:#475467;font-size:16px;max-width:760px}
+.asset-hero-tags span{background:#fff;border:1px solid var(--asset-blue-line);color:#344054}
+.asset-rating-grid{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.asset-rating-card{min-width:0;padding:16px 15px;border:1px solid var(--asset-blue-line);border-radius:17px;background:#fff;box-shadow:0 8px 24px #155eef0a}
+.asset-rating-label{display:flex;align-items:center;gap:5px;min-height:34px;color:#344054;font-size:12px;font-weight:800;line-height:1.35}
+.asset-rating-stars{min-height:28px;margin:8px 0 2px;color:var(--asset-blue);font-size:21px;letter-spacing:1px;white-space:nowrap}
+.rating-stars{color:var(--asset-blue);font-size:21px;letter-spacing:1px;white-space:nowrap}
+.asset-rating-number{display:block;color:#101828;font-size:25px;line-height:1.2;letter-spacing:-.8px}
+.asset-rating-number small{font-size:12px;color:#667085;letter-spacing:0}
+.asset-rating-card>small{display:block;min-height:28px;margin-top:6px;color:#667085;font-size:10px;line-height:1.45}
+.asset-rating-card .score-help-btn{width:18px;height:18px;background:var(--asset-blue-soft);color:var(--asset-blue);border:1px solid var(--asset-blue-line);font-size:11px}
+.asset-rating-card .asset-community-open{margin-top:9px;padding:8px 10px;border-radius:9px;background:var(--asset-blue);color:#fff;font-size:11px;font-weight:800}
+.asset-jump-nav{position:sticky;top:88px;z-index:10;display:flex;gap:7px;overflow-x:auto;padding:11px 0 14px;margin:0 0 10px;background:#ffffffed;backdrop-filter:blur(12px);scrollbar-width:none}
+.asset-jump-nav a{flex:0 0 auto;padding:8px 12px;border:1px solid var(--asset-blue-line);border-radius:99px;background:#fff;color:#344054;font-size:11px;font-weight:750;text-decoration:none}
+.asset-jump-nav a:hover{background:var(--asset-blue-soft);border-color:var(--asset-blue);color:var(--asset-blue)}
+.asset-section{margin-top:36px;scroll-margin-top:150px}
+.asset-section-head{align-items:center;margin-bottom:19px}
+.asset-section-icon{border-color:var(--asset-blue-line);background:var(--asset-blue-soft);color:var(--asset-blue)}
+.asset-section-head h2{font-size:clamp(22px,2.8vw,27px)!important;letter-spacing:-.8px}
+.asset-overview-panel{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(220px,.8fr);gap:16px;padding:22px;border:1px solid var(--asset-blue-line);border-radius:19px;background:linear-gradient(135deg,#fff 0%,#f7f9ff 100%)}
+.asset-overview-copy p{margin:7px 0 15px;color:#344054;font-size:15px;line-height:1.8}
+.asset-overview-kicker,.asset-cost-eyebrow{color:var(--asset-blue);font-size:10px;font-weight:850;letter-spacing:.09em}
+.asset-overview-tags{display:flex;flex-wrap:wrap;gap:8px}
+.asset-overview-tags span{padding:7px 10px;border-radius:9px;background:var(--asset-blue-soft);color:#1849a9;font-size:11px;font-weight:700}
+.asset-overview-return{display:flex;flex-direction:column;justify-content:center;padding:17px;border:1px solid var(--asset-blue-line);border-radius:14px;background:#fff}
+.asset-overview-return strong{margin:8px 0;color:var(--asset-blue);font-size:clamp(24px,3vw,34px);letter-spacing:-1px}
+.asset-overview-return small{color:#667085;font-size:11px;line-height:1.55}
+.asset-quick-grid{margin-top:14px}
+.asset-quick-card{border-color:#e4e7ec;background:#fff}
+.asset-quick-icon.blue,.asset-quick-icon.violet{background:var(--asset-blue-soft);color:var(--asset-blue)}
+.asset-quick-card:hover{border-color:var(--asset-blue-line);box-shadow:0 9px 22px #155eef10}
+.asset-explainer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.asset-explainer-card{padding:22px;border:1px solid #e4e7ec;border-radius:18px;background:#fff}
+.asset-card-eyebrow{color:var(--asset-blue);font-size:10px;font-weight:850;letter-spacing:.08em}
+.asset-explainer-card h3{margin:10px 0 8px;font-size:18px;letter-spacing:-.35px}
+.asset-explainer-card p{margin:0;color:#475467;font-size:14px;line-height:1.75}
+.asset-mini-fact{margin-top:16px;padding:12px;border-radius:12px;background:var(--asset-blue-pale);display:flex;justify-content:space-between;gap:10px}
+.asset-mini-fact span{color:#667085;font-size:11px}.asset-mini-fact b{color:#1849a9;font-size:12px}
+.asset-pros-cons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.asset-pros-card,.asset-cons-card{padding:22px;border-radius:18px}
+.asset-pros-card{border:1px solid #abefc6;background:#f6fef9}
+.asset-cons-card{border:1px solid #fecdca;background:#fff7f6}
+.asset-pros-title,.asset-cons-title{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.asset-pros-title h3,.asset-cons-title h3{margin:0;font-size:17px}
+.asset-pros-title>span{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:#dcfae6;color:#067647;font-weight:900}
+.asset-cons-title>span{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:#fee4e2;color:#b42318;font-weight:900}
+.asset-list{display:grid;gap:9px;margin:0;padding-left:19px;color:#344054;font-size:13px;line-height:1.65}
+.asset-info-grid{display:none}
+.asset-cost-dashboard{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.asset-cost-card{min-width:0;padding:22px;border:1px solid #e4e7ec;border-radius:18px;background:#fff}
+.asset-cost-card h3{margin:9px 0 8px;font-size:17px;letter-spacing:-.3px}
+.asset-cost-card p{margin:0;color:#475467;font-size:13px;line-height:1.75;overflow-wrap:anywhere}
+.asset-cost-card.asset-capital-card{background:linear-gradient(135deg,#fff 0%,#f7f9ff 100%);border-color:var(--asset-blue-line)}
+.asset-cost-card.asset-tax-card{grid-column:1/-1;border-color:var(--asset-blue-line);background:linear-gradient(135deg,#fff 0%,#f9fbff 100%)}
+.asset-tax-card details{margin-top:14px;padding-top:12px;border-top:1px solid var(--asset-blue-line)}
+.asset-tax-card summary{color:var(--asset-blue);font-size:12px;font-weight:800;cursor:pointer}
+.asset-tax-card details p{margin-top:10px;white-space:pre-line}
+.asset-tax-card>small{display:block;margin-top:12px;color:#667085;font-size:10px;line-height:1.55}
+.asset-ratings-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:20px;border:1px solid #e4e7ec;border-radius:18px;background:#fff}
+.asset-meter{padding:12px;border-radius:12px;background:#f8faff}
+.asset-meter-track{background:#e4e7ec}.asset-meter-track i{background:var(--asset-blue)}.asset-meter-track i.risk-meter{background:#f04438}
+.asset-barrier-section .entry-overview,.asset-barrier-section .entry-factor,.asset-barrier-section .entry-takeaway{border-color:var(--asset-blue-line)}
+.asset-barrier-section .entry-level-value,.asset-barrier-section .entry-factor-number,.asset-barrier-section .entry-takeaway>span{color:var(--asset-blue)}
+.asset-barrier-section .entry-level-scale i.on{background:var(--asset-blue)}
+.asset-outlook-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.asset-outlook-grid article{padding:20px;border:1px solid #e4e7ec;border-radius:17px;background:#fff}
+.asset-outlook-grid article>span{display:block;color:#667085;font-size:11px;font-weight:750}
+.asset-outlook-grid article>strong{display:block;margin:8px 0;color:var(--asset-blue);font-size:23px;line-height:1.35}
+.asset-outlook-grid article>strong small{font-size:11px;color:#667085}
+.asset-outlook-grid article p{margin:0;color:#667085;font-size:12px;line-height:1.6}
+.asset-bottom-actions{display:flex;flex-wrap:wrap;gap:10px;margin:38px 0 22px;padding:22px 0;border-top:1px solid #e4e7ec;border-bottom:1px solid #e4e7ec}
+.asset-bottom-actions button{min-height:46px;padding:12px 17px;border-radius:11px;font-size:13px;font-weight:800;transition:transform .2s,box-shadow .2s}
+.asset-bottom-actions button:hover{transform:translateY(-2px);box-shadow:0 7px 16px #10182812}
+.asset-bottom-actions .detail-sim-btn,.asset-bottom-actions .asset-rate-btn{background:var(--asset-blue);color:#fff}
+.asset-bottom-actions .detail-favorite,.asset-bottom-actions .asset-print-btn{border:1px solid var(--asset-blue-line);background:#fff;color:#344054}
+.asset-bottom-actions .detail-favorite.is-favorite{color:#b42318;border-color:#fecdca;background:#fff7f6}
+.asset-bottom-actions .asset-rate-btn{background:#fff;border:1px solid var(--asset-blue);color:var(--asset-blue)}
+.asset-next-nav button{border-color:var(--asset-blue-line)}
+.asset-disclaimer{border-color:var(--asset-blue-line);background:var(--asset-blue-pale)}
+@media(max-width:820px){.asset-hero{grid-template-columns:1fr}.asset-rating-grid{max-width:100%}.asset-overview-panel{grid-template-columns:1fr}.asset-cost-dashboard{grid-template-columns:1fr}.asset-cost-card.asset-tax-card{grid-column:auto}}
+@media(max-width:600px){.asset-rating-grid,.asset-explainer-grid,.asset-pros-cons,.asset-ratings-panel,.asset-outlook-grid{grid-template-columns:1fr}.asset-rating-card{padding:14px}.asset-bottom-actions button{flex:1 1 100%}.asset-jump-nav{top:70px}.asset-detail{padding:14px}.asset-overview-panel{padding:16px}.asset-cost-card{padding:17px}}
+@media print{body{background:#fff!important}.asset-detail{border:0!important;box-shadow:none!important}.asset-jump-nav,.asset-bottom-actions,.asset-topline .back,.asset-next-nav{display:none!important}.asset-section{break-inside:avoid}}
+
 </style>
 <style id="inversora-final-style">
 .home-map-intro{display:flex;justify-content:space-between;align-items:center;gap:22px;padding:22px 24px;margin:0 0 22px;background:#fff;border:1px solid #dbe4f0;border-radius:19px;box-shadow:0 5px 18px #10182806}
@@ -788,6 +886,186 @@ body{min-height:100vh;min-height:100dvh}
 @media(max-width:800px){.app{padding-bottom:0!important}}
 </style>
 
+<style id="inversora-blue-design-system">
+/* =========================================================
+   INVERSORA · SISTEMA VISUAL AZUL — REDISEÑO EXPERIMENTAL
+   Capa visual únicamente: no modifica estructura ni lógica.
+   ========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{
+ --bg:#f3f7ff;--card:#fff;--text:#14233f;--muted:#667895;--line:#dce7f7;
+ --accent:#155eef;--soft:#edf4ff;--blue-ink:#102a56;--blue-mid:#2468e8;
+ --blue-glow:rgba(21,94,239,.13);--shadow-soft:0 8px 26px rgba(26,66,130,.055);
+ --shadow-card:0 14px 34px rgba(24,67,137,.09);
+ --radius-card:20px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans','Manrope',Inter,ui-sans-serif,system-ui,sans-serif!important;background:radial-gradient(ellipse at 8% 0%,rgba(194,216,255,.34),transparent 32%),radial-gradient(ellipse at 95% 16%,rgba(220,233,255,.42),transparent 28%),#f5f8fe!important;color:var(--text)!important}
+button,input,select,textarea{font-family:inherit}
+.app{max-width:1360px!important}
+.inv-header{box-shadow:0 8px 28px rgba(20,54,110,.07)!important;border-bottom:1px solid #e1eafa!important}
+.logo{font-family:'Manrope',sans-serif!important;font-weight:800!important;letter-spacing:-1.15px!important}
+.logo:before{background:linear-gradient(145deg,#155eef,#73a3ff)!important;box-shadow:0 7px 18px rgba(21,94,239,.25)!important}
+.desktop-main-nav{background:linear-gradient(135deg,#f4f8ff,#eaf2ff)!important;border-color:#dce8fb!important}
+.desktop-nav-link{font-family:'DM Sans',sans-serif!important}
+.desktop-nav-link.active{background:linear-gradient(135deg,#e5efff,#d4e5ff)!important;border-color:#c5d9ff!important;box-shadow:0 5px 13px rgba(21,94,239,.12)!important}
+.view{animation-duration:.38s}
+.section,.home-block,.subtype-panel,.filters,.form,.metric,.term,.detail,.asset-standard-analysis,
+.asset-community,.asset-barrier-card,.asset-section,.community-review-form,.community-score,
+.account-card,.profile-card,.compare-panel,.tool-card,.sim-panel{
+ border-color:#dce7f7!important;box-shadow:var(--shadow-soft)
+}
+#home>.home-block{
+ position:relative;isolation:isolate;overflow:hidden;
+ background:linear-gradient(145deg,#fff 0%,#f8fbff 62%,#f0f6ff 100%)!important;
+ border:1px solid #d8e6fb!important;border-radius:22px!important;
+ box-shadow:0 10px 30px rgba(25,75,150,.065),inset 0 1px 0 #fff!important;
+}
+#home>.home-block:before{
+ content:"";position:absolute;z-index:-1;pointer-events:none;width:240px;height:240px;
+ right:-115px;top:-150px;border-radius:50%;
+ background:radial-gradient(circle,rgba(104,158,255,.17),rgba(104,158,255,0) 70%);
+}
+#home .home-block-heading h2,#home .home-welcome h2{font-family:'Manrope',sans-serif!important;color:#16376e!important;font-weight:800!important;letter-spacing:-.65px!important}
+#home .home-block-count{background:#e8f1ff!important;color:#155eef!important;border:1px solid #d5e5ff!important;border-radius:999px!important;padding:6px 11px!important;font-weight:800!important}
+#home .home-welcome{
+ padding:26px 28px!important;border:1px solid #cfe0fb!important;border-radius:24px!important;
+ background:linear-gradient(118deg,#102c59 0%,#155eef 62%,#4c8cff 100%)!important;
+ box-shadow:0 18px 42px rgba(21,94,239,.19)!important;color:#fff!important;overflow:hidden;position:relative;isolation:isolate
+}
+#home .home-welcome:after{content:"";position:absolute;z-index:-1;width:360px;height:360px;right:-90px;top:-220px;border:1px solid #ffffff22;border-radius:50%;box-shadow:0 0 0 34px #ffffff0b,0 0 0 70px #ffffff08}
+#home .home-welcome h2,#home .home-welcome p{color:#fff!important}
+#home .home-welcome-flow span{background:#ffffff16!important;border:1px solid #ffffff30!important;color:#edf4ff!important;border-radius:999px!important;backdrop-filter:blur(8px)}
+.category-tile-v2,.category-tile,.home-goal,.home-compare-card{
+ border:1px solid #dce8fa!important;border-radius:17px!important;
+ background:linear-gradient(150deg,#fff 0%,#f8fbff 100%)!important;
+ box-shadow:0 4px 14px rgba(27,73,143,.035)!important;
+ transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,border-color .28s,background .28s!important
+}
+.category-tile-v2:hover,.category-tile:hover,.home-goal:hover,.home-compare-card:hover{
+ transform:translateY(-4px)!important;border-color:#9fc1ff!important;
+ box-shadow:0 14px 28px rgba(21,94,239,.12)!important
+}
+.category-tile-v2 .cat-icon,.cat-icon,.home-goal-icon{
+ background:linear-gradient(145deg,#e8f1ff,#dceaff)!important;color:#155eef!important;
+ border:1px solid #d4e4ff!important;border-radius:14px!important
+}
+.category-tile-v2 strong,.home-goal b,.home-compare-card strong{color:#17396f!important;font-family:'Manrope',sans-serif!important;font-weight:800!important}
+.category-tile-v2 .category-count{display:inline-flex!important;align-self:flex-start;padding:5px 9px;background:#eaf2ff;border-radius:8px;color:#155eef!important}
+.subtype-panel,.filters,.form,.detail,.term,.metric,.asset-standard-analysis{
+ background:linear-gradient(145deg,#fff,#f9fbff)!important;border-radius:19px!important;border-color:#dce7f7!important
+}
+.subtype-chip,.chip,.asset-jump-nav a{
+ background:#f3f7ff!important;border:1px solid #dce8fa!important;color:#35527e!important;border-radius:11px!important;
+ transition:all .22s ease!important
+}
+.subtype-chip.active,.chip.active{background:linear-gradient(135deg,#155eef,#3e83f5)!important;color:#fff!important;border-color:#155eef!important;box-shadow:0 5px 14px rgba(21,94,239,.18)!important}
+button:not(.logo):not(.desktop-nav-link):not(.inv-footer-logo){
+ transition:transform .2s ease,box-shadow .2s ease,background .2s ease,border-color .2s ease
+}
+button:not(:disabled):active{transform:translateY(1px) scale(.985)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{
+ outline:3px solid #a9c9ff!important;outline-offset:2px
+}
+input,select,textarea,.toolbar input,.toolbar select,.filter-field input,.filter-field select{
+ border-color:#d7e3f4!important;border-radius:12px!important;background:#fff!important
+}
+input:focus,select:focus,textarea:focus{border-color:#78a8ff!important;box-shadow:0 0 0 4px rgba(21,94,239,.09)!important}
+.search,.quick-search{border:1px solid #d7e5fb!important;box-shadow:0 8px 24px rgba(21,94,239,.08)!important}
+.search button,.quick-search button,.apply-filters,.community-submit{
+ background:linear-gradient(135deg,#155eef,#397ff0)!important;box-shadow:0 5px 13px rgba(21,94,239,.18)!important
+}
+.card,.standard-analysis-card,.asset-barrier-factor,.community-review-card,.community-review-form{
+ border:1px solid #dce7f7!important;border-radius:17px!important;
+ box-shadow:0 5px 16px rgba(25,68,135,.045)!important;
+ transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease!important
+}
+.card:hover,.standard-analysis-card:hover,.asset-barrier-factor:hover{
+ transform:translateY(-3px)!important;border-color:#a9c7fa!important;box-shadow:var(--shadow-card)!important
+}
+.tag{background:#edf4ff!important;color:#315b9c!important;border:1px solid #dce9ff!important}
+.score,.scorebox b,.metric b{color:#155eef!important}
+.bar{background:#e7eef9!important}.bar i{background:linear-gradient(90deg,#155eef,#76a8ff)!important;border-radius:99px}
+table{border-color:#dce7f7!important;border-radius:16px!important;box-shadow:var(--shadow-soft)!important;overflow:hidden}
+th{background:#edf4ff!important;color:#31527f!important}
+td,th{border-color:#e7eef8!important}
+.asset-jump-nav{border-color:#d9e6f8!important;box-shadow:0 8px 22px rgba(24,66,132,.08)!important}
+.asset-jump-nav a:hover,.asset-jump-nav a:focus{background:#e4efff!important;color:#155eef!important}
+.asset-barrier-card{background:linear-gradient(135deg,#eaf2ff 0%,#fff 75%)!important;border-color:#c8dcff!important}
+.asset-barrier-symbol,.asset-barrier-factor>span,.standard-analysis-number{background:#e5efff!important;color:#155eef!important}
+#detail .detail,#detail .asset-standard-analysis,#detail .asset-barrier-card{
+ border-radius:22px!important;border-color:#d5e4fa!important;box-shadow:0 10px 28px rgba(26,69,137,.07)!important
+}
+#detail h1,#detail h2,#detail h3{font-family:'Manrope',sans-serif!important;letter-spacing:-.45px}
+#detail h2{color:#17396f!important}
+#detail .asset-section{border-radius:18px!important}
+.inv-footer{background:radial-gradient(circle at 88% 0%,#3569c7 0,transparent 35%),linear-gradient(125deg,#0d2347 0%,#123b79 58%,#155eef 120%)!important}
+.inv-footer-bottom{border-color:#ffffff30!important}
+@keyframes invBlueRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:no-preference){
+ .home-block,.card,.category-tile-v2,.detail,.asset-standard-analysis{animation:invBlueRise .42s ease both}
+ .home-block:nth-of-type(2){animation-delay:.04s}.home-block:nth-of-type(3){animation-delay:.08s}
+}
+@media(max-width:800px){
+ #home .home-welcome{padding:21px 18px!important;border-radius:19px!important}
+ #home>.home-block{border-radius:18px!important}
+ .category-tile-v2,.category-tile{border-radius:15px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+<style id="inversora-original-logo-fix">
+/* Marca Inversora: conservar exactamente el logotipo original */
+.inv-header .logo{
+ font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+ font-weight:850!important;letter-spacing:-1.25px!important
+}
+.inv-header .logo:before{
+ content:""!important;
+ background-image:url('/icon-192.svg')!important;
+ background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;
+ background-color:transparent!important;background:transparent url('/icon-192.svg') center/cover no-repeat!important;
+ box-shadow:0 4px 12px #155eef25!important
+}
+</style>
+
+
+<style id="inversora-glossary-card-system">
+/* Un único lenguaje visual para todos los cuadros, inspirado en las tarjetas del glosario */
+:root{--inv-card-line:#dce8f8;--inv-card-accent:#8bb5f5;--inv-card-ink:#183967;--inv-card-shadow:0 5px 18px rgba(30,75,140,.055)}
+.view :is(.term,.card,.category-tile,.category-tile-v2,.home-goal,.home-compare-card,.subtype-panel,.filters,.form,.metric,.detail,.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,.asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,.asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.compare-picker,.compare-card,.compare-panel,.compare-table-wrap,.tool-card,.tool-hub-card,.sim-form,.sim-output,.sim-breakdown,.sim-report,.sim-report-item,.sim-selected-card,.disclaimer-card,.glossary-enhanced,.gloss-search-wrap,.community-compose,.community-post,.community-side-card,.community-review,.community-review-form,.community-stat,.account-panel,.account-card,.account-dashboard,.profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,.auth-form,.social-auth,.auth-success-panel,.favorites-empty,.community-empty,.empty){
+ position:relative;overflow:hidden;border:1px solid var(--inv-card-line)!important;border-radius:16px!important;
+ background-image:linear-gradient(90deg,var(--inv-card-accent) 0 3px,transparent 3px),linear-gradient(145deg,#fff 0%,#f8fbff 100%)!important;
+ box-shadow:var(--inv-card-shadow)!important;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease!important
+}
+.view :is(.term,.card,.category-tile,.category-tile-v2,.home-goal,.home-compare-card,.asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-mini-fact,.asset-barrier-factor,.compare-card,.tool-card,.tool-hub-card,.sim-report-item,.community-post,.community-review,.community-stat,.profile-shortcut):hover{
+ transform:translateY(-2px);border-color:#b5cff2!important;box-shadow:0 9px 23px rgba(21,94,239,.09)!important
+}
+.view :is(.term b,.card h3,.category-tile strong,.category-tile-v2 strong,.home-goal b,.home-compare-card strong,.asset-section-head h2,.asset-info-card h3,.asset-quick-value,.asset-explainer-card h3,.asset-pros-title,.asset-cons-title,.compare-card h3,.tool-card h3,.tool-hub-card h3,.community-post h3,.profile-section-heading,.account-card h3,.sim-report-item strong){
+ font-family:'Manrope','DM Sans',sans-serif!important;color:var(--inv-card-ink)!important;font-weight:800!important;letter-spacing:-.25px
+}
+.view :is(.term p,.card p,.category-tile small,.asset-info-card p,.asset-explainer-card p,.asset-section p,.compare-card p,.tool-card p,.tool-hub-card p,.community-post p,.community-review p,.sim-report-item p){
+ font-family:'DM Sans',sans-serif!important;line-height:1.6!important;color:#637895
+}
+.view :is(.term,.card,.category-tile,.category-tile-v2,.home-goal,.home-compare-card,.asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,.asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.compare-card,.tool-card,.tool-hub-card,.sim-report-item,.community-post,.community-review,.community-stat,.profile-shortcut){padding:18px}
+.view :is(.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,.compare-picker,.compare-panel,.sim-form,.sim-output,.sim-breakdown,.sim-report,.glossary-enhanced,.community-compose,.community-side-card,.community-review-form,.account-panel,.account-card,.account-dashboard,.profile-card,.profile-editor,.profile-settings-section,.auth-form,.social-auth,.auth-success-panel){padding:20px}
+.view :is(.asset-quick-icon,.asset-info-card-icon,.asset-section-icon,.tool-hub-icon,.cat-icon,.home-goal-icon,.profile-shortcut-icon,.profile-section-icon){
+ background:#edf4ff!important;border:1px solid #dce9fb!important;color:#155eef!important;border-radius:11px!important
+}
+.view :is(.asset-quick-label,.asset-card-eyebrow,.asset-overview-kicker){color:#6682a8!important;font-family:'DM Sans',sans-serif!important;font-weight:800!important}
+@media(max-width:800px){
+ .view :is(.term,.card,.category-tile,.category-tile-v2,.asset-info-card,.asset-quick-card,.asset-explainer-card,.compare-card,.tool-card,.tool-hub-card,.community-post,.community-review){padding:15px}
+ .view :is(.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,.compare-picker,.sim-form,.sim-output,.glossary-enhanced,.community-compose,.account-card,.profile-card,.profile-editor){padding:16px}
+}
+@media(prefers-reduced-motion:reduce){.view :is(.term,.card,.category-tile,.compare-card){transition:none!important}}
+</style>
+
+
+<style id="inversora-favorite-lists-polish">
+.fav-sidebar-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}.fav-sidebar-heading h3{margin:4px 0 0;font-size:21px}.fav-plus-button{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(135deg,#155eef,#528bff);color:#fff;font-size:27px;line-height:1;box-shadow:0 7px 16px #155eef30;transition:transform .2s,box-shadow .2s}.fav-plus-button:hover{transform:translateY(-2px) rotate(90deg);box-shadow:0 10px 20px #155eef40}.fav-list-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fav-list-count{margin-left:auto;color:#667085;font-size:12px;font-weight:750}.fav-list-public-dot{color:#155eef;font-weight:900}.fav-new-list-wide{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;margin:12px 0 16px;border:1px dashed #9bbcff;border-radius:12px;background:#f5f8ff;color:#155eef;font-weight:750;transition:.18s}.fav-new-list-wide:hover{background:#eaf2ff;border-color:#155eef}.fav-new-list-wide span{font-size:20px;line-height:12px}.fav-list-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fav-list-actions button{padding:10px 9px;border:1px solid #e4e7ec;border-radius:10px;background:#fff;color:#344054;font-size:12px;font-weight:700}.fav-list-actions button.primary{grid-column:1/-1;background:#155eef;color:#fff;border-color:#155eef}.fav-list-actions button:last-child{grid-column:1/-1}.fav-list-actions button:disabled{opacity:.42;cursor:not-allowed}.fav-create-modal{position:fixed;inset:0;z-index:1000;background:#10182880;backdrop-filter:blur(5px);display:grid;place-items:center;padding:20px;animation:favModalIn .18s ease}.fav-create-dialog{width:min(100%,440px);position:relative;background:#fff;border:1px solid #e4e7ec;border-radius:22px;padding:28px;box-shadow:0 24px 70px #10182835}.fav-create-close{position:absolute;right:16px;top:14px;width:34px;height:34px;border-radius:10px;background:#f2f4f7;color:#475467;font-size:22px}.fav-create-icon{width:48px;height:48px;border-radius:15px;background:#eef4ff;color:#155eef;display:grid;place-items:center;font-size:30px;margin-bottom:17px}.fav-create-dialog h2{font-size:26px;margin:7px 0}.fav-create-dialog p{color:#667085;font-size:14px;line-height:1.5;margin:0 0 20px}.fav-create-dialog label{display:block;font-size:13px;font-weight:750;margin-bottom:7px}.fav-create-dialog input{width:100%;padding:13px;border:1px solid #d0d5dd;border-radius:11px;outline:0}.fav-create-dialog input:focus{border-color:#528bff;box-shadow:0 0 0 3px #155eef18}.fav-create-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.fav-create-actions button{padding:11px 15px;border-radius:10px;font-weight:750}.fav-create-cancel{background:#f2f4f7;color:#344054}.fav-create-actions .primary{background:#155eef;color:#fff}.fav-create-error{min-height:18px;margin-top:9px;color:#b42318;font-size:12px}.shared-list-view{background:#fff;border:1px solid #e4e7ec;border-radius:22px;padding:24px}.shared-list-back{background:transparent;color:#155eef;font-weight:750;padding:4px 0 18px}.shared-list-hero{display:flex;align-items:center;gap:18px;padding:23px;border-radius:18px;background:linear-gradient(120deg,#edf4ff,#f8fbff);border:1px solid #dbe7ff}.shared-list-mark{width:54px;height:54px;flex:0 0 54px;display:grid;place-items:center;border-radius:16px;background:#155eef;color:#fff;font-size:32px}.shared-list-hero h2{margin:5px 0;font-size:clamp(23px,4vw,32px)}.shared-list-hero p{margin:0;color:#667085}.shared-list-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0}.shared-list-public{display:flex;align-items:center;gap:8px;color:#067647;font-size:13px;font-weight:750}.shared-list-public i{width:8px;height:8px;border-radius:50%;background:#12b76a}.shared-list-actions .primary{padding:11px 15px;border-radius:10px;background:#155eef;color:#fff;font-weight:750}.shared-list-foot{font-size:12px;color:#667085;margin-top:20px;line-height:1.5}@keyframes favModalIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@media(max-width:680px){.fav-list-actions{grid-template-columns:1fr 1fr}.fav-sidebar-heading{margin-bottom:10px}.shared-list-view{padding:14px}.shared-list-hero{padding:16px;align-items:flex-start}.shared-list-actions{align-items:flex-start;flex-direction:column}}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -840,7 +1118,7 @@ body{min-height:100vh;min-height:100dvh}
 <div class="eyebrow">Conocimiento financiero</div>
 <h1>Entiende una inversión antes de poner tu dinero.</h1>
 <p>Explora opciones, compara sus características y simula escenarios en un solo lugar. Sin jerga innecesaria.</p>
-<div class="quick-search"><input id="heroSearch" placeholder="Prueba: fondos indexados, alquiler, dividendos, oro…" onkeydown="if(event.key==='Enter') doSearch(this.value)" aria-label="Buscar inversiones"><button onclick="doSearch(document.getElementById('heroSearch').value)">Buscar inversiones ↗</button></div><div class="hero-stats"><div class="hero-stat"><b>4</b><span>grandes categorías</span></div><div class="hero-stat"><b>20</b><span>subcategorías</span></div><div class="hero-stat"><b>70</b><span>tipos de inversión</span></div><div class="hero-stat"><b>1</b><span>sitio para explorar y comparar</span></div></div>
+<div class="hero-search-wrap"><div class="quick-search"><input id="heroSearch" placeholder="Prueba: fondos indexados, alquiler, dividendos, oro…" oninput="showHeroSuggestions(this.value)" onfocus="showHeroSuggestions(this.value)" onkeydown="handleHeroSearchKeydown(event,this)" aria-label="Buscar inversiones" aria-autocomplete="list" aria-controls="heroSearchSuggestions" aria-expanded="false"><button onclick="doSearch(document.getElementById('heroSearch').value)">Buscar inversiones ↗</button></div><div id="heroSearchSuggestions" class="hero-search-suggestions" role="listbox" aria-label="Sugerencias de inversiones" hidden></div></div><div class="hero-stats"><div class="hero-stat"><b>4</b><span>grandes categorías</span></div><div class="hero-stat"><b>20</b><span>subcategorías</span></div><div class="hero-stat"><b>70</b><span>tipos de inversión</span></div><div class="hero-stat"><b>1</b><span>sitio para explorar y comparar</span></div></div>
 </section>
 <section class="home-welcome">
   <div class="home-welcome-copy"><span class="home-kicker">EXPLORA A TU RITMO</span><h2>Todo el universo de inversión, más fácil de entender.</h2><p>Empieza por una categoría, descubre sus alternativas y consulta lo importante de cada una.</p></div>
@@ -1113,30 +1391,51 @@ function openDetail(name){
  const meter=(label,val,desc='',reverse=false)=>{let n=Math.max(0,Math.min(10,Number(val)||0));return `<div class="asset-meter"><div class="asset-meter-top"><span>${label}</span><b>${n}/10</b></div><div class="asset-meter-track"><i class="${reverse?'risk-meter':''}" style="width:${n*10}%"></i></div>${desc?`<small>${desc}</small>`:''}</div>`};
  const bullet=(arr,kind)=>`<ul class="asset-list ${kind}">${(arr||[]).map(x=>`<li>${x}</li>`).join('')}</ul>`;
  const barrier=barrierInfo(i), assetIndex=investments.findIndex(x=>x.name===i.name), previous=investments[(assetIndex-1+investments.length)%investments.length], next=investments[(assetIndex+1)%investments.length];
- const assetNav=`<nav class="asset-jump-nav" aria-label="Navegar por la ficha"><a href="#asset-summary">Resumen</a><a href="#asset-how">Cómo funciona</a><a href="#asset-features">Características</a><a href="#asset-pros-cons">Ventajas y riesgos</a><a href="#asset-costs">Costes y fiscalidad</a><a href="#asset-barriers">Barreras de entrada</a></nav>`;
+ const incomeText=String(i.income||'').toLowerCase(),mechanismText=String(i.how||'')+' '+String(i.desc||'');
+ const hasPeriodicIncome=/(renta|alquiler|dividend|inter[eé]s|cup[oó]n|distribu|reparto|cash flow)/i.test(incomeText)&&!/(inexistente|sin ingresos|no genera|no hay)/i.test(incomeText);
+ const hasRevaluation=Number(i.grow||0)>0||/(revaloriz|crecimiento|plusval|apreciaci|rentabilidad total)/i.test(mechanismText);
+ const returnMode=hasPeriodicIncome&&hasRevaluation?'Revalorización + rentas (cash flow)':hasPeriodicIncome?'Generación de rentas (cash flow)':hasRevaluation?'Revalorización / crecimiento':'Depende de la estructura concreta del activo';
+ const assetNav=`<nav class="asset-jump-nav" aria-label="Navegar por la ficha"><a href="#asset-summary">01 · Resumen</a><a href="#asset-how">02 · Funcionamiento</a><a href="#asset-pros-cons">03 · Ventajas y desventajas</a><a href="#asset-costs">04 · Capital, costes y fiscalidad</a><a href="#asset-features">05 · Riesgos y características</a><a href="#asset-barriers">06 · Barreras de entrada</a><a href="#asset-outlook">07 · Horizonte y liquidez</a></nav>`;
  document.getElementById('detail').innerHTML=`<section class="section"><article class="detail asset-detail">
   <div class="asset-topline"><button class="back" onclick="showView('explore')">← Volver a explorar</button><span class="asset-top-note"><span class="asset-live-dot"></span> Guía de inversión</span></div>
-  <header class="asset-hero"><div class="asset-hero-copy"><div class="asset-breadcrumb">${i.cat} <span>›</span> ${i.sub}</div><h1>${i.name}</h1><p class="asset-lead">${i.desc}</p><div class="asset-hero-tags"><span>Capital: ${i.capital||'Depende de la operación'}</span><span>Ingresos: ${i.income||'Variables'}</span></div></div><div class="asset-hero-score"><span>Nota orientativa <button type="button" class="score-help-btn" aria-label="Cómo se calcula esta nota" title="Cómo se calcula esta nota" onclick="showScoreBreakdown(${safeName})">?</button></span><strong>${i.score}<small>/10</small></strong><div class="asset-score-track"><i style="width:${Math.max(0,Math.min(10,Number(i.score)||0))*10}%"></i></div><small>Indicador comparativo, no recomendación</small></div></header>
-  ${assetNav}\n  <div class="detail-actions asset-actions"><button class="detail-sim-btn" onclick="simulateInvestment(${safeName})">↗ Simular esta inversión</button><button class="detail-compare-btn" onclick="startCompare([${JSON.stringify(i.name)}]);showView('compare')">⇄ Comparar</button><button class="detail-favorite ${isFavorite(i.name)?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${isFavorite(i.name)?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button></div>
+  <header class="asset-hero"><div class="asset-hero-copy"><div class="asset-breadcrumb">${i.cat} <span>›</span> ${i.sub}</div><h1>${i.name}</h1><p class="asset-lead">${i.desc}</p><div class="asset-hero-tags"><span>Capital: ${i.capital||'Depende de la operación'}</span><span>Ingresos: ${i.income||'Variables'}</span></div></div><div class="asset-rating-grid"><div class="asset-rating-card inversora-rating"><div class="asset-rating-label">Valoración de Inversora <button type="button" class="score-help-btn" aria-label="Cómo se calcula la valoración de Inversora" title="Cómo se calcula la valoración de Inversora" onclick="showScoreBreakdown(${safeName})">?</button></div><div class="asset-rating-stars">${invStarsMarkup((Number(i.score)||0)/2)}</div><strong class="asset-rating-number">${(Number(i.score||0)/2).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})}<small>/5</small></strong><small>Valoración editorial independiente</small></div><div class="asset-rating-card community-rating"><div class="asset-rating-label">Valoración de la comunidad</div><div class="asset-rating-stars" id="asset-community-rating-stars">☆☆☆☆☆</div><strong class="asset-rating-number" id="asset-community-rating-value">—<small>/5</small></strong><small id="asset-community-rating-count">Aún sin valoraciones</small><button type="button" class="asset-community-open" onclick="invOpenCommunityModal(${safeName})">Valorar este activo <span>→</span></button></div></div></header>
+  ${assetNav}
   <section class="asset-section asset-overview" id="asset-summary">
-<div class="asset-section-head"><span class="asset-section-icon">◈</span><div><h2>Resumen de la inversión</h2><p>Lo importante para entenderla de un vistazo.</p></div></div>
-<div class="asset-overview-panel"><div class="asset-overview-copy"><span class="asset-overview-kicker">IDEA CLAVE</span><p>${assetDefinition(i)}</p><div class="asset-overview-tags"><span>Capital: ${i.capital||'Depende de la operación'}</span><span>Ingresos: ${i.income||'Variables'}</span></div></div><div class="asset-overview-score"><span>Valoración de Inversora <button type="button" class="score-help-btn" aria-label="Cómo se calcula esta nota" title="Cómo se calcula esta nota" onclick="showScoreBreakdown(${safeName})">?</button></span><strong>${i.score}<small>/10</small></strong><div class="asset-score-track"><i style="width:${Math.max(0,Math.min(10,Number(i.score)||0))*10}%"></i></div><small>Valoración editorial independiente</small></div><div class="asset-community-compact" id="asset-community-compact" data-asset="${i.name}"><div class="asset-community-compact-label">Valoración de la comunidad</div><div class="asset-community-compact-score" id="asset-community-compact-score">—<small>/10</small></div><button type="button" class="asset-community-open" onclick="invOpenCommunityModal(${safeName})">Añadir valoración <span>→</span></button></div></div>
+<div class="asset-section-head"><span class="asset-section-icon">◈</span><div><h2>01 · Resumen de la inversión</h2><p>Lo importante para entenderla de un vistazo.</p></div></div>
+<div class="asset-overview-panel"><div class="asset-overview-copy"><span class="asset-overview-kicker">IDEA CLAVE</span><p>${assetDefinition(i)}</p><div class="asset-overview-tags"><span>Capital inicial: ${i.capital||'Depende de la operación'}</span><span>Tipo de ingresos: ${i.income||'No especificado'}</span></div></div><div class="asset-overview-return"><span class="asset-overview-kicker">RENTABILIDAD INDICADA</span><strong>${i.ret||'No disponible'}</strong><small>Dato orientativo del catálogo. Comprueba periodo, fuente y si es bruto o neto antes de compararlo.</small></div></div>
 <div class="asset-quick-grid"><div class="asset-quick-card"><span class="asset-quick-icon blue">↗</span><span class="asset-quick-label">Rentabilidad indicada</span><strong class="asset-quick-value">${i.ret}</strong><small>No está garantizada</small></div><div class="asset-quick-card"><span class="asset-quick-icon amber">⌁</span><span class="asset-quick-label">Riesgo</span><strong class="asset-quick-value">${i.risk}<small>/10</small></strong><small>Escala comparativa del catálogo</small></div><div class="asset-quick-card"><span class="asset-quick-icon teal">◷</span><span class="asset-quick-label">Liquidez</span><strong class="asset-quick-value">${i.liq}<small>/10</small></strong><small>Facilidad para recuperar el dinero</small></div><div class="asset-quick-card"><span class="asset-quick-icon violet">€</span><span class="asset-quick-label">Ingresos periódicos</span><strong class="asset-quick-value">${i.cash}<small>/10</small></strong><small>Potencial de generar cobros</small></div></div></section>
-<section class="asset-section" id="asset-how"><div class="asset-section-head"><span class="asset-section-icon">↗</span><div><h2>Cómo funciona</h2><p>De dónde puede venir el rendimiento y qué implica tener este activo.</p></div></div><div class="asset-explainer-grid"><div class="asset-explainer-card"><span class="asset-card-eyebrow">01 · EL MECANISMO</span><h3>¿Cómo se gana dinero?</h3><p>${i.how||i.desc}</p></div><div class="asset-explainer-card"><span class="asset-card-eyebrow">02 · LOS INGRESOS</span><h3>¿Cuándo se cobra?</h3><p>${i.income||'Depende del activo y de las condiciones de la inversión.'}</p><div class="asset-mini-fact"><span>Gestión estimada</span><b>${i.management||'Depende de la operación'}</b></div></div></div></section>
-  <section class="asset-section" id="asset-features"><div class="asset-section-head"><span class="asset-section-icon">◉</span><div><h2>Características principales</h2><p>Escalas de 0 a 10 para comparar distintas alternativas. No son garantías ni probabilidades.</p></div></div><div class="asset-ratings-panel">${meter('Liquidez',i.liq,'Qué fácil puede ser convertirlo en dinero')}${meter('Potencial de rentabilidad',i.return,'Potencial orientativo de revalorización o retorno')}${meter('Potencial de ingresos pasivos',i.passive,'Cuánto puede funcionar sin gestión continua')}${meter('Facilidad de gestión',i.effort,'Más puntuación = más fácil de gestionar')}${meter('Complejidad',i.complex,'Más puntuación = más compleja de entender o gestionar',true)}${meter('Apalancamiento',i.leverage,'Posibilidad o presencia de financiación')}</div></section>
-  <section class="asset-section" id="asset-pros-cons"><div class="asset-section-head"><span class="asset-section-icon">⚖</span><div><h2>Ventajas e inconvenientes</h2><p>Los dos lados que conviene valorar antes de tomar una decisión.</p></div></div><div class="asset-pros-cons"><div class="asset-pros-card"><div class="asset-pros-title"><span>✓</span><h3>Ventajas</h3></div>${bullet(i.pros,'pros')}</div><div class="asset-cons-card"><div class="asset-cons-title"><span>!</span><h3>Inconvenientes y riesgos</h3></div>${bullet(i.cons,'cons')}</div></div></section>
-  <section class="asset-section" id="asset-costs"><div class="asset-section-head"><span class="asset-section-icon">◎</span><div><h2>Capital, costes y fiscalidad</h2><p>Comprueba el dinero necesario, los gastos asociados y cómo pueden tributar los resultados.</p></div></div><div class="asset-info-grid"><div class="asset-info-card"><div class="asset-info-card-icon">€</div><div><h3>Capital inicial</h3><p>${i.capital||'Depende de la operación'}</p></div></div><div class="asset-info-card"><div class="asset-info-card-icon">◷</div><div><h3>Tiempo y dedicación</h3><p>${i.management||'Depende de la operación'}</p><small>Perfil: ${i.profile||'Depende de tus objetivos y experiencia.'}</small></div></div><div class="asset-info-card asset-tax-card"><div class="asset-info-card-icon">▤</div><div><h3>Fiscalidad en España</h3><p>${i.tax||'Depende de la estructura y de la operación.'}</p><details><summary>Ver explicación fiscal detallada</summary><p>${i.taxdetail||'Consulta la normativa aplicable al vehículo y a tu situación fiscal.'}</p></details><small>Resumen orientativo. La tributación depende del vehículo, la operación, la residencia fiscal y la normativa vigente.</small></div></div></div>
-   <div class="asset-costs"><h3>Otros costes que debes revisar</h3><div class="asset-cost-row"><span><b>Costes recurrentes</b><small>Gastos periódicos de mantenimiento o gestión</small></span><p>${i.costs||'No especificados en el catálogo'}</p></div><div class="asset-cost-row"><span><b>Costes extraordinarios</b><small>Reparaciones, incidencias u otros gastos puntuales</small></span><p>${i.costsextra||'No especificados en el catálogo'}</p></div><div class="asset-cost-row"><span><b>Entrada y salida</b><small>Comisiones, intermediación o costes de compraventa</small></span><p>${i.entrycosts||'No especificados en el catálogo'}</p></div></div>
-  </section>
+<section class="asset-section" id="asset-how"><div class="asset-section-head"><span class="asset-section-icon">↗</span><div><h2>02 · Funcionamiento</h2><p>De dónde puede venir el rendimiento y qué implica tener este activo.</p></div></div><div class="asset-return-mode"><span>TIPO DE RETORNO</span><strong>${returnMode}</strong><small>Puede obtenerse por crecimiento del valor, cobros periódicos o una combinación de ambos, según las características concretas del activo.</small></div><div class="asset-explainer-grid"><div class="asset-explainer-card"><span class="asset-card-eyebrow">01 · EL MECANISMO</span><h3>¿Cómo se gana dinero?</h3><p>${i.how||i.desc}</p></div><div class="asset-explainer-card"><span class="asset-card-eyebrow">02 · LOS INGRESOS</span><h3>¿Genera rentas o cash flow?</h3><p>${i.income||'No consta información suficiente sobre los ingresos periódicos de este activo.'}</p><div class="asset-mini-fact"><span>Gestión estimada</span><b>${i.management||'Depende de la operación'}</b></div></div></div></section>
+  
+  <section class="asset-section" id="asset-pros-cons"><div class="asset-section-head"><span class="asset-section-icon">⚖</span><div><h2>03 · Ventajas y desventajas</h2><p>Los dos lados que conviene valorar antes de tomar una decisión.</p></div></div><div class="asset-pros-cons"><div class="asset-pros-card"><div class="asset-pros-title"><span>✓</span><h3>Ventajas</h3></div>${bullet(i.pros,'pros')}</div><div class="asset-cons-card"><div class="asset-cons-title"><span>!</span><h3>Inconvenientes y riesgos</h3></div>${bullet(i.cons,'cons')}</div></div></section>
+  <section class="asset-section" id="asset-costs"><div class="asset-section-head"><span class="asset-section-icon">◎</span><div><h2>04 · Capital inicial, costes y fiscalidad</h2><p>El mismo análisis para todos los activos: cuánto necesitas, qué gastos soportas y qué impuestos pueden aplicarse.</p></div></div><div class="asset-cost-dashboard"><article class="asset-cost-card asset-capital-card"><span class="asset-cost-eyebrow">01 · CAPITAL INICIAL</span><h3>¿Cuánto dinero necesitas?</h3><p>${i.capital||'No especificado para este activo. Depende del producto, proveedor y operación.'}</p></article><article class="asset-cost-card"><span class="asset-cost-eyebrow">02 · COSTES RECURRENTES</span><h3>Gastos periódicos</h3><p>${i.costs||'No consta un coste recurrente específico. Comprueba las condiciones del proveedor.'}</p></article><article class="asset-cost-card"><span class="asset-cost-eyebrow">03 · COSTES EXTRAORDINARIOS</span><h3>Gastos puntuales</h3><p>${i.costsextra||'No consta un coste extraordinario específico para este activo.'}</p></article><article class="asset-cost-card"><span class="asset-cost-eyebrow">04 · ENTRADA Y SALIDA</span><h3>Comprar, vender o retirar</h3><p>${i.entrycosts||'No consta una comisión específica. Revisa intermediación, spreads y condiciones de salida.'}</p></article><article class="asset-cost-card asset-tax-card"><span class="asset-cost-eyebrow">05 · FISCALIDAD EN ESPAÑA</span><h3>¿Qué impuestos se pagan?</h3><p>${i.tax||'Fiscalidad no determinada para este activo. Debe analizarse según el vehículo, la operación y la residencia fiscal.'}</p><details><summary>Ver explicación fiscal detallada y supuestos</summary><p>${i.taxdetail||'La fiscalidad específica está pendiente de verificación. No se deben asumir tipos impositivos sin identificar el vehículo y el hecho imponible.'}</p></details><small>Los porcentajes y reglas deben contrastarse con fuentes oficiales y normativa vigente antes de publicar la ficha como verificada.</small></article><article class="asset-cost-card"><span class="asset-cost-eyebrow">06 · TIEMPO Y DEDICACIÓN</span><h3>Gestión necesaria</h3><p>${i.management||'No especificado'} · ${i.profile||'El encaje depende de los objetivos, experiencia y disponibilidad del inversor.'}</p></article></div></section>
 
-  <section class="asset-section asset-barrier-section" id="asset-barriers"><div class="asset-section-head"><span class="asset-section-icon">⌑</span><div><h2>¿Qué necesitas para empezar?</h2><p>Las barreras de entrada explican qué puede dificultar el acceso a esta inversión.</p></div></div>
+  <section class="asset-section" id="asset-features"><div class="asset-section-head"><span class="asset-section-icon">◉</span><div><h2>05 · Riesgos y características</h2><p>Indicadores orientativos para entender los factores que pueden influir en el resultado.</p></div></div><div class="asset-ratings-panel">${meter('Liquidez',i.liq,'Qué fácil puede ser convertirlo en dinero')}${meter('Potencial de rentabilidad',i.return,'Potencial orientativo de revalorización o retorno')}${meter('Potencial de ingresos pasivos',i.passive,'Cuánto puede funcionar sin gestión continua')}${meter('Facilidad de gestión',i.effort,'Más puntuación = más fácil de gestionar')}${meter('Complejidad',i.complex,'Más puntuación = más compleja de entender o gestionar',true)}${meter('Apalancamiento',i.leverage,'Posibilidad o presencia de financiación')}</div></section>
+  <section class="asset-section asset-barrier-section" id="asset-barriers"><div class="asset-section-head"><span class="asset-section-icon">⌑</span><div><h2>06 · Barreras de entrada</h2><p>Las barreras de entrada explican qué puede dificultar el acceso a esta inversión.</p></div></div>
 <div class="entry-overview"><div class="entry-level"><div class="entry-level-heading"><span class="entry-kicker">BARRERA DE ENTRADA ORIENTATIVA</span><span class="entry-level-value">${barrier.level}</span></div><div class="entry-level-scale"><i class="${/Baja/.test(barrier.level)?'on':''}"></i><i class="${/Baja|Media/.test(barrier.level)?'on':''}"></i><i class="${/Media|Alta/.test(barrier.level)?'on':''}"></i><i class="${/Alta/.test(barrier.level)?'on':''}"></i></div><p>${barrier.summary}</p></div><div class="entry-capital"><span class="entry-capital-icon">€</span><div><small>Capital para acceder</small><strong>${barrier.capital}</strong></div></div></div>
 <h3 class="entry-subtitle">Qué puede suponer una barrera</h3><div class="entry-factors">${barrier.factors.map((x,j)=>'<article class="entry-factor"><span class="entry-factor-number">'+['01','02','03'][j]+'</span><div><b>'+['Dinero necesario','Conocimientos','Acceso y condiciones'][j]+'</b><p>'+x+'</p></div></article>').join('')}</div>
 <div class="entry-takeaway"><span>✓</span><p><b>Qué conviene comprobar:</b> el importe mínimo real, los requisitos del proveedor y todos los costes antes de comprometer tu dinero.</p></div><p class="entry-note">Estimación cualitativa para orientar la comparación. Puede variar según el producto, proveedor, país y operación concreta; no equivale a un mínimo legal ni garantiza el acceso.</p></section>
-${renderStandardAnalysis(i)}\n<nav class="asset-next-nav" aria-label="Otras inversiones"><button onclick="openDetail(${JSON.stringify(previous.name).replace(/"/g,'&quot;')})"><span>← Anterior</span><b>${previous.name}</b></button><button onclick="openDetail(${JSON.stringify(next.name).replace(/"/g,'&quot;')})"><span>Siguiente →</span><b>${next.name}</b></button></nav>
+<section class="asset-section asset-outlook-section" id="asset-outlook"><div class="asset-section-head"><span class="asset-section-icon">⌁</span><div><h2>07 · Horizonte y liquidez</h2><p>Plazo, facilidad de salida y dedicación que conviene considerar antes de invertir.</p></div></div><div class="asset-outlook-grid"><article><span>Liquidez orientativa</span><strong>${i.liq??'—'}<small>/10</small></strong><p>Facilidad para recuperar el capital, según las condiciones del activo.</p></article><article><span>Horizonte y perfil</span><strong>${i.profile||'Por determinar'}</strong><p>El plazo adecuado depende del objetivo, el riesgo y las condiciones de salida.</p></article></div></section>
+<nav class="asset-bottom-actions"><button class="detail-sim-btn" onclick="simulateInvestment(${safeName})">↗ Simular esta inversión</button><button class="detail-favorite ${isFavorite(i.name)?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${isFavorite(i.name)?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button><button class="asset-print-btn" onclick="window.print()">⎙ Imprimir ficha</button><button class="asset-rate-btn" onclick="invOpenCommunityModal(${safeName})">★ Valorar este activo</button></nav>
+<nav class="asset-next-nav" aria-label="Otras inversiones"><button onclick="openDetail(${JSON.stringify(previous.name).replace(/"/g,'&quot;')})"><span>← Anterior</span><b>${previous.name}</b></button><button onclick="openDetail(${JSON.stringify(next.name).replace(/"/g,'&quot;')})"><span>Siguiente →</span><b>${next.name}</b></button></nav>
   <footer class="asset-disclaimer"><span>ⓘ</span><p><b>Antes de decidir:</b> los datos y puntuaciones son orientativos y proceden del catálogo; no han sido verificados de forma independiente. Las rentabilidades potenciales no son promesas ni previsiones. Esta ficha es educativa y no constituye asesoramiento financiero o fiscal personalizado.</p></footer>
  </article></section>`;showView('detail')
 }
+let heroSuggestionItems=[],heroSuggestionActive=-1;
+function hideHeroSuggestions(){const box=document.getElementById('heroSearchSuggestions'),input=document.getElementById('heroSearch');if(box){box.hidden=true;box.innerHTML=''}if(input)input.setAttribute('aria-expanded','false');heroSuggestionItems=[];heroSuggestionActive=-1}
+function showHeroSuggestions(query){
+ const box=document.getElementById('heroSearchSuggestions'),input=document.getElementById('heroSearch');if(!box||!input)return;
+ const q=String(query||'').trim().toLocaleLowerCase('es');if(!q){hideHeroSuggestions();return}
+ const matches=investments.map(item=>{const name=String(item.name||''),fields=[name,item.cat,item.sub,item.desc,item.profile,subtypeFor(item),...(item.goals||[])].filter(Boolean).join(' ').toLocaleLowerCase('es');let rank=name.toLocaleLowerCase('es')===q?0:name.toLocaleLowerCase('es').startsWith(q)?1:name.toLocaleLowerCase('es').includes(q)?2:fields.includes(q)?3:99;return {item,rank}}).filter(x=>x.rank<99).sort((a,b)=>a.rank-b.rank||a.item.name.localeCompare(b.item.name,'es')).slice(0,7);
+ heroSuggestionItems=matches.map(x=>x.item);heroSuggestionActive=-1;
+ if(!matches.length){box.innerHTML='<div class="hero-search-empty">No encontramos coincidencias. Prueba con otra palabra o pulsa Buscar inversiones para ver resultados.</div>';box.hidden=false;input.setAttribute('aria-expanded','true');return}
+ const safe=value=>String(value||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ box.innerHTML=matches.map((x,index)=>'<button type="button" class="hero-search-suggestion" role="option" aria-selected="false" onclick="selectHeroSuggestion('+index+')"><span class="hero-search-suggestion-icon" aria-hidden="true">↗</span><span class="hero-search-suggestion-copy"><strong>'+safe(x.item.name)+'</strong><small>'+safe([x.item.cat,subtypeFor(x.item)].filter(Boolean).join(' · '))+'</small></span><span class="hero-search-suggestion-arrow" aria-hidden="true">›</span></button>').join('')+'<div class="hero-search-hint">Selecciona una sugerencia para abrir su ficha · ↑ ↓ para navegar · Esc para cerrar</div>';
+ box.hidden=false;input.setAttribute('aria-expanded','true');
+}
+function setHeroSuggestionActive(index){const box=document.getElementById('heroSearchSuggestions');if(!box||box.hidden)return;const rows=[...box.querySelectorAll('.hero-search-suggestion')];if(!rows.length)return;heroSuggestionActive=(index+rows.length)%rows.length;rows.forEach((row,i)=>{row.classList.toggle('active',i===heroSuggestionActive);row.setAttribute('aria-selected',i===heroSuggestionActive?'true':'false')});rows[heroSuggestionActive].scrollIntoView({block:'nearest'})}
+function selectHeroSuggestion(index){const item=heroSuggestionItems[Number(index)];if(!item)return;const input=document.getElementById('heroSearch');if(input)input.value=item.name;hideHeroSuggestions();openDetail(item.name)}
+function handleHeroSearchKeydown(event,input){if(event.key==='ArrowDown'&&!document.getElementById('heroSearchSuggestions')?.hidden){event.preventDefault();setHeroSuggestionActive(heroSuggestionActive+1)}else if(event.key==='ArrowUp'&&!document.getElementById('heroSearchSuggestions')?.hidden){event.preventDefault();setHeroSuggestionActive(heroSuggestionActive<=0?heroSuggestionItems.length-1:heroSuggestionActive-1)}else if(event.key==='Enter'){event.preventDefault();if(heroSuggestionActive>=0)selectHeroSuggestion(heroSuggestionActive);else{hideHeroSuggestions();doSearch(input.value)}}else if(event.key==='Escape')hideHeroSuggestions()}
+document.addEventListener('click',event=>{if(!event.target.closest('.hero-search-wrap'))hideHeroSuggestions()});
 function doSearch(q){showView('explore');document.getElementById('exploreSearch').value=q;renderExplore()}
 function filterGoal(g){clearFilters();showView('explore');let a=investments.filter(i=>i.goals.includes(g));document.getElementById('count').textContent=a.length+' resultados';document.getElementById('resultsSummary').textContent='Objetivo: '+g;document.getElementById('exploreGrid').innerHTML=a.map(card).join('')}
 let compareNames=['ETFs indexados','Viviendas para alquiler de larga duración'];
@@ -1462,6 +1761,7 @@ function invReviewAverage(reviews,key){
  return Number((reviews.reduce((sum,r)=>sum+Number(r[key]||0),0)/reviews.length).toFixed(1));
 }
 
+function invStarsMarkup(value){const n=Math.max(0,Math.min(5,Number(value)||0)),full=Math.round(n);return '<span class="rating-stars" role="img" aria-label="'+n.toLocaleString('es-ES',{maximumFractionDigits:1})+' de 5 estrellas">'+('★'.repeat(full))+('☆'.repeat(5-full))+'</span>'}
 function invRenderAssetReviews(name,reviews,profiles){
  const host=document.getElementById('asset-community-modal-content');
  const own=reviews.find(r=>r.user_id===invUser?.id)||null;
@@ -1473,7 +1773,7 @@ function invRenderAssetReviews(name,reviews,profiles){
   const profile=profiles[r.user_id]||{},author=profile.display_name||'Miembro de Inversora';
   const date=r.updated_at||r.created_at;
   const when=date?new Date(date).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}):'';
-  return '<article class="community-review"><div class="community-review-top"><div><span class="community-review-author">'+invEsc(author)+'</span><span class="community-review-date"> · '+invEsc(when)+'</span></div><span class="community-review-score">'+invReviewWeightedScore(r).toLocaleString('es-ES',{maximumFractionDigits:1})+'/10</span></div>'+(r.comment?'<p>'+invEsc(r.comment)+'</p>':'<p style="color:#98a2b3">Ha compartido su valoración por criterios, sin añadir comentario.</p>')+'</article>';
+  return '<article class="community-review"><div class="community-review-top"><div><span class="community-review-author">'+invEsc(author)+'</span><span class="community-review-date"> · '+invEsc(when)+'</span></div><span class="community-review-score">'+invStarsMarkup(invReviewWeightedScore(r)/2)+' '+(invReviewWeightedScore(r)/2).toLocaleString('es-ES',{maximumFractionDigits:1})+'/5</span></div>'+(r.comment?'<p>'+invEsc(r.comment)+'</p>':'<p style="color:#98a2b3">Ha compartido su valoración por criterios, sin añadir comentario.</p>')+'</article>';
  }).join(''):'<div class="community-empty">Todavía no hay valoraciones de usuarios para este activo. ¡Sé el primero en compartir tu opinión!</div>';
  let form='';
  if(invUser){
@@ -1485,9 +1785,13 @@ function invRenderAssetReviews(name,reviews,profiles){
  }else{
   form='<div class="community-login">Para valorar esta inversión necesitas una cuenta de Inversora. <button type="button" onclick="invStartReviewAuth()">Registrarme o iniciar sesión</button></div>';
  }
- if(host)host.innerHTML='<section class="asset-community"><div class="asset-community-head"><div><h2>Valoración de la comunidad</h2><p>Media de las opiniones de usuarios, independiente de la valoración de Inversora.</p></div><div class="community-score"><strong>'+(score===null?'—':score.toLocaleString('es-ES',{maximumFractionDigits:1})+'<small>/10</small>')+'</strong><span>'+(count?count+' '+(count===1?'valoración':'valoraciones'):'Sin valoraciones')+'</span></div></div>'+breakdown+'<div class="community-reviews-title"><h3>Reseñas de usuarios</h3><span>'+count+' '+(count===1?'opinión':'opiniones')+'</span></div><div class="community-review-list">'+list+'</div>'+form+'</section>';
+ if(host)host.innerHTML='<section class="asset-community"><div class="asset-community-head"><div><h2>Valoración de la comunidad</h2><p>Media de las opiniones de usuarios, independiente de la valoración de Inversora.</p></div><div class="community-score"><strong>'+(score===null?'—':invStarsMarkup(score/2)+'<br>'+(score/2).toLocaleString('es-ES',{maximumFractionDigits:1})+'<small>/5</small>')+'</strong><span>'+(count?count+' '+(count===1?'valoración':'valoraciones'):'Sin valoraciones')+'</span></div></div>'+breakdown+'<div class="community-reviews-title"><h3>Reseñas de usuarios</h3><span>'+count+' '+(count===1?'opinión':'opiniones')+'</span></div><div class="community-review-list">'+list+'</div>'+form+'</section>';
  const scoreEl=document.getElementById('asset-community-compact-score');
- if(scoreEl)scoreEl.innerHTML=score===null?'—<small>/10</small>':score.toLocaleString('es-ES',{maximumFractionDigits:1})+'<small>/10</small>';
+ if(scoreEl)scoreEl.innerHTML=score===null?'—<small>/5</small>':(score/2).toLocaleString('es-ES',{maximumFractionDigits:1})+'<small>/5</small>';
+ const stars=document.getElementById('asset-community-rating-stars'),value=document.getElementById('asset-community-rating-value'),countEl=document.getElementById('asset-community-rating-count');
+ if(stars)stars.innerHTML=score===null?'☆☆☆☆☆':invStarsMarkup(score/2);
+ if(value)value.innerHTML=score===null?'—<small>/5</small>':(score/2).toLocaleString('es-ES',{maximumFractionDigits:1})+'<small>/5</small>';
+ if(countEl)countEl.textContent=count?(count+' '+(count===1?'valoración':'valoraciones')):'Aún sin valoraciones';
 }
 
 async function invLoadAssetReviews(name){
@@ -1557,6 +1861,92 @@ openDetail=function(name){
  invLoadAssetReviews(name);
 };
 
+
+
+/* Listas compartidas: enlaces públicos, lectura sin cuenta y creación guiada */
+
+let invDefaultListId=null;
+async function invLoadLists(){
+ if(!invUser){invListsCache=[];invDefaultListId=null;return}
+ const {data:lists,error}=await invDb.from('favorite_lists').select('id,name,is_public,created_at').eq('user_id',invUser.id).order('created_at');
+ if(error)throw error;
+ const ids=(lists||[]).map(x=>x.id);let items=[];
+ if(ids.length){const r=await invDb.from('favorite_items').select('id,list_id,investment_key,investment_name').in('list_id',ids);if(r.error)throw r.error;items=r.data||[]}
+ invListsCache=(lists||[]).map(l=>({...l,items:items.filter(i=>i.list_id===l.id).map(i=>i.investment_name)}));
+ if(!invListsCache.length){const {data,error:e}=await invDb.from('favorite_lists').insert({user_id:invUser.id,name:'Favoritos'}).select().single();if(e)throw e;invListsCache=[{...data,items:[]}]}
+ invDefaultListId=invListsCache[0]?.id||null;
+}
+function getFavorites(){const base=invListsCache.find(x=>x.id===invDefaultListId)||invListsCache[0];return base?.items||[]}
+async function toggleFavorite(name,detail=false){
+ if(!invUser){showView('account');authMode='register';renderAccount();const m=document.getElementById('authMessage');if(m)m.textContent='Crea una cuenta o inicia sesión para guardar tus inversiones.';return}
+ try{let base=invListsCache.find(x=>x.id===invDefaultListId)||invListsCache[0];if(!base){const r=await invDb.from('favorite_lists').insert({user_id:invUser.id,name:'Favoritos'}).select().single();if(r.error)throw r.error;base={...r.data,items:[]};invListsCache.unshift(base);invDefaultListId=base.id}
+ const exists=base.items.includes(name);if(exists){const {data:row,error:readError}=await invDb.from('favorite_items').select('id').eq('list_id',base.id).eq('investment_key',name).maybeSingle();if(readError)throw readError;if(row){const r=await invDb.from('favorite_items').delete().eq('id',row.id);if(r.error)throw r.error}base.items=base.items.filter(x=>x!==name)}else{const r=await invDb.from('favorite_items').insert({list_id:base.id,investment_key:name,investment_name:name});if(r.error)throw r.error;base.items.push(name)}
+ renderHome();renderExplore();renderFavorites();if(detail)openDetail(name)
+ }catch(e){console.error(e);invNotice('No se ha podido actualizar el favorito: '+e.message)}
+}
+async function deleteFavoriteList(){
+ const l=invListsCache.find(x=>x.id===selectedFavoriteList);if(!l||l.id===invDefaultListId)return invNotice('La lista principal no se puede eliminar.');
+ if(!confirm('¿Eliminar la lista «'+l.name+'» y todos sus elementos?'))return;
+ const {error}=await invDb.from('favorite_lists').delete().eq('id',l.id);if(error)return invNotice('No se ha podido eliminar: '+error.message);
+ invListsCache=invListsCache.filter(x=>x.id!==l.id);selectedFavoriteList=invDefaultListId;renderFavorites();invNotice('Lista eliminada.');
+}
+
+async function createFavoriteList(){
+ if(!invUser){showView('account');return}
+ if(document.getElementById('favCreateModal'))return;
+ const modal=document.createElement('div');modal.id='favCreateModal';modal.className='fav-create-modal';
+ modal.innerHTML='<form class="fav-create-dialog" role="dialog" aria-modal="true" aria-labelledby="favCreateTitle"><button type="button" class="fav-create-close" aria-label="Cerrar">×</button><div class="fav-create-icon">＋</div><span class="eyebrow">Organiza tus ideas</span><h2 id="favCreateTitle">Nueva lista</h2><p>Ponle un nombre que te ayude a identificar su objetivo.</p><label for="favCreateName">Nombre de la lista</label><input id="favCreateName" maxlength="50" placeholder="Ej. Inversiones a largo plazo" required autocomplete="off"><div class="fav-create-actions"><button type="button" class="fav-create-cancel">Cancelar</button><button type="submit" class="primary">Crear lista <span>＋</span></button></div><div class="fav-create-error" role="status"></div></form>';
+ document.body.appendChild(modal);const input=modal.querySelector('#favCreateName'),close=()=>modal.remove();modal.querySelector('.fav-create-close').onclick=close;modal.querySelector('.fav-create-cancel').onclick=close;modal.addEventListener('click',e=>{if(e.target===modal)close()});
+ modal.querySelector('form').addEventListener('submit',async e=>{e.preventDefault();const name=input.value.trim();if(!name){input.focus();return}const submit=modal.querySelector('button[type="submit"]');submit.disabled=true;submit.textContent='Creando…';try{const {data,error}=await invDb.from('favorite_lists').insert({user_id:invUser.id,name}).select().single();if(error)throw error;invListsCache.push({...data,items:[]});selectedFavoriteList=data.id;close();renderFavorites();invNotice('Lista creada. Ya puedes añadir tus inversiones.')}catch(err){modal.querySelector('.fav-create-error').textContent=err.code==='23505'?'Ya tienes una lista con ese nombre.':err.message;submit.disabled=false;submit.innerHTML='Crear lista <span>＋</span>'}});
+ setTimeout(()=>input.focus(),30);
+}
+async function renameFavoriteList(){
+ const l=invListsCache.find(x=>x.id===selectedFavoriteList);if(!l)return;
+ const name=prompt('Nuevo nombre de la lista:',l.name)?.trim().slice(0,50);if(!name||name===l.name)return;
+ const {error}=await invDb.from('favorite_lists').update({name,updated_at:new Date().toISOString()}).eq('id',l.id);
+ if(error)return invNotice('No se ha podido renombrar la lista: '+error.message);
+ l.name=name;renderFavorites();invNotice('Nombre de la lista actualizado.');
+}
+async function toggleFavoriteListVisibility(){
+ const l=invListsCache.find(x=>x.id===selectedFavoriteList);if(!l)return;
+ const next=!l.is_public;
+ if(next&&!confirm('Al hacer pública esta lista, cualquier persona con su enlace podrá consultar su nombre y los activos que contiene. No podrá modificarla. ¿Continuar?'))return;
+ const {error}=await invDb.from('favorite_lists').update({is_public:next,updated_at:new Date().toISOString()}).eq('id',l.id);
+ if(error)return invNotice('No se ha podido actualizar la privacidad: '+error.message);
+ l.is_public=next;renderFavorites();
+ invNotice(next?'Lista pública. Ya puedes compartir su enlace.':'La lista ahora es privada. El enlace dejará de mostrar su contenido.');
+}
+async function shareFavoriteList(){
+ const l=invListsCache.find(x=>x.id===selectedFavoriteList);if(!l)return;
+ if(!l.is_public){const {error}=await invDb.from('favorite_lists').update({is_public:true,updated_at:new Date().toISOString()}).eq('id',l.id);if(error)return invNotice('No se ha podido preparar el enlace: '+error.message);l.is_public=true;renderFavorites()}
+ const url=new URL(window.location.href);url.searchParams.set('lista',l.id);url.hash='';
+ const shareUrl=url.toString();
+ try{if(navigator.share)await navigator.share({title:l.name+' · Inversora',text:'Consulta mi lista «'+l.name+'» en Inversora.',url:shareUrl});else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(shareUrl);invNotice('Enlace público copiado. Ya puedes enviarlo a otros usuarios.')}else prompt('Copia el enlace de tu lista:',shareUrl)}
+ catch(e){if(e?.name!=='AbortError'){try{await navigator.clipboard.writeText(shareUrl);invNotice('Enlace copiado.')}catch(_){prompt('Copia el enlace de tu lista:',shareUrl)}}}
+}
+async function openSharedFavoriteList(id){
+ if(!/^[0-9a-f-]{30,40}$/i.test(String(id||'')))return;
+ showView('favorites');const host=document.getElementById('favoritesWorkspace');if(!host)return;
+ host.innerHTML='<div class="community-empty">Cargando lista compartida…</div>';
+ try{
+  const {data:list,error}=await invDb.from('favorite_lists').select('id,name,user_id,created_at,is_public').eq('id',id).eq('is_public',true).maybeSingle();
+  if(error)throw error;if(!list)throw new Error('Esta lista no existe o su propietario ha dejado de compartirla.');
+  const {data:items,error:itemError}=await invDb.from('favorite_items').select('investment_name').eq('list_id',id).order('created_at');if(itemError)throw itemError;
+  const names=(items||[]).map(x=>x.investment_name),cards=names.map(n=>investments.find(i=>i.name===n)).filter(Boolean);
+  const url=new URL(window.location.href);url.searchParams.set('lista',id);
+  host.innerHTML='<div class="shared-list-view"><button class="shared-list-back" onclick="window.history.replaceState({},document.title,window.location.pathname);showView(\'home\')">← Volver a Inversora</button><div class="shared-list-hero"><div class="shared-list-mark">＋</div><div><span class="eyebrow">Lista pública · Inversora</span><h2>'+invEsc(list.name)+'</h2><p>'+names.length+' '+(names.length===1?'inversión':'inversiones')+' compartidas para consultar y descubrir ideas.</p></div></div><div class="shared-list-actions"><span class="shared-list-public"><i></i> Compartida públicamente</span><button type="button" class="primary" onclick="navigator.clipboard?.writeText(location.href).then(()=>invNotice(\'Enlace copiado.\'))">Copiar enlace ↗</button></div>'+(cards.length?'<div class="grid">'+cards.map(card).join('')+'</div>':'<div class="favorites-empty"><h3>Esta lista todavía está vacía</h3><p>Su propietario aún no ha añadido inversiones.</p></div>')+'<p class="shared-list-foot">Lista de consulta. Solo su propietario puede editarla. Las inversiones no constituyen una recomendación personalizada.</p></div>';
+  window.history.replaceState({},document.title,url.pathname+url.search);
+ }catch(e){host.innerHTML='<div class="favorites-empty"><div class="big-heart">↗</div><h3>No se puede consultar esta lista</h3><p>'+invEsc(e.message||'Enlace no disponible.')+'</p><button class="apply-filters" onclick="window.history.replaceState({},document.title,window.location.pathname);showView(\'home\')">Ir al inicio</button></div>'}
+}
+function renderFavorites(){
+ const host=document.getElementById('favoritesWorkspace');if(!host)return;
+ if(!invUser){host.innerHTML='<div class="favorites-empty"><div class="big-heart">♡</div><h3>Tu espacio de inversión</h3><p>Inicia sesión para crear tus propias listas y sincronizarlas entre dispositivos.</p><button class="apply-filters" onclick="showView(\'account\')">Crear cuenta o iniciar sesión</button></div>';return}
+ const lists=invListsCache;if(!lists.length){host.innerHTML='<p>Cargando tus listas…</p>';return}
+ const selected=lists.find(l=>l.id===selectedFavoriteList)||lists.find(l=>l.name==='Favoritos')||lists[0];selectedFavoriteList=selected.id;
+ const arr=selected.items.map(n=>investments.find(i=>i.name===n)).filter(Boolean),total=lists.reduce((n,l)=>n+l.items.length,0),options=investments.filter(i=>!selected.items.includes(i.name)).map(i=>'<option value="'+invEsc(i.name)+'">'+invEsc(i.name)+'</option>').join('');
+ host.innerHTML='<div class="fav-workspace"><aside class="fav-sidebar"><div class="fav-sidebar-heading"><div><span class="eyebrow">Tu biblioteca</span><h3>Mis listas</h3></div><button class="fav-plus-button" type="button" onclick="createFavoriteList()" aria-label="Crear nueva lista" title="Crear nueva lista">＋</button></div><div class="fav-list-buttons">'+lists.map(l=>'<button class="fav-list-button '+(l.id===selected.id?'active':'')+'" onclick="selectFavoriteList(\''+l.id+'\')"><span class="fav-list-name">'+invEsc(l.name)+'</span><span class="fav-list-count">'+l.items.length+'</span>'+(l.is_public?'<span class="fav-list-public-dot" title="Lista pública">↗</span>':'')+'</button>').join('')+'</div><button class="fav-new-list-wide" type="button" onclick="createFavoriteList()"><span>＋</span> Crear otra lista</button><div class="fav-list-actions"><button type="button" onclick="renameFavoriteList()" '+(selected.name==='Favoritos'?'disabled':'')+'>✎ Renombrar</button><button type="button" onclick="deleteFavoriteList()" '+(selected.name==='Favoritos'?'disabled':'')+'>Eliminar</button><button type="button" onclick="toggleFavoriteListVisibility()">'+(selected.is_public?'Hacer privada':'Hacer pública')+'</button><button class="primary" type="button" onclick="shareFavoriteList()">Compartir lista ↗</button><button type="button" onclick="shareFavoriteListToCommunity()">Publicar en Comunidad</button></div><p class="fav-list-sub">'+lists.length+' listas · '+total+' activos guardados</p></aside><div class="fav-main"><div class="section-head"><div><span class="eyebrow">Tu selección</span><h2>'+invEsc(selected.name)+'</h2><small>'+arr.length+' '+(arr.length===1?'inversión':'inversiones')+(selected.is_public?' · Lista pública':'')+'</small></div></div><div class="fav-add-row"><select id="favInvestmentSelect" aria-label="Elegir inversión para añadir"><option value="">Añadir una inversión…</option>'+options+'</select><button class="primary fav-add-button" onclick="addInvestmentToList()" '+(options?'':'disabled')+'><span>＋</span> Añadir activo</button></div>'+(arr.length?'<div class="grid">'+arr.map(i=>'<div class="fav-item">'+card(i)+'<button class="fav-item-remove" onclick="removeInvestmentFromList('+JSON.stringify(i.name).replace(/"/g,'&quot;')+')">Quitar de esta lista</button></div>').join('')+'</div>':'<div class="favorites-empty"><div class="big-heart">＋</div><h3>Empieza a construir esta lista</h3><p>Añade activos del catálogo para organizar tus ideas por objetivos: largo plazo, rentas, liquidez, seguimiento o cualquier otra estrategia.</p><button class="apply-filters" onclick="showView(\'explore\')">Explorar inversiones</button></div>')+'</div></div>';
+}
+window.addEventListener('load',()=>{const sharedId=new URLSearchParams(window.location.search).get('lista');if(sharedId)setTimeout(()=>openSharedFavoriteList(sharedId),900)});
 
 </script>
 <div id="scoreMethodModal" class="score-modal" hidden onclick="if(event.target===this)closeScoreBreakdown()"><section class="score-modal-card" role="dialog" aria-modal="true" aria-labelledby="scoreModalTitle"><button type="button" class="score-modal-close" aria-label="Cerrar explicación" onclick="closeScoreBreakdown()">×</button><div id="scoreModalContent"></div></section></div>
