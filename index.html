@@ -1779,7 +1779,7 @@ function invUnavailableQuery(){
  return query;
 }
 const invDb=invSupabaseAvailable
- ? window.supabase.createClient(INV_SUPABASE_URL,INV_SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})
+ ? window.supabase.createClient(INV_SUPABASE_URL,INV_SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,experimental:{passkey:true}}})
  : {auth:{onAuthStateChange(){return {data:{subscription:{unsubscribe(){}}}}},getSession:async()=>({data:{session:null},error:null}),signOut:async()=>({error:null}),signInWithPassword:async()=>({data:null,error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')}),signUp:async()=>({data:null,error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')}),signInWithOAuth:async()=>({data:null,error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')}),resend:async()=>({error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')})},from:()=>invUnavailableQuery()};
 if(!invSupabaseAvailable)console.error('Inversora: Supabase CDN no disponible; el catálogo seguirá funcionando en modo lectura.');
 let invUser=null, invProfile=null, invListsCache=[], invCommunityCache=[];
