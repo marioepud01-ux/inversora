@@ -1080,37 +1080,72 @@ td,th{border-color:#e7eef8!important}
 
 <style id="inversora-mobile-header-and-stats">
 @media(max-width:800px){
-  /* Cabecera móvil compacta: marca + menú, en una sola línea */
+  /* Cabecera móvil con altura cómoda y controles alineados dentro */
   .inv-header{
-    min-height:54px!important;
-    height:54px!important;
-    padding:6px 15px!important;
-    margin-bottom:14px!important;
-    gap:8px!important;
+    box-sizing:border-box!important;
+    width:100vw!important;
+    min-height:78px!important;
+    height:78px!important;
+    padding:12px 18px!important;
+    margin:0 0 16px calc(50% - 50vw)!important;
+    display:flex!important;
+    flex-direction:row!important;
+    justify-content:space-between!important;
     align-items:center!important;
-    box-shadow:0 3px 14px rgba(20,54,110,.045)!important;
+    gap:12px!important;
+    overflow:visible!important;
+    position:relative!important;
   }
-  .inv-header .header-brand-group{margin:0!important;gap:0!important}
-  .inv-header .logo{
+  .inv-header .header-brand-group{
+    display:flex!important;
+    align-items:center!important;
+    flex:0 1 auto!important;
+    min-width:0!important;
     margin:0!important;
-    font-size:21px!important;
+    gap:0!important;
+  }
+  .inv-header .logo{
+    display:flex!important;
+    align-items:center!important;
+    margin:0!important;
+    font-size:23px!important;
     line-height:1!important;
-    gap:8px!important;
+    gap:9px!important;
     letter-spacing:-.9px!important;
+    white-space:nowrap!important;
   }
   .inv-header .logo:before{
-    width:31px!important;height:31px!important;flex:0 0 31px!important;
+    width:36px!important;height:36px!important;flex:0 0 36px!important;
   }
-  .inv-header .header-actions{margin-left:auto!important;gap:0!important}
+  .inv-header .header-actions{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    flex:0 0 auto!important;
+    width:auto!important;
+    min-width:40px!important;
+    height:100%!important;
+    margin:0 0 0 auto!important;
+    padding:0!important;
+    position:static!important;
+    gap:0!important;
+  }
   .inv-header .header-icon-btn,
   .inv-header .profile-nav-btn{display:none!important}
   .inv-header .menu-toggle{
     display:flex!important;
-    width:37px!important;height:37px!important;
-    padding:0!important;margin:0!important;
-    border-radius:10px!important;
+    position:relative!important;
+    inset:auto!important;
+    float:none!important;
+    flex:0 0 40px!important;
+    width:40px!important;height:40px!important;
+    min-width:40px!important;min-height:40px!important;
+    margin:0!important;padding:0!important;
+    align-items:center!important;justify-content:center!important;
+    border-radius:11px!important;
+    transform:none!important;
   }
-  /* Estadísticas en dos columnas: la última cifra queda junto a los activos */
+  /* Estadísticas en dos columnas */
   #home .hero-stats{
     display:grid!important;
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
@@ -1120,22 +1155,15 @@ td,th{border-color:#e7eef8!important}
   #home .hero-stat{min-width:0!important;padding-left:11px!important}
   #home .hero-stat b{font-size:20px!important}
   #home .hero-stat span{font-size:12px!important;line-height:1.35!important}
-  /* Menú móvil: mostrar solo las cinco secciones solicitadas */
+  /* Menú móvil: mostrar las cinco secciones principales */
   #invSidebar{width:min(340px,88vw)!important}
   #invSidebar .inv-sidebar-group-title{display:none!important}
   #invSidebar .inv-sidebar-link[data-view="glossary"],
   #invSidebar .inv-sidebar-link[data-view="compare"],
   #invSidebar .inv-sidebar-link[data-view="sim"],
   #invSidebar .inv-sidebar-link[data-view="community"]{display:none!important}
-  #invSidebar .inv-sidebar-group{
-    padding:0 0 10px!important;
-    margin:0 0 10px!important;
-  }
-  #invSidebar .inv-sidebar-link{
-    min-height:47px!important;
-    padding:12px 13px!important;
-    font-size:15px!important;
-  }
+  #invSidebar .inv-sidebar-group{padding:0 0 10px!important;margin:0 0 10px!important}
+  #invSidebar .inv-sidebar-link{min-height:47px!important;padding:12px 13px!important;font-size:15px!important}
 }
 </style>
 
