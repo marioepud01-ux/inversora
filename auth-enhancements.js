@@ -5,10 +5,13 @@
  const label=p=>p==='apple'?'Apple':'Google';
  function addAppleButton(){
   const host=document.querySelector('#accountContent .social-auth');
-  if(!host||host.querySelector('[data-provider="apple"]'))return;
+  if(!host)return;
+  const google=host.querySelector('button');
+  if(google&&!google.dataset.provider){google.dataset.provider='google';google.classList.add('social-auth-google');google.innerHTML='<span class="social-auth-google-mark" aria-hidden="true">G</span><span>Continuar con Google</span>';}
+  if(host.querySelector('[data-provider="apple"]'))return;
   const b=document.createElement('button');
   b.type='button';b.dataset.provider='apple';b.className='social-auth-apple';
-  b.innerHTML='<span class="social-auth-apple-mark" aria-hidden="true">●</span><span>Continuar con Apple</span>';
+  b.innerHTML='<span class="social-auth-apple-mark" aria-hidden="true"></span><span>Continuar con Apple</span>';
   b.addEventListener('click',()=>window.startSocialAuth('apple'));
   host.appendChild(b);
   const passkey=document.createElement('button');
@@ -18,7 +21,7 @@
   host.appendChild(passkey);
   if(!document.getElementById('invAuthEnhancementsStyle')){
    const s=document.createElement('style');s.id='invAuthEnhancementsStyle';
-   s.textContent='.social-auth{display:grid;grid-template-columns:1fr 1fr;gap:10px}.social-auth>button,.social-auth-apple{min-height:48px;padding:12px 15px;border:1px solid #dce7f7;border-radius:13px;background:#fff;color:#17396f;font-weight:750;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 4px 12px rgba(24,67,137,.05)}.social-auth>button:hover,.social-auth-apple:hover,.social-auth-passkey:hover{border-color:#9fc1ff;background:#f7faff}.social-auth-passkey{grid-column:1/-1;background:linear-gradient(135deg,#edf4ff,#fff)!important;color:#155eef!important}.social-auth-passkey>span:first-child{font-size:22px}.social-auth-apple-mark{font-size:19px;color:#101828}@media(max-width:520px){.social-auth{grid-template-columns:1fr}}';
+   s.textContent='.social-auth{display:grid;grid-template-columns:1fr 1fr;gap:10px}.social-auth>button,.social-auth-apple{min-height:48px;padding:12px 15px;border:1px solid #dce7f7;border-radius:13px;background:#fff;color:#17396f;font-weight:750;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 4px 12px rgba(24,67,137,.05)}.social-auth>button:hover,.social-auth-apple:hover,.social-auth-passkey:hover{border-color:#9fc1ff;background:#f7faff}.social-auth-passkey{grid-column:1/-1;background:linear-gradient(135deg,#edf4ff,#fff)!important;color:#155eef!important}.social-auth-passkey>span:first-child{font-size:22px}.social-auth-apple-mark{font-size:21px;color:#101828}.social-auth-google-mark{font-size:20px;font-weight:900;color:#4285f4}@media(max-width:520px){.social-auth{grid-template-columns:1fr}}';
    document.head.appendChild(s);
   }
  }
