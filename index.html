@@ -1419,7 +1419,9 @@ function invMenuNavigate(id){showView(id);invToggleMenu(false);}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')invToggleMenu(false);});
 function invHeaderSearch(){showView('explore');const field=document.getElementById('exploreSearch');if(field){field.focus();field.scrollIntoView({behavior:'smooth',block:'center'});}}
 function updateNavIndicator(){const nav=document.getElementById('mainNav'),active=nav?.querySelector('button.active');if(!nav||!active)return;nav.style.setProperty('--nav-x',active.offsetLeft+'px');nav.style.setProperty('--nav-w',active.offsetWidth+'px')}
-function showView(id){const target=document.getElementById(id);if(!target)return;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));target.classList.remove('hidden');document.querySelectorAll('.inv-sidebar-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));document.querySelectorAll('.desktop-nav-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));if(id==='explore')renderExplore();if(id==='tools'){}if(id==='compare')renderCompare();if(id==='glossary')renderGlossary();if(id==='favorites')renderFavorites();if(id==='community')renderCommunity();if(id==='account')renderAccount();try{window.scrollTo({top:0,behavior:'smooth'})}catch(err){window.scrollTo(0,0)}}
+const invPageTitles={home:'Inicio',explore:'Explorar',detail:'Inversión',favorites:'Favoritos',tools:'Herramientas',community:'Comunidad',account:'Mi cuenta',compare:'Comparador',sim:'Simulador',glossary:'Glosario financiero',privacy:'Privacidad',terms:'Términos y condiciones'};
+function invSetPageTitle(label){document.title='Inversora | '+(label||'Inicio')}
+function showView(id){const target=document.getElementById(id);if(!target)return;invSetPageTitle(invPageTitles[id]||'Inicio');document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));target.classList.remove('hidden');document.querySelectorAll('.inv-sidebar-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));document.querySelectorAll('.desktop-nav-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));if(id==='explore')renderExplore();if(id==='tools'){}if(id==='compare')renderCompare();if(id==='glossary')renderGlossary();if(id==='favorites')renderFavorites();if(id==='community')renderCommunity();if(id==='account')renderAccount();try{window.scrollTo({top:0,behavior:'smooth'})}catch(err){window.scrollTo(0,0)}}
 // Navegación por botones: usar el evento click nativo, que los navegadores
 // móviles convierten correctamente desde el toque. No cancelar touchend,
 // porque en Safari/iOS puede impedir que se genere el click posterior.
@@ -1514,7 +1516,7 @@ function renderStandardAnalysis(i){
  return '<section class="asset-section asset-standard-analysis" id="asset-analysis"><div class="asset-section-head"><span class="asset-section-icon">▦</span><div><h2>La inversión, analizada en 15 puntos</h2><p>La misma guía de análisis para todas las inversiones, con métricas adaptadas a cada activo.</p></div></div><div class="standard-analysis-grid">'+rows.map(r=>'<article class="standard-analysis-card"><span class="standard-analysis-number">'+r[0]+'</span><div><h3>'+esc(r[1])+'</h3><p>'+esc(r[2])+'</p><small>'+esc(r[3])+'</small></div></article>').join('')+'</div><p class="standard-analysis-note">Cuando un dato no está disponible o no resulta aplicable, se indica expresamente. Las métricas y estimaciones deben acompañarse de fuente, fecha, periodo y supuestos antes de considerarse verificadas.</p></section>';
 }
 function openDetail(name){
- let i=investments.find(x=>x.name===name);if(!i)return;
+ let i=investments.find(x=>x.name===name);if(!i)return;invSetPageTitle(i.name);
  const safeName=JSON.stringify(i.name).replace(/"/g,'&quot;');
  const meter=(label,val,desc='',reverse=false)=>{let raw=Math.max(0,Math.min(10,Number(val)||0)),n=raw/2;return `<div class="asset-meter"><div class="asset-meter-top"><span>${label}</span><b>${n.toLocaleString('es-ES',{maximumFractionDigits:1})}/5 ★</b></div><div class="asset-meter-track"><i class="${reverse?'risk-meter':''}" style="width:${n*20}%"></i></div>${desc?`<small>${desc}</small>`:''}</div>`};
  const bullet=(arr,kind)=>`<ul class="asset-list ${kind}">${(arr||[]).map(x=>`<li>${x}</li>`).join('')}</ul>`;
@@ -2064,7 +2066,7 @@ async function shareFavoriteList(){
 }
 async function openSharedFavoriteList(id){
  if(!/^[0-9a-f-]{30,40}$/i.test(String(id||'')))return;
- showView('favorites');const host=document.getElementById('favoritesWorkspace');if(!host)return;
+ showView('favorites');invSetPageTitle('Lista compartida');const host=document.getElementById('favoritesWorkspace');if(!host)return;
  host.innerHTML='<div class="community-empty">Cargando lista compartida…</div>';
  try{
   const {data:list,error}=await invDb.from('favorite_lists').select('id,name,user_id,created_at,is_public').eq('id',id).eq('is_public',true).maybeSingle();
