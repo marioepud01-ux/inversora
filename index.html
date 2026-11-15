@@ -1904,11 +1904,8 @@ function openInvestmentReport(){
 .investment-card .inv-card-data small{font-size:9px}
 .investment-card .inv-card-data strong{font-size:11px}
 
-.investment-card h3{margin:0 0 8px!important;color:#172b4d!important;font-size:17px!important;line-height:1.25}
-.investment-card>p{font-size:12px!important;line-height:1.55!important;min-height:38px;margin:0 0 10px!important}
-.investment-card .meta{gap:8px;align-items:center}.investment-card .score{color:#155eef!important;font-size:12px!important;font-weight:850!important;text-align:right}
 .inv-card-data{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:auto;padding-top:12px;border-top:1px solid #e8eef7}
-.inv-card-data>span{display:flex;flex-direction:column;gap:3px;min-width:0}.inv-card-data>span:first-child{grid-column:1/-1}
+.inv-card-data>span{display:flex;flex-direction:column;gap:3px;min-width:0}
 .inv-card-data small{font-size:9px;color:#7a8da8;line-height:1.3}.inv-card-data strong{font-size:11px;color:#155eef;font-weight:800;line-height:1.35;overflow-wrap:anywhere}
 .asset-detail{--asset-accent:#155eef}
 .asset-detail .asset-section{border-left:3px solid var(--asset-accent)!important;transition:border-color .18s,box-shadow .18s,background-color .18s}
@@ -2322,7 +2319,7 @@ const invReviewFactors=[
 ];
 let invAssetReviewCache={};
 
-async function invLoadReviewCounts(){if(invReviewCountsLoaded||invReviewCountsLoading)return;invReviewCountsLoading=true;try{const counts={},scoreSums={};let from=0,batch=[];do{const {data,error}=await invDb.from('asset_reviews').select('asset_key,return_potential,risk_control,liquidity,periodic_income,simplicity').eq('status','published').order('created_at',{ascending:true}).range(from,from+999);if(error)throw error;batch=data||[];batch.forEach(r=>{counts[r.asset_key]=(counts[r.asset_key]||0)+1});from+=1000}while(batch.length===1000);invReviewCounts=counts;invReviewAverages=Object.fromEntries(Object.entries(scoreSums).map(([key,sum])=>[key,Number((sum/counts[key]).toFixed(1))]));invReviewCountsLoaded=true;renderHome();renderExplore()}catch(e){console.warn('No se pudieron cargar los contadores de valoraciones:',e)}finally{invReviewCountsLoading=false}}
+async function invLoadReviewCounts(){if(invReviewCountsLoaded||invReviewCountsLoading)return;invReviewCountsLoading=true;try{const counts={},scoreSums={};let from=0,batch=[];do{const {data,error}=await invDb.from('asset_reviews').select('asset_key,return_potential,risk_control,liquidity,periodic_income,simplicity').eq('status','published').order('created_at',{ascending:true}).range(from,from+999);if(error)throw error;batch=data||[];batch.forEach(r=>{counts[r.asset_key]=(counts[r.asset_key]||0)+1;scoreSums[r.asset_key]=(scoreSums[r.asset_key]||0)+invReviewWeightedScore(r)/2});from+=1000}while(batch.length===1000);invReviewCounts=counts;invReviewAverages=Object.fromEntries(Object.entries(scoreSums).map(([key,sum])=>[key,Number((sum/counts[key]).toFixed(1))]));invReviewCountsLoaded=true;renderHome();renderExplore()}catch(e){console.warn('No se pudieron cargar los contadores de valoraciones:',e)}finally{invReviewCountsLoading=false}}
 function invToggleCommunityReviews(button){const list=button?.nextElementSibling;if(!list)return;const opening=list.hidden;list.hidden=!opening;button.textContent=opening?'Ocultar reseñas':'Ver todas las reseñas ('+(invAssetReviewCache[invPendingReviewAsset]?.reviews?.length||0)+')'}
 function invReviewWeightedScore(r){
  return Number((invReviewFactors.reduce((sum,f)=>sum+(Number(r[f.key])||0)*f.weight,0)/100).toFixed(1));
