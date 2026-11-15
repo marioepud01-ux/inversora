@@ -1242,6 +1242,33 @@ td,th{border-color:#e7eef8!important}
  body:has(#compare:not(.hidden)) #compare{display:block!important;position:absolute;inset:0;padding:0;margin:0}
  body:has(#compare:not(.hidden)) .compare-page{border:0!important;box-shadow:none!important}
 }
+</style><style id="inversora-mobile-menu-community-print">
+/* Menú móvil: jerarquía visual, acentos azules y navegación clara */
+.inv-sidebar{background:linear-gradient(180deg,#fff 0%,#fbfdff 100%)!important}
+.inv-sidebar-head{position:relative;background:linear-gradient(115deg,#f1f6ff 0%,#fff 82%);border-bottom:1px solid #dce8ff!important}
+.inv-sidebar-head:after{content:"";position:absolute;left:24px;right:24px;bottom:-1px;height:2px;background:linear-gradient(90deg,#155eef,#84adff,transparent)}
+.inv-sidebar-eyebrow{display:inline-flex;align-items:center;gap:7px;color:#155eef!important;font-weight:850!important}
+.inv-sidebar-eyebrow:before{content:"";width:7px;height:7px;border-radius:50%;background:#528bff;box-shadow:0 0 0 4px #e7efff}
+.inv-sidebar-head h2{color:#172b4d!important;font-size:21px!important}
+.inv-sidebar-close{background:#fff!important;border:1px solid #dce7fb!important;color:#155eef!important;box-shadow:0 2px 8px #155eef0c}
+.inv-sidebar-content{padding:18px 15px 24px!important}
+.inv-sidebar-group{position:relative;padding:12px 9px 13px!important;margin:0 0 11px!important;border:1px solid #e7eefb!important;border-radius:15px;background:linear-gradient(110deg,#f8faff,#fff 70%)}
+.inv-sidebar-group:last-child{margin-bottom:0!important}
+.inv-sidebar-group-title{padding:0 9px 9px!important;color:#52709e!important;font-size:10px!important;letter-spacing:1.2px!important}
+.inv-sidebar-link{position:relative;min-height:44px;padding:10px 11px!important;margin:3px 0!important;border:1px solid transparent!important;border-radius:11px!important;color:#475467!important;font-weight:650!important;transition:background .18s,border-color .18s,color .18s,transform .18s!important}
+.inv-sidebar-link:before{content:"";position:absolute;left:-1px;top:9px;bottom:9px;width:3px;border-radius:0 4px 4px 0;background:transparent;transition:background .18s}
+.inv-sidebar-link:hover{background:#edf4ff!important;border-color:#dce8ff!important;color:#155eef!important;transform:translateX(-2px)}
+.inv-sidebar-link.active{background:linear-gradient(100deg,#eaf2ff,#f5f8ff)!important;border-color:#d7e5ff!important;color:#155eef!important;box-shadow:0 3px 10px #155eef0b}
+.inv-sidebar-link.active:before{background:#155eef}
+.inv-sidebar-icon{width:29px!important;height:29px!important;flex-basis:29px!important;border-radius:9px;background:#edf3ff;color:#155eef!important;font-size:18px!important}
+.inv-sidebar-link.active .inv-sidebar-icon{background:#155eef;color:#fff!important;box-shadow:0 3px 8px #155eef35}
+.inv-sidebar-link[data-view="community"]{background:linear-gradient(100deg,#f0f6ff,#fff)!important;border-color:#dbe8ff!important;color:#1849a9!important;font-weight:800!important}
+.inv-sidebar-link[data-view="community"] .inv-sidebar-icon{background:linear-gradient(135deg,#155eef,#84adff);color:#fff!important}
+.inv-sidebar-link[data-view="community"]:after{content:"";width:6px;height:6px;margin-left:auto;border-radius:50%;background:#528bff;box-shadow:0 0 0 4px #eaf2ff}
+.inv-sidebar-foot{background:linear-gradient(100deg,#f0f5ff,#fff);border-top:1px solid #dce8ff!important;color:#52709e!important}
+.inv-sidebar-foot-mark{background:linear-gradient(135deg,#155eef,#528bff)!important;color:#fff!important;box-shadow:0 4px 10px #155eef30}
+@media(max-width:800px){.inv-sidebar{width:min(370px,90vw)!important}.inv-sidebar-head{padding:24px 22px 21px!important}.inv-sidebar-content{padding:16px 13px 22px!important}.inv-sidebar-group{padding:11px 8px 12px!important}.inv-sidebar-link{min-height:46px;font-size:14px!important}.inv-sidebar-foot{padding:15px 19px!important}}
+@media print{.asset-detail{color:#101828!important}.asset-detail .asset-section{break-inside:avoid;page-break-inside:avoid}}
 </style></head>
 <body>
 <div class="app">
@@ -1610,6 +1637,22 @@ function invMenuNavigate(id){showView(id);invToggleMenu(false);}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')invToggleMenu(false);});
 function invHeaderSearch(){showView('explore');const field=document.getElementById('exploreSearch');if(field){field.focus();field.scrollIntoView({behavior:'smooth',block:'center'});}}
 function updateNavIndicator(){const nav=document.getElementById('mainNav'),active=nav?.querySelector('button.active');if(!nav||!active)return;nav.style.setProperty('--nav-x',active.offsetLeft+'px');nav.style.setProperty('--nav-w',active.offsetWidth+'px')}
+function printAssetSheet(){
+ const source=document.querySelector('#detail .asset-detail');
+ if(!source){invNotice('No se ha encontrado la ficha que quieres imprimir.');return}
+ const clone=source.cloneNode(true);
+ clone.querySelectorAll('.asset-jump-nav,.asset-bottom-actions,.asset-next-nav,.back,.asset-print-btn').forEach(el=>el.remove());
+ const styles=[...document.querySelectorAll('style')].map(el=>el.outerHTML).join('');
+ const links=[...document.querySelectorAll('link[rel="stylesheet"]')].map(el=>el.outerHTML).join('');
+ const printCss='<style>html,body{margin:0!important;padding:0!important;background:#fff!important;color:#101828!important;font-family:Arial,sans-serif!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.print-wrap{max-width:1100px;margin:0 auto;padding:22px}.asset-detail{max-width:none!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}.asset-section,.asset-quick-card,.asset-explainer-card,.asset-cost-card,.asset-pros-card,.asset-cons-card{break-inside:avoid;page-break-inside:avoid}.asset-hero{break-inside:avoid;page-break-inside:avoid}.asset-section{box-shadow:none!important}a{color:inherit;text-decoration:none}@page{size:A4;margin:14mm}@media print{.print-wrap{padding:0}.asset-detail{width:100%}}</style>';
+ const win=window.open('','_blank');
+ if(!win){invNotice('El navegador ha bloqueado la ventana de impresión. Permite las ventanas emergentes para Inversora o usa la opción Compartir del navegador.');return}
+ win.document.open();
+ win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ficha de inversión · Inversora</title>'+links+styles+printCss+'</head><body><main class="print-wrap">'+clone.outerHTML+'</main></body></html>');
+ win.document.close();
+ const doPrint=()=>{try{win.focus();win.print()}catch(err){console.error('Print asset:',err)}};
+ if(win.document.readyState==='complete')setTimeout(doPrint,350);else win.addEventListener('load',()=>setTimeout(doPrint,350),{once:true});
+}
 const invPageTitles={home:'Inicio',explore:'Explorar',detail:'Inversión',favorites:'Favoritos',tools:'Herramientas',community:'Comunidad',account:'Mi cuenta',compare:'Comparador',sim:'Simulador',glossary:'Glosario financiero',privacy:'Privacidad',terms:'Términos y condiciones'};
 function invSetPageTitle(label){document.title='Inversora | '+(label||'Inicio')}
 function showView(id){const target=document.getElementById(id);if(!target)return;invSetPageTitle(invPageTitles[id]||'Inicio');document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));target.classList.remove('hidden');document.querySelectorAll('.inv-sidebar-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));document.querySelectorAll('.desktop-nav-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));if(id==='explore')renderExplore();if(id==='tools'){}if(id==='compare')renderCompare();if(id==='glossary')renderGlossary();if(id==='favorites')renderFavorites();if(id==='community')renderCommunity();if(id==='account')renderAccount();try{window.scrollTo({top:0,behavior:'smooth'})}catch(err){window.scrollTo(0,0)}}
@@ -1740,7 +1783,7 @@ function openDetail(name){
 <h3 class="entry-subtitle">Qué puede suponer una barrera</h3><div class="entry-factors">${barrier.factors.map((x,j)=>'<article class="entry-factor"><span class="entry-factor-number">'+['01','02','03'][j]+'</span><div><b>'+['Dinero necesario','Conocimientos','Acceso y condiciones'][j]+'</b><p>'+x+'</p></div></article>').join('')}</div>
 <div class="entry-takeaway"><span>✓</span><p><b>Qué conviene comprobar:</b> el importe mínimo real, los requisitos del proveedor y todos los costes antes de comprometer tu dinero.</p></div><p class="entry-note">Estimación cualitativa para orientar la comparación. Puede variar según el producto, proveedor, país y operación concreta; no equivale a un mínimo legal ni garantiza el acceso.</p></section>
 <section class="asset-section asset-outlook-section" id="asset-outlook"><div class="asset-section-head"><span class="asset-section-icon">⌁</span><div><h2>07 · Horizonte y liquidez</h2><p>Plazo, facilidad de salida y dedicación que conviene considerar antes de invertir.</p></div></div><div class="asset-outlook-grid"><article><span>Liquidez orientativa</span><strong>${(Number(i.liq)/2).toLocaleString('es-ES',{maximumFractionDigits:1})}<small>/5 ★</small></strong><p>Facilidad para recuperar el capital, según las condiciones del activo.</p></article><article><span>Horizonte y perfil</span><strong>${i.profile||'Por determinar'}</strong><p>El plazo adecuado depende del objetivo, el riesgo y las condiciones de salida.</p></article></div></section>
-<nav class="asset-bottom-actions"><button class="detail-sim-btn" onclick="simulateInvestment(${safeName})">↗ Simular esta inversión</button><button class="detail-favorite ${isFavorite(i.name)?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${isFavorite(i.name)?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button><button class="asset-print-btn" onclick="window.print()">⎙ Imprimir ficha</button><button class="asset-rate-btn" onclick="invOpenCommunityModal(${safeName})">★ Valorar este activo</button></nav>
+<nav class="asset-bottom-actions"><button class="detail-sim-btn" onclick="simulateInvestment(${safeName})">↗ Simular esta inversión</button><button class="detail-favorite ${isFavorite(i.name)?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${isFavorite(i.name)?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button><button class="asset-print-btn" onclick="printAssetSheet()">⎙ Imprimir ficha</button><button class="asset-rate-btn" onclick="invOpenCommunityModal(${safeName})">★ Valorar este activo</button></nav>
 <nav class="asset-next-nav" aria-label="Otras inversiones"><button onclick="openDetail(${JSON.stringify(previous.name).replace(/"/g,'&quot;')})"><span>← Anterior</span><b>${previous.name}</b></button><button onclick="openDetail(${JSON.stringify(next.name).replace(/"/g,'&quot;')})"><span>Siguiente →</span><b>${next.name}</b></button></nav>
   <footer class="asset-disclaimer"><span>ⓘ</span><p><b>Antes de decidir:</b> los datos y puntuaciones son orientativos y proceden del catálogo; no han sido verificados de forma independiente. Las rentabilidades potenciales no son promesas ni previsiones. Esta ficha es educativa y no constituye asesoramiento financiero o fiscal personalizado.</p></footer>
  </article></section>`;showView('detail')
