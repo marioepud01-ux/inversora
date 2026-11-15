@@ -1389,7 +1389,7 @@ td,th{border-color:#e7eef8!important}
 <div class="auth-tabs"><button id="registerTab" onclick="setAuthMode('register')">Crear cuenta</button><button id="loginTab" class="active" onclick="setAuthMode('login')">Iniciar sesión</button></div>
 <form id="authForm" class="auth-form" onsubmit="submitAuth(event)"><div class="auth-field full"><label for="authEmail">Correo electrónico *</label><input id="authEmail" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="tu@correo.com"></div><div class="auth-field full"><label for="authPassword">Contraseña *</label><input id="authPassword" name="password" type="password" autocomplete="current-password" required placeholder="Tu contraseña"></div><button class="auth-submit" type="submit">Iniciar sesión</button></form><div id="authMessage" class="auth-message" role="status"></div>
 <div class="auth-note"><b>Versión de demostración:</b> el registro por correo guarda los datos solo en este navegador. No es una cuenta online ni sincroniza entre dispositivos. Los accesos sociales se activarán cuando se conecte un servicio de autenticación.</div></div></section></main>
-<main id="compare" class="view hidden"><section class="section compare-page"><div class="compare-hero"><div><div class="eyebrow">Decide con perspectiva</div><h1>Compara sin perderte en los datos.</h1><p>Elige hasta cuatro inversiones y descubre de un vistazo cómo se diferencian en riesgo, liquidez, ingresos, esfuerzo y capital necesario.</p></div><div class="compare-hero-mark">⇄</div></div><div class="compare-section-head"><div><h2>Tu comparativa</h2><p>Selecciona alternativas y revisa los criterios lado a lado.</p></div><span id="compareCount" class="compare-count">2 de 4 seleccionadas</span></div><div id="compareContent"></div><div class="compare-community-share"><button type="button" class="secondary-action" onclick="shareComparisonToCommunity()">Compartir comparativa en Comunidad</button><button type="button" class="secondary-action" onclick="window.print()">Imprimir comparativa</button></div></section></main>
+<main id="compare" class="view hidden"><section class="section compare-page"><div class="compare-hero"><div><div class="eyebrow">Decide con perspectiva</div><h1>Compara sin perderte en los datos.</h1><p>Elige hasta cuatro inversiones y descubre de un vistazo cómo se diferencian en riesgo, liquidez, ingresos, esfuerzo y capital necesario.</p></div><div class="compare-hero-mark">⇄</div></div><div class="compare-section-head"><div><h2>Tu comparativa</h2><p>Selecciona alternativas y revisa los criterios lado a lado.</p></div><span id="compareCount" class="compare-count">2 de 4 seleccionadas</span></div><div id="compareContent"></div><div class="compare-community-share"><button type="button" class="secondary-action" onclick="shareComparisonToCommunity()">Compartir comparativa en Comunidad</button><button type="button" class="secondary-action" onclick="printAssetSheet()">Imprimir comparativa</button></div></section></main>
 
 <main id="sim" class="view hidden"><section class="section tool-page"><div class="tool-hero sim-hero"><div><div class="eyebrow">Planifica distintos escenarios</div><h1>Tu dinero en el tiempo.</h1><p>Modifica el capital, tus aportaciones y una rentabilidad hipotética para entender cómo podrían evolucionar tus ahorros. No es una predicción.</p></div><div class="tool-hero-icon">↗</div></div><div class="tool-section-head"><div><h2>Configura tu escenario</h2><p>Empieza con tus cifras y cambia una variable cada vez.</p></div><span class="soft-badge">Simulación orientativa</span></div><div class="sim sim-enhanced"><div class="form sim-form" id="simForm">
 <div class="form-intro"><span class="mini-icon">⚙</span><div><b>Datos de partida</b><small>Todos los campos se pueden ajustar</small></div></div>
@@ -1642,6 +1642,42 @@ function invMenuNavigate(id){showView(id);invToggleMenu(false);}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')invToggleMenu(false);});
 function invHeaderSearch(){showView('explore');const field=document.getElementById('exploreSearch');if(field){field.focus();field.scrollIntoView({behavior:'smooth',block:'center'});}}
 function updateNavIndicator(){const nav=document.getElementById('mainNav'),active=nav?.querySelector('button.active');if(!nav||!active)return;nav.style.setProperty('--nav-x',active.offsetLeft+'px');nav.style.setProperty('--nav-w',active.offsetWidth+'px')}
+function printAssetSheet(){
+ const source=document.querySelector('#detail .asset-print-sheet');
+ if(!source){invNotice('No se ha encontrado la ficha que quieres imprimir.');return}
+ const win=window.open('','_blank');
+ if(!win){invNotice('El navegador ha bloqueado la nueva pestaña. Permite las ventanas emergentes para Inversora.');return}
+ const sheet=source.cloneNode(true);
+ const css=`
+ @page{size:A4 portrait;margin:9mm}
+ *{box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+ html,body{margin:0;padding:0;background:#fff;color:#101828;font:8.4pt/1.32 Arial,Helvetica,sans-serif}
+ .asset-print-sheet{display:block;width:100%;min-height:278mm;max-height:278mm;overflow:hidden;background:#fff}
+ .asset-print-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 0 7px;border-bottom:2px solid #155eef}
+ .asset-print-brand{font-size:20pt;font-weight:900;letter-spacing:-1px;color:#101828}.asset-print-brand span{color:#155eef}
+ .asset-print-head>span{font-size:7pt;font-weight:800;letter-spacing:.08em;color:#155eef;text-align:right}
+ .asset-print-sheet h1{font-size:19pt;line-height:1.05;letter-spacing:-.5px;margin:10px 0 4px}
+ .asset-print-lead{font-size:8.3pt;color:#475467;margin:0 0 9px}
+ .asset-print-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:8px 0}
+ .asset-print-metrics>div{border:1px solid #b9d0fa;border-radius:7px;padding:7px;background:#f5f8ff;min-width:0}
+ .asset-print-metrics small{display:block;font-size:6.7pt;color:#667085}.asset-print-metrics b{display:block;font-size:9pt;margin-top:3px;color:#1849a9}
+ .asset-print-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+ .asset-print-grid>section{border:1px solid #c8d9f5;border-radius:7px;padding:8px;break-inside:avoid;min-width:0}
+ .asset-print-grid h2{font-size:9pt;color:#155eef;margin:0 0 5px;padding-bottom:4px;border-bottom:1px solid #e4ecff}
+ .asset-print-grid p{font-size:7.4pt;line-height:1.35;margin:3px 0;overflow-wrap:anywhere}
+ .asset-print-small{color:#667085;font-size:6.7pt!important}
+ .asset-print-columns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.asset-print-columns b{font-size:7pt;color:#344054}
+ .asset-print-columns ul{margin:3px 0 0;padding-left:13px}.asset-print-columns li{font-size:7pt;line-height:1.3;margin:2px 0}
+ .asset-print-sheet footer{display:flex;justify-content:space-between;gap:8px;border-top:1px solid #b9d0fa;margin-top:8px;padding-top:5px;font-size:7pt;font-weight:800;color:#155eef}
+ .asset-print-sheet footer span{font-size:6.4pt;font-weight:500;color:#667085;text-align:right}
+ @media screen{body{background:#f4f6fa}.asset-print-sheet{width:210mm;margin:20px auto;padding:9mm;min-height:297mm;box-shadow:0 3px 18px #00000018}}
+ `;
+ win.document.open();
+ win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ficha de inversión · Inversora</title><style>'+css+'</style></head><body>'+sheet.outerHTML+'</body></html>');
+ win.document.close();
+ const doPrint=()=>{try{win.focus();win.print()}catch(err){console.error('Print asset:',err)}};
+ if(win.document.readyState==='complete')setTimeout(doPrint,500);else win.addEventListener('load',()=>setTimeout(doPrint,500),{once:true});
+}
 const invPageTitles={home:'Inicio',explore:'Explorar',detail:'Inversión',favorites:'Favoritos',tools:'Herramientas',community:'Comunidad',account:'Mi cuenta',compare:'Comparador',sim:'Simulador',glossary:'Glosario financiero',privacy:'Privacidad',terms:'Términos y condiciones'};
 function invSetPageTitle(label){document.title='Inversora | '+(label||'Inicio')}
 function showView(id){const target=document.getElementById(id);if(!target)return;invSetPageTitle(invPageTitles[id]||'Inicio');document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));target.classList.remove('hidden');document.querySelectorAll('.inv-sidebar-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));document.querySelectorAll('.desktop-nav-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));if(id==='explore')renderExplore();if(id==='tools'){}if(id==='compare')renderCompare();if(id==='glossary')renderGlossary();if(id==='favorites')renderFavorites();if(id==='community')renderCommunity();if(id==='account')renderAccount();try{window.scrollTo({top:0,behavior:'smooth'})}catch(err){window.scrollTo(0,0)}}
