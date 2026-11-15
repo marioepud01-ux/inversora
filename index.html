@@ -1642,57 +1642,6 @@ function invMenuNavigate(id){showView(id);invToggleMenu(false);}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')invToggleMenu(false);});
 function invHeaderSearch(){showView('explore');const field=document.getElementById('exploreSearch');if(field){field.focus();field.scrollIntoView({behavior:'smooth',block:'center'});}}
 function updateNavIndicator(){const nav=document.getElementById('mainNav'),active=nav?.querySelector('button.active');if(!nav||!active)return;nav.style.setProperty('--nav-x',active.offsetLeft+'px');nav.style.setProperty('--nav-w',active.offsetWidth+'px')}
-function printAssetSheet(){
- const source=document.querySelector('#detail .asset-detail');
- if(!source){invNotice('No se ha encontrado la ficha que quieres imprimir.');return}
- const clone=source.cloneNode(true);
- clone.querySelectorAll('.asset-jump-nav,.asset-bottom-actions,.asset-next-nav,.back,.asset-print-btn').forEach(el=>el.remove());
- const styles=[...document.querySelectorAll('style')].map(el=>el.outerHTML).join('');
- const links=[...document.querySelectorAll('link[rel="stylesheet"]')].map(el=>el.outerHTML).join('');
- const printCss=`<style>
- @page{size:A4 portrait;margin:6mm}
- *{box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
- html,body{margin:0!important;padding:0!important;width:100%;background:#fff!important;color:#101828!important;font-family:Arial,sans-serif!important}
- .print-wrap{width:198mm;height:285mm;margin:0 auto;padding:0;overflow:hidden;position:relative}.print-brand{height:9mm;display:flex;align-items:center;justify-content:space-between;margin:0 0 2mm;padding:0 1mm 1.5mm;border-bottom:1px solid #155eef;color:#667085;font-size:6.5pt;font-weight:750;letter-spacing:.12em}.print-brand .brand-word{font-size:15pt;font-weight:900;letter-spacing:-.06em;color:#101828}.print-brand .brand-word span{color:#155eef}
- .asset-detail{width:100%!important;max-width:none!important;min-height:274mm!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-flow:row dense!important;align-content:space-between!important;gap:2.2mm!important;background:#fff!important}
- .asset-hero{grid-column:1/-1!important;margin:0!important;padding:4mm!important;border:1px solid #dbe7ff!important;border-radius:3mm!important;box-shadow:none!important;gap:3mm!important;break-inside:avoid!important;page-break-inside:avoid!important}
- .asset-hero h1{font-size:18pt!important;line-height:1.05!important;margin:0 0 2mm!important}
- .asset-hero p,.asset-lead{font-size:7.2pt!important;line-height:1.3!important;margin:1mm 0!important}
- .asset-section{min-width:0!important;margin:0!important;padding:2.7mm!important;border:1px solid #dce6f5!important;border-radius:2.5mm!important;box-shadow:none!important;background:#fff!important;break-inside:avoid!important;page-break-inside:avoid!important}
- .asset-section-head{margin:0 0 2mm!important}
- .asset-section-head h2{font-size:9pt!important;line-height:1.12!important;margin:0!important}
- .asset-section p,.asset-section li,.asset-section span,.asset-section small{font-size:6.4pt!important;line-height:1.24!important}
- .asset-section p{margin:1mm 0!important}
- .asset-section ul,.asset-section ol{margin:1mm 0!important;padding-left:4mm!important}
- .asset-section h3,.asset-section strong{font-size:7pt!important;line-height:1.2!important}
- .asset-overview-panel,.asset-quick-card,.asset-explainer-card,.asset-cost-card,.asset-pros-card,.asset-cons-card,.asset-rating-card,.asset-meter{padding:2mm!important;margin:1mm 0!important;border-radius:2mm!important;box-shadow:none!important}
- .asset-meter-track{height:4px!important}
- .asset-section [style*="grid-template-columns"],.asset-hero [style*="grid-template-columns"]{gap:1.5mm!important}
- .asset-jump-nav,.asset-bottom-actions,.asset-next-nav,.back,.asset-print-btn{display:none!important}
- a{color:inherit;text-decoration:none}
- @media print{.print-wrap{break-after:avoid!important;page-break-after:avoid!important}}
- </style>`;
- const win=window.open('','_blank');
- if(!win){invNotice('El navegador ha bloqueado la ventana de impresión. Permite las ventanas emergentes para Inversora o usa la opción Compartir del navegador.');return}
- win.document.open();
- win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ficha de inversión · Inversora</title>'+links+styles+printCss+'</head><body><main class="print-wrap"><div class="print-brand"><span class="brand-word">Invers<span>ora</span></span><span>FICHA DE INVERSIÓN</span></div>'+clone.outerHTML+'</main></body></html>');
- win.document.close();
- const doPrint=()=>{
-  try{
-   const wrap=win.document.querySelector('.print-wrap'),detail=win.document.querySelector('.asset-detail');
-   if(detail&&wrap){
-    const available=1035;
-    const natural=detail.scrollHeight;
-    const scale=Math.min(1.08,available/Math.max(natural,1));
-    detail.style.transform='scale('+scale+')';
-    detail.style.transformOrigin='top left';
-    detail.style.width=(100/scale)+'%';
-   }
-   win.focus();win.print();
-  }catch(err){console.error('Print asset:',err)}
- };
- if(win.document.readyState==='complete')setTimeout(doPrint,650);else win.addEventListener('load',()=>setTimeout(doPrint,650),{once:true});
-}
 const invPageTitles={home:'Inicio',explore:'Explorar',detail:'Inversión',favorites:'Favoritos',tools:'Herramientas',community:'Comunidad',account:'Mi cuenta',compare:'Comparador',sim:'Simulador',glossary:'Glosario financiero',privacy:'Privacidad',terms:'Términos y condiciones'};
 function invSetPageTitle(label){document.title='Inversora | '+(label||'Inicio')}
 function showView(id){const target=document.getElementById(id);if(!target)return;invSetPageTitle(invPageTitles[id]||'Inicio');document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));target.classList.remove('hidden');document.querySelectorAll('.inv-sidebar-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));document.querySelectorAll('.desktop-nav-link').forEach(b=>b.classList.toggle('active',b.dataset.view===id));if(id==='explore')renderExplore();if(id==='tools'){}if(id==='compare')renderCompare();if(id==='glossary')renderGlossary();if(id==='favorites')renderFavorites();if(id==='community')renderCommunity();if(id==='account')renderAccount();try{window.scrollTo({top:0,behavior:'smooth'})}catch(err){window.scrollTo(0,0)}}
@@ -1823,7 +1772,7 @@ function openDetail(name){
 <h3 class="entry-subtitle">Qué puede suponer una barrera</h3><div class="entry-factors">${barrier.factors.map((x,j)=>'<article class="entry-factor"><span class="entry-factor-number">'+['01','02','03'][j]+'</span><div><b>'+['Dinero necesario','Conocimientos','Acceso y condiciones'][j]+'</b><p>'+x+'</p></div></article>').join('')}</div>
 <div class="entry-takeaway"><span>✓</span><p><b>Qué conviene comprobar:</b> el importe mínimo real, los requisitos del proveedor y todos los costes antes de comprometer tu dinero.</p></div><p class="entry-note">Estimación cualitativa para orientar la comparación. Puede variar según el producto, proveedor, país y operación concreta; no equivale a un mínimo legal ni garantiza el acceso.</p></section>
 <section class="asset-section asset-outlook-section" id="asset-outlook"><div class="asset-section-head"><span class="asset-section-icon">⌁</span><div><h2>07 · Horizonte y liquidez</h2><p>Plazo, facilidad de salida y dedicación que conviene considerar antes de invertir.</p></div></div><div class="asset-outlook-grid"><article><span>Liquidez orientativa</span><strong>${(Number(i.liq)/2).toLocaleString('es-ES',{maximumFractionDigits:1})}<small>/5 ★</small></strong><p>Facilidad para recuperar el capital, según las condiciones del activo.</p></article><article><span>Horizonte y perfil</span><strong>${i.profile||'Por determinar'}</strong><p>El plazo adecuado depende del objetivo, el riesgo y las condiciones de salida.</p></article></div></section>
-<nav class="asset-bottom-actions"><button class="detail-sim-btn" onclick="simulateInvestment(${safeName})">↗ Simular esta inversión</button><button class="detail-favorite ${isFavorite(i.name)?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${isFavorite(i.name)?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button><button class="asset-print-btn" onclick="printAssetSheet()">⎙ Imprimir ficha</button><button class="asset-rate-btn" onclick="invOpenCommunityModal(${safeName})">★ Valorar este activo</button></nav>
+<nav class="asset-bottom-actions"><button class="detail-sim-btn" onclick="simulateInvestment(${safeName})">↗ Simular esta inversión</button><button class="detail-favorite ${isFavorite(i.name)?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${isFavorite(i.name)?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button><button class="asset-print-btn" onclick="window.print()">⎙ Imprimir ficha</button><button class="asset-rate-btn" onclick="invOpenCommunityModal(${safeName})">★ Valorar este activo</button></nav>
 <nav class="asset-next-nav" aria-label="Otras inversiones"><button onclick="openDetail(${JSON.stringify(previous.name).replace(/"/g,'&quot;')})"><span>← Anterior</span><b>${previous.name}</b></button><button onclick="openDetail(${JSON.stringify(next.name).replace(/"/g,'&quot;')})"><span>Siguiente →</span><b>${next.name}</b></button></nav>
   <footer class="asset-disclaimer"><span>ⓘ</span><p><b>Antes de decidir:</b> los datos y puntuaciones son orientativos y proceden del catálogo; no han sido verificados de forma independiente. Las rentabilidades potenciales no son promesas ni previsiones. Esta ficha es educativa y no constituye asesoramiento financiero o fiscal personalizado.</p></footer>
  </article></section>`;showView('detail')
@@ -1974,6 +1923,39 @@ function openInvestmentReport(){
  body:has(#compare:not(.hidden)) #compare .compare-card{break-inside:avoid;box-shadow:none!important}
  body:has(#compare:not(.hidden)) #compare .compare-table-wrap{break-inside:auto}
  body:has(#compare:not(.hidden)) #compare .compare-table tr{break-inside:avoid}
+}
+
+.asset-print-sheet{display:none}
+@media print{
+ @page{size:A4 portrait;margin:9mm}
+ html,body{background:#fff!important;color:#101828!important}
+ body *{visibility:hidden!important}
+ .asset-print-sheet,.asset-print-sheet *{visibility:visible!important}
+ .asset-print-sheet{display:block!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;height:278mm!important;max-height:278mm!important;overflow:hidden!important;padding:0!important;margin:0!important;border:0!important;box-shadow:none!important;background:#fff!important;font:8.4pt/1.32 Arial,Helvetica,sans-serif!important;color:#101828!important}
+ .asset-print-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 0 7px;border-bottom:2px solid #155eef}
+ .asset-print-brand{font-size:20pt;font-weight:900;letter-spacing:-1px;color:#101828}.asset-print-brand span{color:#155eef}
+ .asset-print-head>span{font-size:7pt;font-weight:800;letter-spacing:.08em;color:#155eef;text-align:right}
+ .asset-print-sheet h1{font-size:19pt;line-height:1.05;letter-spacing:-.5px;margin:10px 0 4px}
+ .asset-print-lead{font-size:8.3pt;color:#475467;margin:0 0 9px}
+ .asset-print-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
+ .asset-print-metrics>div{border:1px solid #b9d0fa;border-radius:7px;padding:7px;background:#f5f8ff}
+ .asset-print-metrics small{display:block;font-size:6.7pt;color:#667085}.asset-print-metrics b{display:block;font-size:9pt;margin-top:3px;color:#1849a9}
+ .asset-print-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+ .asset-print-grid>section{border:1px solid #c8d9f5;border-radius:7px;padding:8px;break-inside:avoid}
+ .asset-print-grid h2{font-size:9pt;color:#155eef;margin:0 0 5px;padding-bottom:4px;border-bottom:1px solid #e4ecff}
+ .asset-print-grid p{font-size:7.4pt;line-height:1.35;margin:3px 0;overflow-wrap:anywhere}
+ .asset-print-small{color:#667085;font-size:6.7pt!important}
+ .asset-print-columns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.asset-print-columns b{font-size:7pt;color:#344054}
+ .asset-print-columns ul{margin:3px 0 0;padding-left:13px}.asset-print-columns li{font-size:7pt;line-height:1.3;margin:2px 0}
+ .asset-print-sheet footer{display:flex;justify-content:space-between;gap:8px;border-top:1px solid #b9d0fa;margin-top:8px;padding-top:5px;font-size:7pt;font-weight:800;color:#155eef}
+ .asset-print-sheet footer span{font-size:6.4pt;font-weight:500;color:#667085;text-align:right}
+}
+
+@media print{
+ body:has(#compare:not(.hidden)) *{visibility:visible!important}
+ body:has(#compare:not(.hidden)) .inv-header,body:has(#compare:not(.hidden)) .inv-sidebar,body:has(#compare:not(.hidden)) .inv-sidebar-backdrop,body:has(#compare:not(.hidden)) .mobile-nav,body:has(#compare:not(.hidden)) .mobile-tabbar,body:has(#compare:not(.hidden)) .bottom-nav,body:has(#compare:not(.hidden)) .compare-community-share{display:none!important}
+ body:has(#compare:not(.hidden)) #compare{display:block!important;position:absolute;inset:0;padding:0;margin:0}
+ body:has(#compare:not(.hidden)) .compare-page{border:0!important;box-shadow:none!important}
 }
 </style></head><body><main class="page"><div class="top"><div class="brand">Invers<span>ora</span></div><div class="actions"><button class="secondary" onclick="window.close()">Cerrar informe</button><button onclick="window.print()">Imprimir / Guardar PDF</button></div></div><section class="cover"><div class="eyebrow">Informe personalizado · ${esc(date)}</div><h1>${esc(title)}</h1><p>${esc(selected)} · Calculado con los datos introducidos en Inversora.</p></section><div class="summary"><div><span>Resultado final estimado</span><b>${esc(document.getElementById('final')?.textContent||'—')}</b></div><div><span>Dinero aportado / desembolso</span><b>${esc(document.getElementById('contributed')?.textContent||'—')}</b></div><div><span>Beneficio o crecimiento estimado</span><b>${esc(document.getElementById('growth')?.textContent||'—')}</b></div></div><section class="section"><h2>Tu escenario</h2><table class="data"><tbody>${data}</tbody></table></section>${assetInsight}<section class="section"><h2>Resultados y desglose</h2><div class="sim-report">${results}</div></section><section class="section"><h2>Evolución visual estimada</h2><div class="chart">${bars}</div><p class="note">El gráfico es orientativo y representa el escenario calculado, no una predicción de resultados futuros.</p></section><p class="note">Este documento recoge los datos y resultados de la simulación en la fecha indicada. Los cálculos se basan en hipótesis editables, pueden omitir costes o circunstancias particulares y no constituyen asesoramiento financiero, legal ni fiscal. La fiscalidad real depende del producto, la normativa vigente y la situación personal.</p><div class="footer">Inversora · Entiende · Compara · Simula</div></main></body></html>`);win.document.close();
 }
