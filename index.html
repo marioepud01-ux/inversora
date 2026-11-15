@@ -1474,14 +1474,14 @@ function card(i){
  const liquidity=Number(i.liq)>=7?'Alta':Number(i.liq)>=4?'Media':'Baja';
  const rawCapital=String(i.capital||''),match=rawCapital.match(/(?:desde\\s*)?~?\\s*[\\d.,]+(?:\\s*[–-]\\s*[\\d.,]+)?\\s*€/i);
  const entry=match?match[0].replace(/\\s+/g,' ').trim():(rawCapital?'Variable':'No definida');
- const reviewCount=Number(invReviewCounts[i.name]||0);
+ const reviewCount=Number(invReviewCounts[i.name]||0),communityAverage=Number(invReviewAverages[i.name]||0);
  return `<article class="card investment-card" style="--asset-accent:${accent}" onclick="openDetail(${n})">
  <button class="favorite-heart ${isFavorite(i.name)?'is-favorite':''}" aria-label="${isFavorite(i.name)?'Quitar de favoritos':'Añadir a favoritos'}" title="${isFavorite(i.name)?'Quitar de favoritos':'Añadir a favoritos'}" onclick="event.stopPropagation();toggleFavorite(${n})">${isFavorite(i.name)?'♥':'♡'}</button>
- <div class="inv-card-path"><span>${i.cat}</span><b>›</b><span>${subtypeFor(i)}</span><b>›</b><strong>${i.name}</strong></div>
- <h3>${i.name}</h3><p>${i.desc}</p>
- <div class="meta"><span class="pill ${scoreColor(i.score)}">Riesgo ${i.riskBand||'Por determinar'}</span><span class="score">${i.ret}</span></div>
- <div class="inv-card-review-count">${reviewCount?"★ "+reviewCount+" "+(reviewCount===1?"valoración":"valoraciones"):"☆ Sin valoraciones"}</div>
- <div class="inv-card-data"><span><small>Rentabilidad orientativa</small><strong>${i.ret}</strong></span><span><small>Liquidez</small><strong>${liquidity}</strong></span><span><small>Capital de entrada</small><strong>${entry}</strong></span></div>
+ <div class="inv-card-path"><span>${i.cat}</span><b>›</b><span>${subtypeFor(i)}</span></div>
+ <h3>${i.name}</h3>
+ <div class="inv-card-yield"><small>Rentabilidad orientativa</small><strong>${i.ret||'No definida'}</strong></div>
+ <div class="inv-card-badges"><span class="pill ${scoreColor(i.score)}">Riesgo ${i.riskBand||'Por determinar'}</span>${reviewCount?`<span class="inv-card-community" title="Valoración media de la comunidad">★ ${communityAverage.toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})}/5 · ${reviewCount}</span>`:'<span class="inv-card-community is-empty">☆ Sin valoraciones</span>'}</div>
+ <div class="inv-card-data"><span><small>Capital de entrada</small><strong>${entry}</strong></span><span><small>Liquidez</small><strong>${liquidity}</strong></span></div>
  </article>`
 }
 const investmentTaxonomy={"Mercados financieros":{"icon":"◈","short":"Ahorro, liquidez, instrumentos de deuda, acciones, fondos, ETF, derivados y previsión.","subtypes":{"Liquidez y ahorro bancario":["Efectivo","Cuentas corrientes","Cuentas remuneradas","Depósitos a plazo","Cuentas en divisa extranjera"],"Mercado monetario":["Fondos monetarios","Repos","Papel comercial","Certificados de depósito"],"Renta fija":["Letras del Tesoro","Bonos del Estado","Bonos ligados a la inflación","Bonos corporativos","Bonos convertibles","Obligaciones","Pagarés de empresa","Participaciones preferentes"],"Renta variable":["Acciones nacionales","Acciones internacionales","Acciones de dividendos","Acciones de crecimiento","Acciones de valor","Acciones de pequeña capitalización"],"Fondos de inversión":["Fondos indexados de renta variable","Fondos indexados de renta fija","Fondos de gestión activa de renta variable","Fondos de gestión activa de renta fija","Fondos mixtos","Fondos de retorno absoluto","Fondos de fondos"],"ETF y ETC":["ETF de renta variable (índices amplios)","ETF de renta fija","ETF sectoriales","ETF de dividendos","ETF y ETC de materias primas","ETF de criptoactivos"],"Derivados":["Futuros","Opciones","Warrants","Turbos y productos apalancados","CFDs"],"Productos estructurados y gestión alternativa":["Productos estructurados","Notas estructuradas","Hedge funds"],"Gestión delegada":["Carteras gestionadas","Robo-advisors","Carteras de fondos perfiladas"],"Previsión y seguros de ahorro":["Planes de pensiones individuales","Planes de pensiones de empleo","Planes de pensiones asociados","Planes de previsión asegurados (PPA)","PIAS","SIALP","Seguros de ahorro","Unit linked","Rentas vitalicias"]}},"Inmobiliario":{"icon":"⌂","short":"Inmuebles directos, vehículos cotizados y colectivos, financiación participativa y terrenos.","subtypes":{"Inmueble directo":["Viviendas","Locales comerciales","Plazas de garaje","Trasteros","Oficinas","Naves industriales","Edificios","Inmuebles turísticos","Nuda propiedad"],"REITs y SOCIMI":["SOCIMI residenciales","SOCIMI comerciales","SOCIMI logísticas","REITs internacionales"],"Fondos inmobiliarios":["Fondos de inversión inmobiliaria","ETF inmobiliarios cotizados"],"Crowdfunding inmobiliario":["Préstamos inmobiliarios","Participación en proyectos","Crowdfunding de alquiler"],"Terrenos":["Suelo urbano","Suelo urbanizable","Suelo rústico","Fincas agrícolas y forestales"]}},"Empresas y negocios":{"icon":"▦","short":"Negocios propios y digitales, participaciones empresariales, capital riesgo e intangibles.","subtypes":{"Negocio propio":["Comercio físico","Franquicias","Máquinas expendedoras","Negocios de servicios","Hostelería"],"Negocios digitales":["Páginas web monetizadas","Tiendas online","Aplicaciones y software","Plataformas digitales","Negocios de contenido"],"Participaciones empresariales":["Empresas privadas","Sociedades no cotizadas"],"Venture Capital":["Capital semilla","Startups en fase inicial","Startups en crecimiento"],"Private Equity":["Empresas consolidadas","Compra de participaciones","Adquisiciones empresariales"],"Intangibles y capital humano":["Royalties y derechos de autor","Licencias y patentes","Marcas","Dominios web","Formación y certificaciones","Desarrollo profesional y mentoría"]}},"Alternativos":{"icon":"◇","short":"Materias primas físicas, criptoactivos, deuda privada, arte y bienes coleccionables.","subtypes":{"Materias primas físicas":["Oro (lingotes y monedas de inversión)","Plata","Platino y paladio","Petróleo","Gas natural","Cobre","Materias primas agrícolas"],"Criptoactivos":["Bitcoin","Ethereum","Altcoins","Stablecoins","Staking y DeFi","Minería de criptomonedas"],"Deuda privada":["Préstamos privados","Deuda corporativa privada","Crowdlending a empresas","Préstamos entre particulares (P2P)","Factoring y confirming"],"Arte":["Pintura","Escultura","Fotografía","Arte contemporáneo","Arte digital (NFT)"],"Coleccionables":["Relojes","Vino","Whisky y licores","Coches clásicos","Monedas numismáticas","Sellos","Cartas coleccionables","Joyas y diamantes","Libros y manuscritos antiguos","Antigüedades","Instrumentos musicales","Otros objetos de colección"]}}};
@@ -1889,7 +1889,21 @@ function openInvestmentReport(){
 /* Pulido visual de fichas y tarjetas · noviembre 2026 */
 .inv-card-path{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:0 0 12px;color:#6682a8;font-size:10px;line-height:1.45;font-weight:700}
 .inv-card-path b{color:#9bb4d5;font-size:13px}.inv-card-path strong{color:#155eef;font-weight:800}
-.investment-card{padding:19px!important;border-left:3px solid var(--asset-accent,#155eef)!important;min-height:255px;display:flex;flex-direction:column;gap:0}
+.investment-card{padding:19px!important;border:1px solid #e5ecf6!important;border-left:3px solid var(--asset-accent,#155eef)!important;min-height:220px;display:flex;flex-direction:column;gap:0;background:linear-gradient(155deg,#fff 0%,#fbfdff 100%)!important;transition:transform .18s,box-shadow .18s,border-color .18s}
+.investment-card:hover{transform:translateY(-2px);box-shadow:0 10px 26px #155eef12!important;border-color:#c9d9f5!important}
+.investment-card h3{margin:0 38px 14px 0!important;color:#155eef!important;font-size:21px!important;font-weight:850!important;letter-spacing:-.55px!important;line-height:1.18!important}
+.investment-card .inv-card-path{margin:0 34px 11px 0;font-size:9px}
+.inv-card-yield{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;margin:0 0 10px;border-radius:11px;background:#eef4ff}
+.inv-card-yield small{font-size:10px;color:#667c9e;font-weight:650}
+.inv-card-yield strong{font-size:13px;color:#155eef;font-weight:850;text-align:right}
+.inv-card-badges{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.inv-card-community{display:inline-flex;align-items:center;gap:4px;padding:5px 8px;border-radius:999px;background:#fff8e8;color:#9a6700;font-size:10px;font-weight:800}
+.inv-card-community.is-empty{background:#f2f4f7;color:#98a2b3}
+.investment-card .inv-card-data{margin-top:auto;padding-top:11px;gap:12px}
+.investment-card .inv-card-data>span:first-child{grid-column:auto}
+.investment-card .inv-card-data small{font-size:9px}
+.investment-card .inv-card-data strong{font-size:11px}
+
 .investment-card h3{margin:0 0 8px!important;color:#172b4d!important;font-size:17px!important;line-height:1.25}
 .investment-card>p{font-size:12px!important;line-height:1.55!important;min-height:38px;margin:0 0 10px!important}
 .investment-card .meta{gap:8px;align-items:center}.investment-card .score{color:#155eef!important;font-size:12px!important;font-weight:850!important;text-align:right}
@@ -1904,7 +1918,7 @@ function openInvestmentReport(){
 .asset-breadcrumb{gap:7px!important;align-items:center}.asset-breadcrumb>span:not(.asset-crumb){color:#9bb4d5!important;font-size:15px!important}
 .asset-breadcrumb .asset-crumb{color:#155eef!important;font-size:11px!important;font-weight:750}.asset-breadcrumb strong{color:#155eef!important;font-size:11px!important;font-weight:850}
 .asset-quick-value{color:#155eef!important}.taxonomy-map-symbol{font-family:inherit;font-size:25px!important;font-weight:800;color:var(--universe-color)!important}.cat-icon{font-family:inherit;font-size:25px!important;font-weight:800}
-@media(max-width:620px){.investment-card{min-height:0;padding:15px!important}.inv-card-path{font-size:9px}.investment-card>p{min-height:0}.inv-card-data{gap:7px}}
+@media(max-width:620px){.investment-card{min-height:0;padding:15px!important}.inv-card-path{font-size:9px}.investment-card h3{font-size:19px!important}.inv-card-yield{padding:9px 10px}.inv-card-data{gap:7px}}
 @media print{
  @page{size:A4 portrait;margin:10mm}
  body:has(#compare:not(.hidden)) #compare .compare-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}
@@ -2290,7 +2304,7 @@ invDb.auth.onAuthStateChange((event,session)=>{
 });
 window.addEventListener('online',()=>invRefresh());
 
-let invReviewCounts={};let invReviewCountsLoaded=false;let invReviewCountsLoading=false;
+let invReviewCounts={};let invReviewAverages={};let invReviewCountsLoaded=false;let invReviewCountsLoading=false;
 renderHome();renderExplore();populateSimulatorInvestments();applyInvestmentAssumption();simulate();
 setTimeout(()=>invLoadReviewCounts(),0);
 refreshAccountNav();updateNavIndicator();window.addEventListener('resize',updateNavIndicator);
@@ -2308,7 +2322,7 @@ const invReviewFactors=[
 ];
 let invAssetReviewCache={};
 
-async function invLoadReviewCounts(){if(invReviewCountsLoaded||invReviewCountsLoading)return;invReviewCountsLoading=true;try{const counts={};let from=0,batch=[];do{const {data,error}=await invDb.from('asset_reviews').select('asset_key').eq('status','published').order('created_at',{ascending:true}).range(from,from+999);if(error)throw error;batch=data||[];batch.forEach(r=>{counts[r.asset_key]=(counts[r.asset_key]||0)+1});from+=1000}while(batch.length===1000);invReviewCounts=counts;invReviewCountsLoaded=true;renderHome();renderExplore()}catch(e){console.warn('No se pudieron cargar los contadores de valoraciones:',e)}finally{invReviewCountsLoading=false}}
+async function invLoadReviewCounts(){if(invReviewCountsLoaded||invReviewCountsLoading)return;invReviewCountsLoading=true;try{const counts={},scoreSums={};let from=0,batch=[];do{const {data,error}=await invDb.from('asset_reviews').select('asset_key,return_potential,risk_control,liquidity,periodic_income,simplicity').eq('status','published').order('created_at',{ascending:true}).range(from,from+999);if(error)throw error;batch=data||[];batch.forEach(r=>{counts[r.asset_key]=(counts[r.asset_key]||0)+1});from+=1000}while(batch.length===1000);invReviewCounts=counts;invReviewAverages=Object.fromEntries(Object.entries(scoreSums).map(([key,sum])=>[key,Number((sum/counts[key]).toFixed(1))]));invReviewCountsLoaded=true;renderHome();renderExplore()}catch(e){console.warn('No se pudieron cargar los contadores de valoraciones:',e)}finally{invReviewCountsLoading=false}}
 function invToggleCommunityReviews(button){const list=button?.nextElementSibling;if(!list)return;const opening=list.hidden;list.hidden=!opening;button.textContent=opening?'Ocultar reseñas':'Ver todas las reseñas ('+(invAssetReviewCache[invPendingReviewAsset]?.reviews?.length||0)+')'}
 function invReviewWeightedScore(r){
  return Number((invReviewFactors.reduce((sum,f)=>sum+(Number(r[f.key])||0)*f.weight,0)/100).toFixed(1));
