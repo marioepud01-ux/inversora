@@ -1756,13 +1756,14 @@ function simulateInvestment(name){showView('sim');populateSimulatorInvestments()
 function openInvestmentReport(){
   simulate(); // El informe siempre refleja los últimos datos introducidos.
   const title='Informe de simulación';
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const selected=document.getElementById('simInvestment')?.selectedOptions?.[0]?.textContent||'Simulación general';
   const investment=investments.find(x=>x.name===(document.getElementById('simInvestment')?.value||''));
   const assetInsight=investment?'<section class="section"><h2>Lectura de la inversión</h2><p>'+esc(investment.how||investment.desc||'')+'</p><table class="data"><tbody>'+
     '<tr><td>Rentabilidad indicada</td><td>'+esc(investment.ret||'No especificada')+'</td></tr>'+
     '<tr><td>Capital inicial</td><td>'+esc(investment.capital||'Variable')+'</td></tr>'+
     '<tr><td>Ingresos potenciales</td><td>'+esc(investment.income||'Dependen del activo')+'</td></tr>'+
-    '<tr><td>Gestión estimada</td><td>'+esc(investment.management||'Depende de la operación')+'</td></tr>'+
+    '<tr><td>Gestión estimada</td><td>'+(investment.management!==undefined&&investment.management!==null&&String(investment.management).trim()!==''&&Number.isFinite(Number(investment.management))?Number(investment.management).toLocaleString('es-ES',{maximumFractionDigits:1})+' h/mes':esc(investment.management||'Depende de la operación'))+'</td></tr>'+
     '<tr><td>Costes recurrentes</td><td>'+esc(investment.costs||'Consultar proveedor y condiciones')+'</td></tr>'+
     '<tr><td>Costes de entrada y salida</td><td>'+esc(investment.entrycosts||'Revisar antes de contratar')+'</td></tr>'+
     '<tr><td>Fiscalidad orientativa</td><td>'+esc(investment.tax||'Depende del vehículo y de la situación fiscal')+'</td></tr>'+
@@ -1771,7 +1772,6 @@ function openInvestmentReport(){
     '</tbody></table><p class="note">'+esc(investment.profile||'El encaje depende del horizonte, la liquidez y la situación del inversor.')+'</p></section>':'<section class="section"><h2>Lectura del escenario</h2><p>Al no seleccionar un activo concreto, este informe se centra en las hipótesis y resultados introducidos. Contrasta costes, fiscalidad, inflación y riesgos antes de aplicar el escenario a una inversión real.</p></section>';
 
   const date=new Date().toLocaleDateString('es-ES',{year:'numeric',month:'long',day:'numeric'});
-  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const fmt=id=>{const el=document.getElementById(id);if(!el)return '—';const v=el.value;return v===''?'—':v;};
   const inputs=[...document.querySelectorAll('#simForm input, #simInvestment, #simDynamicFields input')];
   const unique=[...new Set(inputs)].filter(el=>el.type!=='button'&&el.id!==''&&!el.closest('.hidden'));
