@@ -1754,6 +1754,7 @@ function applyInvestmentAssumption(){
 }
 function simulateInvestment(name){showView('sim');populateSimulatorInvestments();const select=document.getElementById('simInvestment');select.value=name;applyInvestmentAssumption();}
 function openInvestmentReport(){
+  simulate(); // El informe siempre refleja los últimos datos introducidos.
   const title='Informe de simulación';
   const selected=document.getElementById('simInvestment')?.selectedOptions?.[0]?.textContent||'Simulación general';
   const investment=investments.find(x=>x.name===(document.getElementById('simInvestment')?.value||''));
