@@ -186,6 +186,7 @@ select option{padding:12px;background:#fff;color:#101828}
 .inversora-chat-launch{position:fixed;right:24px;bottom:22px;z-index:1000;display:flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:10px 17px 10px 10px;background:#155eef;color:#fff;box-shadow:0 12px 35px #155eef45;font-weight:750;transition:transform .18s,box-shadow .18s}
 .inversora-chat-launch:hover{transform:translateY(-2px);box-shadow:0 16px 38px #155eef55}
 .inversora-chat-avatar{display:grid;place-items:center;width:43px;height:43px;border-radius:50%;background:#fff;color:#155eef;font-size:23px;font-weight:900;border:2px solid #dbe7ff}
+.inversora-maintenance-card{margin:auto;padding:24px 20px;text-align:center;background:#fff;border:1px solid #dbe7ff;border-radius:18px;box-shadow:0 8px 28px rgba(21,94,239,.07);max-width:310px}.inversora-maintenance-icon{display:grid;place-items:center;width:48px;height:48px;margin:0 auto 14px;border-radius:15px;background:#eef4ff;color:#155eef;font-size:25px}.inversora-maintenance-card strong{display:block;color:#101828;font-size:15px;line-height:1.35}.inversora-maintenance-card p{margin:10px 0;color:#475467;font-size:13px;line-height:1.55}.inversora-maintenance-card span{display:block;color:#667085;font-size:11px;line-height:1.5}
 .inversora-chat-panel{position:fixed;right:24px;bottom:88px;width:min(390px,calc(100vw - 28px));height:min(590px,calc(100dvh - 125px));z-index:1001;display:none;flex-direction:column;overflow:hidden;background:#fff;border:1px solid #dfe6f2;border-radius:22px;box-shadow:0 22px 70px #10182830}
 .inversora-chat-panel.open{display:flex;animation:chatIn .18s ease-out}
 @keyframes chatIn{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -1430,12 +1431,17 @@ td,th{border-color:#e7eef8!important}
 
 </div>
 
-<div id="inversoraChatPanel" class="inversora-chat-panel" role="dialog" aria-label="Asistente de Inversora" aria-modal="false">
-  <div class="inversora-chat-head"><div class="inversora-chat-avatar" aria-hidden="true">↗</div><div><strong>IA de Inversora</strong><small>Tu copiloto financiero · web y actualidad</small></div><button class="inversora-chat-close" type="button" onclick="toggleInversoraChat(false)" aria-label="Cerrar chat">×</button></div>
-  <div id="inversoraChatMessages" class="inversora-chat-messages" aria-live="polite"><div class="inversora-message bot">¡Hola! Soy la IA de Inversora. Puedes preguntarme sobre cualquier decisión financiera, conceptos, mercados y actualidad, o sobre cómo utilizar esta web. Si la respuesta depende de datos recientes, puedo consultar fuentes actuales. ¿Qué quieres analizar?</div></div>
-  <div class="inversora-chat-suggestions"><button type="button" onclick="askInversoraSuggestion('¿Me conviene comprar un coche al contado, financiarlo o contratar un renting?')">Coche: contado o renting</button><button type="button" onclick="askInversoraSuggestion('¿Me conviene comprar una vivienda este año? Analiza tipos, mercado y riesgos.')">Comprar vivienda</button><button type="button" onclick="askInversoraSuggestion('Explícame cómo se clasifican las inversiones en Inversora.')">Cómo funciona Inversora</button></div>
-  <form class="inversora-chat-form" onsubmit="sendInversoraMessage(event)"><input id="inversoraChatInput" maxlength="4000" autocomplete="off" placeholder="Pregunta lo que quieras sobre finanzas o Inversora…" aria-label="Escribe tu pregunta"><button type="submit" aria-label="Enviar pregunta">➤</button></form>
-  <div class="inversora-chat-foot">Orientación educativa y análisis comparativo, no asesoramiento financiero, fiscal o jurídico personalizado. No compartas datos bancarios ni contraseñas.</div>
+<div id="inversoraChatPanel" class="inversora-chat-panel" role="dialog" aria-label="IA de Inversora" aria-modal="false">
+  <div class="inversora-chat-head"><div class="inversora-chat-avatar" aria-hidden="true">↗</div><div><strong>IA de Inversora</strong><small>Servicio temporalmente no disponible</small></div><button class="inversora-chat-close" type="button" onclick="toggleInversoraChat(false)" aria-label="Cerrar chat">×</button></div>
+  <div class="inversora-chat-messages" aria-live="polite">
+    <div class="inversora-maintenance-card">
+      <div class="inversora-maintenance-icon">✦</div>
+      <strong>Estamos trabajando en nuestra IA</strong>
+      <p>La IA de Inversora no está disponible temporalmente. Estamos mejorándola para ofrecerte respuestas útiles y fiables.</p>
+      <span>Gracias por tu paciencia. Mientras tanto, puedes seguir utilizando todas las demás herramientas de Inversora.</span>
+    </div>
+  </div>
+  <div class="inversora-chat-foot">La IA volverá a estar disponible cuando podamos ofrecer un servicio estable y útil.</div>
 </div>
 <button id="inversoraChatLaunch" class="inversora-chat-launch" type="button" onclick="toggleInversoraChat()" aria-controls="inversoraChatPanel" aria-expanded="false"><span class="inversora-chat-avatar" aria-hidden="true">↗</span><span>Pregunta a Inversora</span></button>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1643,14 +1649,49 @@ function printAssetSheet(){
  clone.querySelectorAll('.asset-jump-nav,.asset-bottom-actions,.asset-next-nav,.back,.asset-print-btn').forEach(el=>el.remove());
  const styles=[...document.querySelectorAll('style')].map(el=>el.outerHTML).join('');
  const links=[...document.querySelectorAll('link[rel="stylesheet"]')].map(el=>el.outerHTML).join('');
- const printCss='<style>html,body{margin:0!important;padding:0!important;background:#fff!important;color:#101828!important;font-family:Arial,sans-serif!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.print-wrap{max-width:1100px;margin:0 auto;padding:22px}.asset-detail{max-width:none!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}.asset-section,.asset-quick-card,.asset-explainer-card,.asset-cost-card,.asset-pros-card,.asset-cons-card{break-inside:avoid;page-break-inside:avoid}.asset-hero{break-inside:avoid;page-break-inside:avoid}.asset-section{box-shadow:none!important}a{color:inherit;text-decoration:none}@page{size:A4;margin:14mm}@media print{.print-wrap{padding:0}.asset-detail{width:100%}}</style>';
+ const printCss=`<style>
+ @page{size:A4 portrait;margin:6mm}
+ *{box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+ html,body{margin:0!important;padding:0!important;width:100%;background:#fff!important;color:#101828!important;font-family:Arial,sans-serif!important}
+ .print-wrap{width:198mm;height:285mm;margin:0 auto;padding:0;overflow:hidden;position:relative}.print-brand{height:9mm;display:flex;align-items:center;justify-content:space-between;margin:0 0 2mm;padding:0 1mm 1.5mm;border-bottom:1px solid #155eef;color:#667085;font-size:6.5pt;font-weight:750;letter-spacing:.12em}.print-brand .brand-word{font-size:15pt;font-weight:900;letter-spacing:-.06em;color:#101828}.print-brand .brand-word span{color:#155eef}
+ .asset-detail{width:100%!important;max-width:none!important;min-height:274mm!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-flow:row dense!important;align-content:space-between!important;gap:2.2mm!important;background:#fff!important}
+ .asset-hero{grid-column:1/-1!important;margin:0!important;padding:4mm!important;border:1px solid #dbe7ff!important;border-radius:3mm!important;box-shadow:none!important;gap:3mm!important;break-inside:avoid!important;page-break-inside:avoid!important}
+ .asset-hero h1{font-size:18pt!important;line-height:1.05!important;margin:0 0 2mm!important}
+ .asset-hero p,.asset-lead{font-size:7.2pt!important;line-height:1.3!important;margin:1mm 0!important}
+ .asset-section{min-width:0!important;margin:0!important;padding:2.7mm!important;border:1px solid #dce6f5!important;border-radius:2.5mm!important;box-shadow:none!important;background:#fff!important;break-inside:avoid!important;page-break-inside:avoid!important}
+ .asset-section-head{margin:0 0 2mm!important}
+ .asset-section-head h2{font-size:9pt!important;line-height:1.12!important;margin:0!important}
+ .asset-section p,.asset-section li,.asset-section span,.asset-section small{font-size:6.4pt!important;line-height:1.24!important}
+ .asset-section p{margin:1mm 0!important}
+ .asset-section ul,.asset-section ol{margin:1mm 0!important;padding-left:4mm!important}
+ .asset-section h3,.asset-section strong{font-size:7pt!important;line-height:1.2!important}
+ .asset-overview-panel,.asset-quick-card,.asset-explainer-card,.asset-cost-card,.asset-pros-card,.asset-cons-card,.asset-rating-card,.asset-meter{padding:2mm!important;margin:1mm 0!important;border-radius:2mm!important;box-shadow:none!important}
+ .asset-meter-track{height:4px!important}
+ .asset-section [style*="grid-template-columns"],.asset-hero [style*="grid-template-columns"]{gap:1.5mm!important}
+ .asset-jump-nav,.asset-bottom-actions,.asset-next-nav,.back,.asset-print-btn{display:none!important}
+ a{color:inherit;text-decoration:none}
+ @media print{.print-wrap{break-after:avoid!important;page-break-after:avoid!important}}
+ </style>`;
  const win=window.open('','_blank');
  if(!win){invNotice('El navegador ha bloqueado la ventana de impresión. Permite las ventanas emergentes para Inversora o usa la opción Compartir del navegador.');return}
  win.document.open();
- win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ficha de inversión · Inversora</title>'+links+styles+printCss+'</head><body><main class="print-wrap">'+clone.outerHTML+'</main></body></html>');
+ win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ficha de inversión · Inversora</title>'+links+styles+printCss+'</head><body><main class="print-wrap"><div class="print-brand"><span class="brand-word">Invers<span>ora</span></span><span>FICHA DE INVERSIÓN</span></div>'+clone.outerHTML+'</main></body></html>');
  win.document.close();
- const doPrint=()=>{try{win.focus();win.print()}catch(err){console.error('Print asset:',err)}};
- if(win.document.readyState==='complete')setTimeout(doPrint,350);else win.addEventListener('load',()=>setTimeout(doPrint,350),{once:true});
+ const doPrint=()=>{
+  try{
+   const wrap=win.document.querySelector('.print-wrap'),detail=win.document.querySelector('.asset-detail');
+   if(detail&&wrap){
+    const available=1035;
+    const natural=detail.scrollHeight;
+    const scale=Math.min(1.08,available/Math.max(natural,1));
+    detail.style.transform='scale('+scale+')';
+    detail.style.transformOrigin='top left';
+    detail.style.width=(100/scale)+'%';
+   }
+   win.focus();win.print();
+  }catch(err){console.error('Print asset:',err)}
+ };
+ if(win.document.readyState==='complete')setTimeout(doPrint,650);else win.addEventListener('load',()=>setTimeout(doPrint,650),{once:true});
 }
 const invPageTitles={home:'Inicio',explore:'Explorar',detail:'Inversión',favorites:'Favoritos',tools:'Herramientas',community:'Comunidad',account:'Mi cuenta',compare:'Comparador',sim:'Simulador',glossary:'Glosario financiero',privacy:'Privacidad',terms:'Términos y condiciones'};
 function invSetPageTitle(label){document.title='Inversora | '+(label||'Inicio')}
