@@ -230,3 +230,18 @@
  .asset-v2-crumb{max-width:58%;font-size:10px!important}
  .asset-v2-hero{padding:16px!important}
 }
+
+
+/* Marca oficial en la cabecera de la ficha imprimible */
+@media print{
+ .asset-print-sheet .asset-print-head .asset-print-brand .asset-v2-wordmark{
+  color:#101828!important;
+  -webkit-print-color-adjust:exact!important;
+  print-color-adjust:exact!important
+ }
+ .asset-print-sheet .asset-print-head .asset-print-brand .asset-v2-wordmark>span{
+  color:#155eef!important;
+  -webkit-print-color-adjust:exact!important;
+  print-color-adjust:exact!important
+ }
+}
