@@ -90,3 +90,5 @@
  .asset-v2-prevnext{gap:7px}
 }
 @media print{.asset-v2-top,.asset-v2-index,.asset-v2-bottom,.asset-v2-prevnext{display:none!important}.asset-v2-section{break-inside:avoid}}
+
+.asset-v2 .asset-print-sheet{display:none}
