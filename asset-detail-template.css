@@ -92,3 +92,22 @@
 @media print{.asset-v2-top,.asset-v2-index,.asset-v2-bottom,.asset-v2-prevnext{display:none!important}.asset-v2-section{break-inside:avoid}}
 
 .asset-v2 .asset-print-sheet{display:none}
+
+/* Ajustes de identidad y usabilidad de la ficha Inversora */
+.asset-v2-top{gap:10px;margin:0 0 10px;padding:2px 0;min-height:34px}
+.asset-v2-top .back{min-height:32px;padding:6px 10px;border:1px solid #e4e7ec;border-radius:9px;background:#fff;color:#344054;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:6px;line-height:1.2}
+.asset-v2-top .back svg{width:14px;height:14px;flex:none}
+.asset-v2-brand{gap:7px}
+.asset-v2-mark{display:block;width:27px;height:27px;flex:0 0 27px;border-radius:8px;object-fit:cover}
+.asset-v2-wordmark{display:inline-flex;align-items:center;gap:0;white-space:nowrap;letter-spacing:-.6px;line-height:1}
+.asset-v2-wordmark>span{color:#155eef}
+.asset-v2-bottom .asset-v2-wordmark>span{color:#b2ccff}
+.asset-v2-panel,.asset-v2-section,.asset-v2-rating,.asset-v2-prevnext button{border:1px solid #e4e7ec;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.asset-v2-panel:hover,.asset-v2-section:hover,.asset-v2-rating:hover,.asset-v2-prevnext button:hover{border-color:#155eef;box-shadow:0 0 0 3px rgba(21,94,239,.09),0 7px 18px rgba(21,94,239,.07);transform:translateY(-1px)}
+.asset-v2-panel:focus-within,.asset-v2-section:focus-within,.asset-v2-rating:focus-within{border-color:#155eef;box-shadow:0 0 0 3px rgba(21,94,239,.09)}
+.asset-v2-help{cursor:pointer;flex:0 0 18px;display:inline-grid;place-items:center;transition:background .18s,border-color .18s,transform .18s}
+.asset-v2-help:hover,.asset-v2-help:focus-visible{background:#eef4ff;border-color:#155eef;transform:scale(1.06);outline:none}
+.asset-print-brand{display:flex;align-items:center;gap:8px}
+.asset-print-brand>img,.asset-print-sheet footer>img{width:24px;height:24px;border-radius:7px;vertical-align:middle}
+.asset-print-sheet footer>img{width:16px;height:16px;margin-right:5px}
+@media(max-width:760px){.asset-v2-top{gap:8px;margin-bottom:9px;min-height:30px}.asset-v2-top .back{min-height:30px;padding:5px 8px;font-size:10px}.asset-v2-brand{font-size:13px}.asset-v2-mark{width:24px;height:24px;flex-basis:24px}.asset-v2-crumb{font-size:10px}}
