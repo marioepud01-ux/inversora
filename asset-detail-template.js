@@ -68,6 +68,23 @@ function render(name){
  '<p class="asset-v2-legal"><b>Inversora</b> · Datos orientativos, no asesoramiento financiero ni fiscal. Rentabilidades no garantizadas. Última revisión: '+esc(data.reviewed.slice(5)+'/'+data.reviewed.slice(0,4))+'. Fuentes: BOE, Agencia Tributaria y Fondo de Garantía de Depósitos.</p><section class="asset-print-sheet"><header class="asset-print-head"><div class="asset-print-brand"><img src="/icon-192.svg" alt=""><span class="asset-v2-wordmark">Invers<span>ora</span></span></div><span>FICHA DE INVERSIÓN · '+esc(data.category)+'</span></header><h1>'+esc(data.name)+'</h1><p class="asset-print-lead">'+esc(data.phrase)+'</p><div class="asset-print-metrics"><div><small>Rentabilidad indicada</small><b>'+yieldText+'</b></div><div><small>Riesgo</small><b>'+num(data.metrics.risk)+'/5</b></div><div><small>Liquidez</small><b>'+num(data.metrics.liquidity)+'/5</b></div><div><small>Capital inicial</small><b>'+esc(data.capital)+'</b></div></div><div class="asset-print-grid"><section><h2>Funcionamiento</h2><p>'+esc(data.how)+'</p><p><b>Ingresos:</b> '+esc(data.periodic)+'</p><p><b>Gestión:</b> '+num(data.management)+' h/mes</p></section><section><h2>Costes y fiscalidad</h2><p><b>Costes recurrentes:</b> '+esc(data.costs.recurring)+'</p><p><b>Costes puntuales:</b> '+esc(data.costs.oneoff)+'</p><p><b>Fiscalidad:</b> '+esc(data.tax)+'</p><p class="asset-print-small">'+esc(data.taxDetail)+'</p></section><section><h2>Ventajas y desventajas</h2><div class="asset-print-columns"><div><b>Ventajas</b><ul>'+data.pros.slice(0,3).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div><div><b>Riesgos</b><ul>'+data.cons.slice(0,3).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div></div></section><section><h2>Riesgos y protección</h2><ul>'+data.risks.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul><p>'+esc(data.protection)+'</p></section></div><footer><img src="/icon-192.svg" alt=""> Inversora · Ficha educativa · Datos orientativos, no asesoramiento financiero ni fiscal · Revisado '+esc(data.reviewed)+'</footer></section></article>';
  document.getElementById('detail').innerHTML='<section class="section">'+html+'</section>';
  if(typeof invSetPageTitle==='function')invSetPageTitle(name);
+ const sectionNav=document.querySelector('.asset-v2-index');
+ if(sectionNav&&!sectionNav.dataset.offsetReady){
+  sectionNav.dataset.offsetReady='1';
+  sectionNav.addEventListener('click',function(event){
+   const link=event.target.closest('a[href^="#asset-v2-"]');
+   if(!link)return;
+   const target=document.getElementById(link.getAttribute('href').slice(1));
+   const hero=document.querySelector('.asset-v2-hero');
+   if(!target||!hero)return;
+   event.preventDefault();
+   const stickyTop=parseFloat(getComputedStyle(hero).top)||0;
+   const offset=hero.getBoundingClientRect().height+stickyTop+18;
+   const top=target.getBoundingClientRect().top+window.scrollY-offset;
+   history.replaceState(null,'',link.getAttribute('href'));
+   window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+  });
+ }
  showView('detail');
  if(typeof invLoadAssetReviews==='function')invLoadAssetReviews(name);
 }
