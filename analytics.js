@@ -37,6 +37,7 @@
   const original=document.title;document.title='Inversora | '+pageTitle;
   track('page_view');
  }
+ window.invAnalyticsManageConsent=function(){localStorage.removeItem(CONSENT_KEY);consented=false;showConsent()};
  function install(){
   const saved=localStorage.getItem(CONSENT_KEY);
   consented=saved==='accepted';
