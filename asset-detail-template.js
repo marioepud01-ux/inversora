@@ -42,7 +42,7 @@ const list=(items,kind)=>'<ul class="asset-v2-bullets '+kind+'">'+items.map(x=>'
 function ratingMarkup(name){
  const score=Number(window.scoreFormula?scoreFormula(investments.find(x=>x.name===name)):6.5)/2;
  const count=Number(invReviewCounts?.[name]||0),avg=Number(invReviewAverages?.[name]||0);
- const community=count>=5?'<div class="asset-v2-rating-main"><span class="asset-v2-stars" role="img" aria-label="'+num(avg)+' de 5 estrellas">'+('★'.repeat(Math.round(avg))+'☆'.repeat(5-Math.round(avg)))+'</span><strong>'+num(avg)+'/5</strong></div><small>'+count+' valoraciones</small>':'<div class="asset-v2-rating-main"><strong>Pocas valoraciones aún</strong></div><small>'+count+' '+(count===1?'valoración':'valoraciones')+'</small>';
+ const community=count>=5?'<div class="asset-v2-rating-main"><span id="asset-v2-community-score-stars" class="asset-v2-stars" role="img" aria-label="'+num(avg)+' de 5 estrellas">'+('★'.repeat(Math.round(avg))+'☆'.repeat(5-Math.round(avg)))+'</span><strong id="asset-v2-community-average">'+num(avg)+'/5</strong></div><small id="asset-v2-community-count">'+count+' valoraciones</small>':'<div class="asset-v2-rating-main"><strong id="asset-v2-community-average">Pocas valoraciones aún</strong></div><small id="asset-v2-community-count">'+count+' '+(count===1?'valoración':'valoraciones')+'</small>';
  return '<div class="asset-v2-rating"><div class="asset-v2-rating-head">Valoración de Inversora <button type="button" class="asset-v2-help" aria-label="Cómo se calcula la valoración de Inversora" title="Cómo se calcula la valoración de Inversora" onclick="showScoreBreakdown('+JSON.stringify(name)+')">?</button></div><div class="asset-v2-rating-main"><span class="asset-v2-stars" role="img" aria-label="'+num(score)+' de 5 estrellas">★★★★☆</span><strong>'+num(score)+'/5</strong></div><small>Nota editorial calculada con los criterios de Inversora.</small></div><div class="asset-v2-rating"><div class="asset-v2-rating-head">Valoración de la comunidad</div>'+community+'<div class="asset-v2-community-stars" aria-label="Valorar este activo; abre el formulario de valoración">'+[1,2,3,4,5].map(n=>'<button type="button" aria-label="Valorar '+n+' de 5 estrellas" onclick="invOpenCommunityModal('+JSON.stringify(name)+')">☆</button>').join('')+'</div><small>Tu valoración se registra desde el formulario de la comunidad.</small></div>';
 }
 function render(name){
@@ -69,6 +69,23 @@ function render(name){
  if(typeof invSetPageTitle==='function')invSetPageTitle(name);
  showView('detail');
  if(typeof invLoadAssetReviews==='function')invLoadAssetReviews(name);
+}
+const originalReviews=window.invRenderAssetReviews;
+if(typeof originalReviews==='function'){
+ window.invRenderAssetReviews=function(name,reviews,profiles){
+  const out=originalReviews.apply(this,arguments);
+  if(name===data.name){
+   const rows=Array.isArray(reviews)?reviews:[],count=rows.length;
+   const avg=count?Number((rows.reduce((sum,r)=>sum+(typeof invReviewWeightedScore==='function'?invReviewWeightedScore(r):0),0)/count).toFixed(1)):0;
+   const value=document.getElementById('asset-v2-community-average');
+   const countNode=document.getElementById('asset-v2-community-count');
+   const stars=document.getElementById('asset-v2-community-score-stars');
+   if(value)value.textContent=count>=5?num(avg)+'/5':'Pocas valoraciones aún';
+   if(countNode)countNode.textContent=count+' '+(count===1?'valoración':'valoraciones');
+   if(stars){stars.textContent=count>=5?'★'.repeat(Math.round(avg))+'☆'.repeat(5-Math.round(avg)):'☆☆☆☆☆';stars.setAttribute('aria-label',count>=5?num(avg)+' de 5 estrellas':'Aún no hay suficientes valoraciones para mostrar una media');}
+  }
+  return out;
+ };
 }
 const original=window.openDetail;
 window.openDetail=function(name){if(name===data.name){render(name);return}return original(name)};
