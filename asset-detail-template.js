@@ -48,7 +48,7 @@ function ratingMarkup(name){
 }
 
 function buildSheetData(i){
- if(i.name===data.name)return {...data,managementText:num(data.management)+' h/mes',sourceNote:'Ficha específica de cuenta remunerada. Comprueba siempre las condiciones vigentes de cada entidad.',barrier:{...data.barrier,summary:'La apertura suele ser sencilla si cumples los criterios de la entidad. Comprueba identificación, requisitos, límites y cobertura del depósito.'},costs:{...data.costs,recurringValue:'Normalmente 0 €',oneoffValue:'Según servicios',entryValue:'Según condiciones'},taxLabel:'IRPF · base del ahorro'};
+ if(i.name===data.name)return {...data,metrics:{...data.metrics,complex:data.metrics.complexity},managementText:num(data.management)+' h/mes',sourceNote:'Ficha específica de cuenta remunerada. Comprueba siempre las condiciones vigentes de cada entidad.',barrier:{...data.barrier,summary:'La apertura suele ser sencilla si cumples los criterios de la entidad. Comprueba identificación, requisitos, límites y cobertura del depósito.'},costs:{...data.costs,recurringValue:'Normalmente 0 €',oneoffValue:'Según servicios',entryValue:'Según condiciones'},taxLabel:'IRPF · base del ahorro'};
  const category=i.cat||'Otros',subcategory=typeof subtypeFor==='function'?subtypeFor(i):(i.catalogSubtype||i.sub||'Activo de inversión');
  const range=String(i.ret||(typeof catalogReturnRange==='function'?catalogReturnRange(i.name,category,subcategory):'No disponible'));
  const nums=[...range.matchAll(/(\d+(?:[.,]\d+)?)/g)].map(x=>Number(x[1].replace(',','.')));
