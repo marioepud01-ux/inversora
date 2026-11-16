@@ -1370,6 +1370,60 @@ td,th{border-color:#e7eef8!important}
 }
 </style>
 
+
+<style id="inversora-apple-header">
+/* Apple-inspired desktop navigation: restrained, precise and spacious */
+@media (min-width:801px){
+ .app{padding-top:0}
+ .inv-header{
+  width:100vw;max-width:none;margin:0 0 30px calc(50% - 50vw);
+  min-height:64px;padding:0 max(34px,calc((100vw - 1440px)/2));
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:30px;
+  position:sticky;top:0;z-index:100;border:0;border-bottom:1px solid rgba(0,0,0,.08);
+  border-radius:0;background:rgba(250,250,252,.82);backdrop-filter:saturate(180%) blur(22px);
+  -webkit-backdrop-filter:saturate(180%) blur(22px);box-shadow:none;
+ }
+ .inv-header .header-brand-group{grid-column:1;justify-self:start;min-width:0}
+ .inv-header .logo{font-size:21px;font-weight:700;letter-spacing:-.7px;gap:9px;color:#1d1d1f}
+ .inv-header .logo:before{width:29px;height:29px;flex-basis:29px;border-radius:8px;box-shadow:none}
+ .inv-header .desktop-main-nav{
+  grid-column:2;display:flex;align-items:center;justify-content:center;gap:clamp(17px,2vw,31px);
+  padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;white-space:nowrap;
+ }
+ .inv-header .desktop-nav-link{
+  position:relative;padding:8px 0;border:0;border-radius:0;background:transparent;
+  color:#424245;font-size:12px;font-weight:500;letter-spacing:-.01em;line-height:1.2;
+  transition:color .18s ease,opacity .18s ease;box-shadow:none;
+ }
+ .inv-header .desktop-nav-link:hover{background:transparent;color:#0071e3}
+ .inv-header .desktop-nav-link.active{background:transparent;border:0;color:#0071e3;box-shadow:none}
+ .inv-header .desktop-nav-link.active:after{
+  content:"";position:absolute;left:0;right:0;bottom:-11px;height:2px;border-radius:2px;background:#0071e3;
+ }
+ .inv-header .header-actions{grid-column:3;justify-self:end;gap:20px;min-width:0}
+ .inv-header .header-icon-btn{width:25px;height:34px;color:#1d1d1f;font-size:22px;transition:color .18s,transform .18s}
+ .inv-header .header-icon-btn:hover{color:#0071e3;transform:none}
+ .inv-header .profile-nav-btn{
+  height:34px;padding:0 0 0 2px;gap:8px;border:0;border-radius:0;background:transparent;
+  color:#1d1d1f;font-size:12px;font-weight:500;letter-spacing:-.01em;
+ }
+ .inv-header .profile-nav-btn:hover{background:transparent;color:#0071e3}
+ .inv-header .profile-nav-avatar,.inv-header .profile-nav-avatar-fallback{
+  width:27px;height:27px;flex-basis:27px;border:0;background:#e8e8ed;color:#424245;font-size:11px;
+ }
+ .inv-header .menu-toggle{display:none}
+}
+@media (min-width:801px) and (max-width:1120px){
+ .inv-header{padding-left:22px;padding-right:22px;gap:18px}
+ .inv-header .desktop-main-nav{gap:14px}
+ .inv-header .desktop-nav-link{font-size:11px}
+ .inv-header .header-actions{gap:13px}
+}
+@media(prefers-reduced-motion:reduce){
+ .inv-header .desktop-nav-link,.inv-header .header-icon-btn,.inv-header .profile-nav-btn{transition:none!important}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
