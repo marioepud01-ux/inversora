@@ -2614,6 +2614,104 @@ window.addEventListener('load',()=>{const sharedId=new URLSearchParams(window.lo
 </script>
 <div id="scoreMethodModal" class="score-modal" hidden onclick="if(event.target===this)closeScoreBreakdown()"><section class="score-modal-card" role="dialog" aria-modal="true" aria-labelledby="scoreModalTitle"><button type="button" class="score-modal-close" aria-label="Cerrar explicación" onclick="closeScoreBreakdown()">×</button><div id="scoreModalContent"></div></section></div>
 <script src="/asset-detail-template.js"></script>
-<script src="/auth-enhancements.js"></script>
+<script src="/auth-enhancements.js">
+/* Selector de listas al guardar cualquier activo en favoritos */
+(function(){
+ const style=document.createElement('style');
+ style.textContent='#favPickerModal{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;padding:18px;background:#10182880;backdrop-filter:blur(5px);animation:fpFade .16s ease}#favPickerModal[hidden]{display:none}.fp-dialog{width:min(100%,510px);max-height:min(88vh,720px);overflow:auto;background:#fff;border:1px solid #e4e7ec;border-radius:23px;padding:25px;box-shadow:0 24px 70px #10182835;animation:fpRise .2s ease}.fp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:15px}.fp-mark{width:43px;height:43px;display:grid;place-items:center;border-radius:14px;background:#eef4ff;color:#155eef;font-size:23px;margin-bottom:15px}.fp-close{width:34px;height:34px;border-radius:10px;background:#f2f4f7;color:#475467;font-size:22px}.fp-dialog h2{font-size:23px;letter-spacing:-.6px;margin:0 0 7px}.fp-subtitle{margin:0 0 19px;color:#667085;font-size:14px;line-height:1.5}.fp-asset{padding:11px 13px;margin-bottom:16px;border:1px solid #e4e7ec;border-radius:12px;background:#f9fafb;font-size:14px;font-weight:750;color:#344054}.fp-list-options{display:grid;gap:8px;max-height:265px;overflow:auto}.fp-list-option{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid #e4e7ec;border-radius:13px;cursor:pointer;transition:border-color .15s,background .15s}.fp-list-option:has(input:checked){border-color:#84adff;background:#f5f8ff}.fp-list-option input{accent-color:#155eef;width:17px;height:17px;flex:0 0 auto}.fp-list-option-copy{min-width:0;flex:1}.fp-list-option-copy strong{display:block;font-size:14px;color:#101828}.fp-list-option-copy small{display:block;margin-top:3px;color:#667085;font-size:12px}.fp-list-option-count{font-size:12px;color:#667085;background:#f2f4f7;border-radius:99px;padding:4px 8px}.fp-create-toggle{width:100%;margin-top:12px;padding:12px;border:1px dashed #b2ccff;border-radius:12px;background:#f8faff;color:#155eef;font-weight:750;text-align:left}.fp-create-panel{margin-top:12px;padding:14px;border:1px solid #e4e7ec;border-radius:13px;background:#f9fafb}.fp-create-panel[hidden]{display:none}.fp-create-panel label{display:block;margin-bottom:7px;font-size:13px;font-weight:750;color:#344054}.fp-create-panel input{width:100%;padding:12px;border:1px solid #d0d5dd;border-radius:10px;background:#fff;outline:0}.fp-create-panel input:focus{border-color:#84adff;box-shadow:0 0 0 3px #155eef14}.fp-error{min-height:18px;margin-top:8px;color:#b42318;font-size:12px}.fp-actions{display:flex;gap:9px;margin-top:18px}.fp-actions button{flex:1;min-height:44px;padding:11px 14px;border-radius:11px;font-weight:750}.fp-cancel{background:#f2f4f7;color:#344054}.fp-save{background:#155eef;color:#fff}.fp-save:disabled{opacity:.55;cursor:wait}.fp-remove{display:block;margin:12px auto 0;padding:7px 10px;background:transparent;color:#b42318;font-size:13px;font-weight:700}@keyframes fpFade{from{opacity:0}to{opacity:1}}@keyframes fpRise{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}@media(max-width:520px){.fp-dialog{padding:19px;border-radius:19px}.fp-actions{flex-direction:column}}';
+ document.head.appendChild(style);
+})();
+function isFavorite(name){return !!invListsCache?.some(list=>(list.items||[]).includes(name))}
+function toggleFavorite(name,detail=false){
+ if(!invUser){showView('account');authMode='register';renderAccount();const m=document.getElementById('authMessage');if(m)m.textContent='Crea una cuenta o inicia sesión para guardar tus inversiones.';return}
+ openFavoriteListPicker(name,detail);
+}
+function openFavoriteListPicker(name,detail){
+ const old=document.getElementById('favPickerModal');if(old)old.remove();
+ const lists=Array.isArray(invListsCache)?invListsCache:[];
+ if(!lists.length){invNotice('Tus listas todavía se están cargando. Inténtalo de nuevo en unos segundos.');return}
+ const existing=lists.filter(l=>(l.items||[]).includes(name));
+ const preferred=existing[0]||lists.find(l=>l.name==='Favoritos')||lists[0];
+ const modal=document.createElement('div');modal.id='favPickerModal';modal.innerHTML=
+ '<section class="fp-dialog" role="dialog" aria-modal="true" aria-labelledby="fpTitle">'+
+ '<div class="fp-top"><div><div class="fp-mark">♡</div><h2 id="fpTitle">Guardar en una lista</h2></div><button type="button" class="fp-close" aria-label="Cerrar">×</button></div>'+
+ '<p class="fp-subtitle">Elige dónde quieres organizar esta inversión.</p>'+
+ '<div class="fp-asset">'+invEsc(name)+'</div>'+
+ '<form id="fpPickerForm"><div class="fp-list-options">'+lists.map(l=>
+ '<label class="fp-list-option"><input type="radio" name="fpListId" value="'+invEsc(l.id)+'" '+(l.id===preferred.id?'checked':'')+'>'+
+ '<span class="fp-list-option-copy"><strong>'+invEsc(l.name)+'</strong><small>'+(l.is_public?'Lista pública':'Lista privada')+'</small></span>'+
+ '<span class="fp-list-option-count">'+(l.items||[]).length+'</span></label>').join('')+
+ '</div><button type="button" class="fp-create-toggle" id="fpShowCreate">＋ Crear una nueva lista</button>'+
+ '<div class="fp-create-panel" id="fpCreatePanel" hidden><label for="fpNewListName">Nombre de la nueva lista</label><input id="fpNewListName" maxlength="50" placeholder="Ej. Inversiones a largo plazo" autocomplete="off"><div class="fp-error" id="fpCreateError" role="status"></div></div>'+
+ '<div class="fp-actions"><button type="button" class="fp-cancel">Cancelar</button><button type="submit" class="fp-save">Guardar en esta lista</button></div>'+
+ '</form>'+
+ (existing.length?'<button type="button" class="fp-remove" id="fpRemove">Quitar de la lista seleccionada</button>':'')+
+ '</section>';
+ document.body.appendChild(modal);
+ const close=()=>modal.remove(),panel=modal.querySelector('#fpCreatePanel'),input=modal.querySelector('#fpNewListName');
+ modal.querySelector('.fp-close').addEventListener('click',close);
+ modal.querySelector('.fp-cancel').addEventListener('click',close);
+ modal.addEventListener('click',e=>{if(e.target===modal)close()});
+ modal.querySelector('#fpShowCreate').addEventListener('click',()=>{panel.hidden=!panel.hidden;if(!panel.hidden)input.focus()});
+ modal.querySelector('#fpPickerForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!panel.hidden){await createListAndSaveFavorite(name,input.value,modal,detail);return}
+  const selected=modal.querySelector('input[name="fpListId"]:checked');
+  if(!selected){modal.querySelector('#fpCreateError').textContent='Selecciona una lista para continuar.';return}
+  await saveFavoriteToList(name,selected.value,modal,detail);
+ });
+ const remove=modal.querySelector('#fpRemove');
+ if(remove)remove.addEventListener('click',async()=>{
+  const selected=modal.querySelector('input[name="fpListId"]:checked');
+  const list=lists.find(l=>l.id===selected?.value);
+  if(!list||(list.items||[]).indexOf(name)<0){invNotice('El activo no está guardado en esa lista.');return}
+  await removeFavoriteFromList(name,list,modal,detail);
+ });
+ document.addEventListener('keydown',function esc(e){if(e.key==='Escape'&&document.getElementById('favPickerModal')===modal){close();document.removeEventListener('keydown',esc)}});
+}
+async function saveFavoriteToList(name,listId,modal,detail){
+ const list=invListsCache.find(l=>l.id===listId);if(!list)return;
+ if((list.items||[]).includes(name)){modal.remove();invNotice('Este activo ya está guardado en «'+list.name+'».');return}
+ const submit=modal.querySelector('.fp-save');submit.disabled=true;submit.textContent='Guardando…';
+ try{
+  const {error}=await invDb.from('favorite_items').insert({list_id:list.id,investment_key:name,investment_name:name});
+  if(error)throw error;
+  list.items=list.items||[];list.items.push(name);modal.remove();
+  renderHome();renderExplore();renderFavorites();if(detail)openDetail(name);
+  invNotice('Activo guardado en «'+list.name+'».');
+ }catch(e){console.error('Guardar activo en lista:',e);submit.disabled=false;submit.textContent='Guardar en esta lista';const error=modal.querySelector('#fpCreateError');if(error)error.textContent=e.code==='23505'?'Este activo ya está en esa lista.':(e.message||'No se ha podido guardar.')}
+}
+async function createListAndSaveFavorite(name,listName,modal,detail){
+ const clean=String(listName||'').trim().slice(0,50),errorNode=modal.querySelector('#fpCreateError'),submit=modal.querySelector('.fp-save');
+ if(!clean){errorNode.textContent='Escribe un nombre para la lista.';modal.querySelector('#fpNewListName').focus();return}
+ if(invListsCache.some(l=>String(l.name).toLocaleLowerCase('es')===clean.toLocaleLowerCase('es'))){errorNode.textContent='Ya tienes una lista con ese nombre.';return}
+ submit.disabled=true;submit.textContent='Creando lista…';
+ let created=null;
+ try{
+  const createdResult=await invDb.from('favorite_lists').insert({user_id:invUser.id,name:clean}).select().single();
+  if(createdResult.error)throw createdResult.error;
+  created={...createdResult.data,items:[]};invListsCache.push(created);
+  const itemResult=await invDb.from('favorite_items').insert({list_id:created.id,investment_key:name,investment_name:name});
+  if(itemResult.error)throw itemResult.error;
+  created.items.push(name);selectedFavoriteList=created.id;modal.remove();
+  renderHome();renderExplore();renderFavorites();if(detail)openDetail(name);
+  invNotice('Lista «'+clean+'» creada y activo guardado correctamente.');
+ }catch(e){
+  if(created){try{await invDb.from('favorite_lists').delete().eq('id',created.id)}catch(_){}invListsCache=invListsCache.filter(l=>l.id!==created.id)}
+  console.error('Crear lista y guardar activo:',e);submit.disabled=false;submit.textContent='Guardar en esta lista';errorNode.textContent=e.code==='23505'?'Ya existe una lista o el activo ya está guardado.':(e.message||'No se ha podido crear la lista.')}
+}
+async function removeFavoriteFromList(name,list,modal,detail){
+ const remove=modal.querySelector('#fpRemove');if(remove){remove.disabled=true;remove.textContent='Quitando…'}
+ try{
+  const {data:row,error:readError}=await invDb.from('favorite_items').select('id').eq('list_id',list.id).eq('investment_key',name).maybeSingle();
+  if(readError)throw readError;
+  if(row){const {error}=await invDb.from('favorite_items').delete().eq('id',row.id);if(error)throw error}
+  list.items=(list.items||[]).filter(x=>x!==name);modal.remove();
+  renderHome();renderExplore();renderFavorites();if(detail)openDetail(name);
+  invNotice('Activo eliminado de «'+list.name+'».');
+ }catch(e){if(remove){remove.disabled=false;remove.textContent='Quitar de la lista seleccionada'}invNotice('No se ha podido quitar el activo: '+e.message)}
+}
+
+</script>
 </body>
 </html>
