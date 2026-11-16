@@ -245,3 +245,14 @@
   print-color-adjust:exact!important
  }
 }
+
+/* Hover azul en los botones de navegación por secciones */
+.asset-v2 .asset-v2-index a{
+ transition:border-color .18s ease,box-shadow .18s ease
+}
+.asset-v2 .asset-v2-index a:hover,
+.asset-v2 .asset-v2-index a:focus-visible{
+ border-color:#155eef;
+ box-shadow:0 0 0 3px rgba(21,94,239,.09),0 7px 18px rgba(21,94,239,.07);
+ outline:none
+}
