@@ -1370,6 +1370,82 @@ td,th{border-color:#e7eef8!important}
 }
 </style>
 
+
+<style id="inversora-header-concept-5">
+/* Concepto 5 — identidad financiera nocturna, sobria y de alto contraste */
+@media(min-width:801px){
+ .app{padding-top:0}
+ .inv-header{
+  width:100vw;max-width:none;margin:0 0 30px calc(50% - 50vw);
+  min-height:84px;padding:0 max(36px,calc((100vw - 1460px)/2));
+  display:grid;grid-template-columns:230px minmax(0,1fr) 250px;align-items:center;gap:26px;
+  position:sticky;top:0;z-index:100;
+  background:
+   radial-gradient(ellipse at 50% -110%,rgba(51,112,235,.27),transparent 60%),
+   linear-gradient(112deg,#101b31 0%,#142744 54%,#101d35 100%);
+  border:0;border-bottom:1px solid rgba(135,174,239,.24);border-radius:0;
+  box-shadow:0 9px 28px rgba(7,18,38,.18)
+ }
+ .inv-header .header-brand-group{grid-column:1;justify-self:start;min-width:0}
+ .inv-header .logo{display:inline-flex;align-items:center;gap:12px;padding:8px 0}
+ .inv-header .logo:before{
+  width:40px;height:40px;border-radius:12px;
+  box-shadow:0 5px 18px rgba(44,112,255,.32);outline:1px solid rgba(255,255,255,.18)
+ }
+ .inv-header .logo .brand-word{font-size:26px;font-weight:830;letter-spacing:-1.15px;color:#fff}
+ .inv-header .logo .brand-word span{color:#82b0ff}
+ .inv-header .desktop-main-nav{
+  grid-column:2;justify-self:center;display:flex;align-items:center;justify-content:center;
+  gap:clamp(6px,1vw,17px);white-space:nowrap
+ }
+ .desktop-nav-link{
+  position:relative;padding:14px 10px;border:0;border-radius:0;background:transparent;
+  color:#c2cde0;font-size:13px;font-weight:620;letter-spacing:-.012em;
+  transition:color .2s ease,background .2s ease
+ }
+ .desktop-nav-link:after{
+  content:"";position:absolute;left:10px;right:10px;bottom:3px;height:2px;border-radius:3px;
+  background:linear-gradient(90deg,#4e8dff,#8dbaff);transform:scaleX(0);
+  transform-origin:left;transition:transform .22s ease
+ }
+ .desktop-nav-link:hover{background:rgba(255,255,255,.055);color:#fff}
+ .desktop-nav-link.active{background:transparent;border:0;color:#fff;font-weight:780;box-shadow:none}
+ .desktop-nav-link.active:after{transform:scaleX(1)}
+ .inv-header .header-actions{
+  grid-column:3;justify-self:end;display:flex;align-items:center;gap:9px;min-width:0
+ }
+ .inv-header .header-icon-btn{
+  width:40px;height:40px;border:1px solid rgba(196,215,246,.2);border-radius:11px;
+  background:rgba(255,255,255,.055);color:#e0eaff;font-size:23px;
+  transition:all .2s ease
+ }
+ .inv-header .header-icon-btn:hover{
+  background:rgba(105,157,255,.17);border-color:rgba(139,181,255,.62);
+  color:#fff;transform:translateY(-1px)
+ }
+ .inv-header .menu-toggle{display:none}
+ .inv-header .profile-nav-btn{
+  height:44px;display:inline-flex!important;align-items:center;gap:9px;
+  padding:4px 13px 4px 5px;border:1px solid rgba(205,222,250,.7);
+  border-radius:12px;background:#f7faff;color:#172b4d;font-size:12.5px;font-weight:780;
+  box-shadow:0 4px 12px rgba(0,0,0,.13);transition:all .2s ease
+ }
+ .inv-header .profile-nav-btn:hover{background:#e8f1ff;border-color:#fff;color:#124ba8;transform:translateY(-1px)}
+ .inv-header .profile-nav-avatar,.inv-header .profile-nav-avatar-fallback{
+  width:33px;height:33px;flex:0 0 33px;border:0;
+  background:linear-gradient(145deg,#dceaff,#b9d3ff);color:#174ea6;font-size:12px;font-weight:850
+ }
+ .inv-header .profile-nav-label{display:inline!important}
+}
+@media(min-width:801px) and (max-width:1120px){
+ .inv-header{grid-template-columns:180px minmax(0,1fr) 220px;gap:10px;padding-left:22px;padding-right:22px}
+ .inv-header .desktop-main-nav{gap:0}
+ .desktop-nav-link{padding-left:7px;padding-right:7px;font-size:12px}
+ .inv-header .header-actions{gap:7px}
+ .inv-header .profile-nav-btn{padding-right:9px}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
