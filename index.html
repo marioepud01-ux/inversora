@@ -1271,6 +1271,15 @@ td,th{border-color:#e7eef8!important}
 @media(max-width:800px){.inv-sidebar{width:min(370px,90vw)!important}.inv-sidebar-head{padding:24px 22px 21px!important}.inv-sidebar-content{padding:16px 13px 22px!important}.inv-sidebar-group{padding:11px 8px 12px!important}.inv-sidebar-link{min-height:46px;font-size:14px!important}.inv-sidebar-foot{padding:15px 19px!important}}
 @media print{.asset-detail{color:#101828!important}.asset-detail .asset-section{break-inside:avoid;page-break-inside:avoid}}
 </style><link rel="stylesheet" href="/asset-detail-template.css">
+
+<style id="inversora-asset-hero-scroll-fix">
+/* La cabecera de cada ficha de activo debe desplazarse con el documento, no quedarse fija. */
+.asset-detail > header.asset-hero{
+  position:static!important;
+  top:auto!important;
+  z-index:auto!important;
+}
+</style>
 </head>
 <body>
 <div class="app">
