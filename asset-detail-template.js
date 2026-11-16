@@ -13,7 +13,7 @@ const data={
  name:'Cuentas remuneradas',category:'Mercados financieros',subcategory:'Liquidez y ahorro bancario',
  phrase:'Ideal para el fondo de emergencia y el dinero que quieres mantener disponible.',
  capital:'Desde ~1 €',capitalValue:1,income:'Intereses mensuales o trimestrales, según entidad',management:0.1,
- yield:{min:0.5,max:3,base:'bruta',note:'Rango orientativo de ofertas; el tipo puede ser promocional, variable o sujeto a un saldo máximo.'},
+ yield:{min:0.5,max:3,base:'bruta',note:'Rango orientativo heredado del catálogo; no representa una oferta vigente y debe contrastarse con cada entidad. El tipo puede ser promocional, variable o sujeto a un saldo máximo.'},
  metrics:{risk:0.5,liquidity:5,periodicIncome:1.5,potential:1,passive:4.5,ease:4.5,complexity:0.5,leverage:0},
  returnType:'Intereses',scoreBasis:'Calculada con los seis criterios de la metodología actual de Inversora.',
  summary:'Una cuenta remunerada paga intereses por el saldo que mantienes en ella. Permite conservar disponibilidad del dinero, aunque el tipo puede cambiar y la remuneración puede estar limitada por saldo, plazo o requisitos.',
