@@ -1270,7 +1270,8 @@ td,th{border-color:#e7eef8!important}
 .inv-sidebar-foot-mark{background:linear-gradient(135deg,#155eef,#528bff)!important;color:#fff!important;box-shadow:0 4px 10px #155eef30}
 @media(max-width:800px){.inv-sidebar{width:min(370px,90vw)!important}.inv-sidebar-head{padding:24px 22px 21px!important}.inv-sidebar-content{padding:16px 13px 22px!important}.inv-sidebar-group{padding:11px 8px 12px!important}.inv-sidebar-link{min-height:46px;font-size:14px!important}.inv-sidebar-foot{padding:15px 19px!important}}
 @media print{.asset-detail{color:#101828!important}.asset-detail .asset-section{break-inside:avoid;page-break-inside:avoid}}
-</style></head>
+</style><link rel="stylesheet" href="/asset-detail-template.css">
+</head>
 <body>
 <div class="app">
 <header class="inv-header">
@@ -2608,6 +2609,7 @@ window.addEventListener('load',()=>{const sharedId=new URLSearchParams(window.lo
 
 </script>
 <div id="scoreMethodModal" class="score-modal" hidden onclick="if(event.target===this)closeScoreBreakdown()"><section class="score-modal-card" role="dialog" aria-modal="true" aria-labelledby="scoreModalTitle"><button type="button" class="score-modal-close" aria-label="Cerrar explicación" onclick="closeScoreBreakdown()">×</button><div id="scoreModalContent"></div></section></div>
+<script src="/asset-detail-template.js"></script>
 <script src="/auth-enhancements.js"></script>
 </body>
 </html>
