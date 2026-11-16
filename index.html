@@ -448,30 +448,76 @@ body.score-modal-open{overflow:hidden}
 @media(max-width:1000px){.taxonomy-map{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.taxonomy-map{grid-template-columns:1fr;gap:10px}.taxonomy-map-universe{padding:14px}.taxonomy-map-universe-head strong{font-size:14px}.taxonomy-map-branch-toggle{padding:10px}.taxonomy-map-branch-toggle strong{font-size:13px}.taxonomy-map-asset{font-size:12px;padding:8px}}
 
-/* CONCEPTO EDITORIAL 02 */
+/* CONCEPTO FINTECH 03: barra elevada, navegación compacta y perfil siempre visible */
 @media(min-width:801px){
-body{background:#f7f8fa}
-.app{max-width:1440px;padding:0 52px 100px}
-header.inv-header{position:relative!important;top:auto!important;display:grid!important;grid-template-columns:1fr auto 1fr!important;gap:28px!important;align-items:center!important;margin:0 0 34px!important;padding:22px 0 19px!important;border:0!important;border-bottom:1px solid #dfe4ec!important;border-radius:0!important;background:transparent!important;backdrop-filter:none!important;box-shadow:none!important}
-.header-brand-group{justify-self:start}
-header.inv-header .logo{padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;color:#111827!important;font-size:27px!important;font-weight:850!important;letter-spacing:-1.5px!important}
-header.inv-header .brand-word,header.inv-header .brand-word>span{letter-spacing:-1.5px!important}
-header.inv-header .brand-word>span{color:#2457d6!important}
-nav.desktop-main-nav{justify-self:center!important;display:flex!important;gap:clamp(17px,2.2vw,34px)!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important}
-nav.desktop-main-nav .desktop-nav-link{position:relative!important;min-height:42px!important;padding:5px 1px 8px!important;border:0!important;border-radius:0!important;background:transparent!important;color:#697386!important;font-size:13px!important;font-weight:650!important;white-space:nowrap!important}
-nav.desktop-main-nav .desktop-nav-link:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:#2457d6;transform:scaleX(0);transform-origin:left;transition:transform .24s}
-nav.desktop-main-nav .desktop-nav-link:hover,nav.desktop-main-nav .desktop-nav-link.active{color:#172033!important}
-nav.desktop-main-nav .desktop-nav-link.active:after,nav.desktop-main-nav .desktop-nav-link:hover:after{transform:scaleX(1)}
-.header-actions{justify-self:end!important;display:flex!important;align-items:center!important;gap:9px!important}
-.header-actions .header-icon-btn,.header-actions .menu-toggle{display:grid!important;place-content:center!important;width:39px!important;height:39px!important;padding:0!important;border:1px solid #e0e5ed!important;border-radius:50%!important;background:#fff!important;color:#485467!important;box-shadow:none!important}
+body{background:#f3f6fb}
+.app{max-width:1460px;padding:0 42px 100px}
+header.inv-header{
+ position:sticky!important;top:14px!important;z-index:30!important;
+ display:grid!important;grid-template-columns:minmax(185px,245px) minmax(0,1fr) auto!important;
+ gap:20px!important;align-items:center!important;
+ margin:14px 0 30px!important;padding:13px 16px!important;
+ border:1px solid #e5eaf2!important;border-radius:19px!important;
+ background:#fff!important;backdrop-filter:blur(14px)!important;
+ box-shadow:0 9px 30px #172b4d0d,0 2px 6px #172b4d08!important
+}
+.header-brand-group{justify-self:start;min-width:0}
+header.inv-header .logo{padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;color:#101828!important;font-size:26px!important;font-weight:850!important;letter-spacing:-1.4px!important}
+header.inv-header .brand-word,header.inv-header .brand-word>span{letter-spacing:-1.4px!important}
+header.inv-header .brand-word>span{color:#155eef!important}
+nav.desktop-main-nav{
+ justify-self:center!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ gap:4px!important;min-width:0!important;padding:5px!important;margin:0!important;
+ border:1px solid #edf0f5!important;border-radius:13px!important;background:#f7f9fc!important
+}
+nav.desktop-main-nav .desktop-nav-link{
+ position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ min-height:39px!important;padding:0 clamp(9px,1.2vw,17px)!important;
+ border:1px solid transparent!important;border-radius:9px!important;background:transparent!important;
+ color:#667085!important;font-size:12px!important;font-weight:700!important;white-space:nowrap!important;
+ transition:background .18s,border-color .18s,color .18s,box-shadow .18s!important
+}
+nav.desktop-main-nav .desktop-nav-link:after{content:none!important}
+nav.desktop-main-nav .desktop-nav-link:hover{background:#edf4ff!important;border-color:#dce8ff!important;color:#1749a9!important}
+nav.desktop-main-nav .desktop-nav-link.active{background:#155eef!important;border-color:#155eef!important;color:#fff!important;box-shadow:0 3px 8px #155eef2b!important}
+.header-actions{justify-self:end!important;display:flex!important;align-items:center!important;gap:8px!important;white-space:nowrap!important}
+.header-actions .header-icon-btn,.header-actions .menu-toggle{
+ display:grid!important;place-content:center!important;flex:0 0 38px!important;width:38px!important;height:38px!important;
+ padding:0!important;border:1px solid #e3e8f0!important;border-radius:11px!important;
+ background:#fff!important;color:#475467!important;box-shadow:none!important
+}
 .header-actions .header-icon-btn{font-size:20px!important}
-.header-actions .header-icon-btn:hover,.header-actions .menu-toggle:hover{background:#edf3ff!important;border-color:#b9ccff!important;color:#2457d6!important}
+.header-actions .header-icon-btn:hover,.header-actions .menu-toggle:hover{background:#edf4ff!important;border-color:#b9d0ff!important;color:#155eef!important}
 .header-actions .menu-toggle{gap:4px!important}
 .header-actions .menu-toggle span{display:block!important;width:14px!important;height:1.5px!important;margin:0 auto!important;background:#344054!important}
-.header-actions .profile-nav-btn{display:flex!important;align-items:center!important;gap:9px!important;min-height:40px!important;margin-left:5px!important;padding:4px 12px 4px 5px!important;border:1px solid #e0e5ed!important;border-radius:999px!important;background:#fff!important;color:#263247!important;font-size:12px!important;font-weight:700!important;box-shadow:none!important}
-.profile-nav-avatar-fallback{display:grid!important;place-items:center!important;width:29px!important;height:29px!important;border-radius:50%!important;background:#172033!important;color:#fff!important;font-size:11px!important;font-weight:800!important}
-@media(max-width:1100px){.app{padding-left:28px;padding-right:28px}header.inv-header{gap:18px!important}nav.desktop-main-nav{gap:16px!important}nav.desktop-main-nav .desktop-nav-link{font-size:12px!important}.header-actions .profile-nav-label{display:none!important}.header-actions .profile-nav-btn{padding:4px!important;margin-left:0!important;border-radius:50%!important}}
+.header-actions .profile-nav-btn{
+ display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;
+ flex:0 0 auto!important;min-width:108px!important;min-height:40px!important;margin-left:3px!important;
+ padding:4px 12px 4px 5px!important;border:1px solid #cddcff!important;border-radius:12px!important;
+ background:#f4f7ff!important;color:#1749a9!important;font-size:12px!important;font-weight:800!important;
+ box-shadow:none!important;white-space:nowrap!important
 }
+.header-actions .profile-nav-btn:hover{background:#eaf1ff!important;border-color:#9bbaff!important}
+.profile-nav-avatar-fallback{display:grid!important;place-items:center!important;flex:0 0 30px!important;width:30px!important;height:30px!important;border-radius:9px!important;background:#155eef!important;color:#fff!important;font-size:11px!important;font-weight:850!important}
+@media(max-width:1180px){
+ .app{padding-left:26px;padding-right:26px}
+ header.inv-header{grid-template-columns:165px minmax(0,1fr) auto!important;gap:12px!important;padding:12px!important}
+ nav.desktop-main-nav{gap:2px!important}
+ nav.desktop-main-nav .desktop-nav-link{padding:0 9px!important;font-size:11px!important}
+ .header-actions{gap:6px!important}
+ .header-actions .header-icon-btn,.header-actions .menu-toggle{flex-basis:35px!important;width:35px!important;height:35px!important}
+ .header-actions .profile-nav-btn{min-width:98px!important;padding-right:8px!important}
+}
+@media(max-width:920px){
+ header.inv-header{grid-template-columns:140px minmax(0,1fr) auto!important;gap:8px!important}
+ header.inv-header .logo{font-size:23px!important}
+ nav.desktop-main-nav .desktop-nav-link{padding:0 6px!important;font-size:10px!important}
+ .header-actions .header-icon-btn{display:none!important}
+ .header-actions .profile-nav-btn{min-width:38px!important;width:38px!important;height:38px!important;padding:3px!important;border-radius:11px!important}
+ .header-actions .profile-nav-label{display:none!important}
+}
+}
+
 @media(prefers-reduced-motion:reduce){nav.desktop-main-nav .desktop-nav-link:after{transition:none}}
 
 </style>
