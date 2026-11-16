@@ -130,3 +130,66 @@
 .community-review-identity .community-review-author{display:block;line-height:1.25}
 .community-review-identity .community-review-date{display:block;font-size:10px;line-height:1.2}
 @media(max-width:480px){.community-review-avatar{width:32px;height:32px;flex-basis:32px}.community-review-top{align-items:flex-start}}
+
+
+/* Ajuste de marca oficial y legibilidad de las fichas */
+.asset-v2{width:100%;max-width:1480px}
+.asset-v2-top .back{color:var(--accent,#155eef)!important;border-color:#dbe7ff;background:#f8faff;font-size:13px;padding:8px 12px}
+.asset-v2-top .back:hover{color:var(--accent,#155eef)!important;background:#eef4ff;border-color:var(--accent,#155eef)}
+.asset-v2-crumb{color:var(--accent,#155eef);font-size:13px;font-weight:600;line-height:1.45}
+.asset-v2-crumb b{color:var(--accent,#155eef);font-weight:850}
+.asset-v2-brand{font-size:19px}
+.asset-v2-wordmark{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;font-weight:850!important;letter-spacing:-1px!important}
+.asset-v2-wordmark>span{color:var(--accent,#155eef)!important}
+.asset-v2-bottom .asset-v2-wordmark{font-size:25px}
+.asset-v2-bottom .asset-v2-wordmark>span{color:var(--accent,#155eef)!important}
+.asset-v2-hero{padding:26px 30px;gap:26px}
+.asset-v2-hero h1{font-size:clamp(32px,3.2vw,44px)}
+.asset-v2-kicker{font-size:12px;padding:6px 12px}
+.asset-v2-lead{font-size:16px;line-height:1.55}
+.asset-v2-chips{gap:8px}
+.asset-v2-chips span{font-size:12px;padding:7px 11px}
+.asset-v2-btn{font-size:13px;padding:10px 15px;min-height:44px}
+.asset-v2-rating{padding:13px 15px}
+.asset-v2-rating-head{font-size:11px}
+.asset-v2-rating-main strong{font-size:17px}
+.asset-v2-rating small{font-size:11px}
+.asset-v2-index{gap:8px;margin-bottom:16px}
+.asset-v2-index a{font-size:12px;padding:8px 12px}
+.asset-v2-section{padding:22px;margin-bottom:16px}
+.asset-v2-section h2{font-size:22px}
+.asset-v2-section-intro{font-size:13px;margin-bottom:15px}
+.asset-v2-section-no{font-size:11px}
+.asset-v2-grid{gap:12px}
+.asset-v2-panel{padding:16px}
+.asset-v2-label{font-size:10px;margin-bottom:7px}
+.asset-v2-panel p{font-size:13px;line-height:1.6}
+.asset-v2-panel strong{font-size:16px;line-height:1.4}
+.asset-v2-return strong{font-size:32px}
+.asset-v2-return small{font-size:11px}
+.asset-v2-bullets li{font-size:13px;line-height:1.6;margin:7px 0;gap:9px}
+.asset-v2-inline-note{font-size:13px;line-height:1.6}
+.asset-v2-tax summary{font-size:13px}
+.asset-v2-barrier{font-size:24px}
+.asset-v2-bottom{padding:26px}
+.asset-v2-bottom h2{font-size:23px}
+.asset-v2-bottom p{font-size:14px}
+.asset-v2-prevnext button{padding:15px}
+.asset-v2-prevnext small{font-size:10px}
+.asset-v2-prevnext strong{font-size:13px}
+.asset-v2-legal{font-size:11px}
+@media(max-width:760px){
+ .asset-v2-hero{padding:20px}
+ .asset-v2-section{padding:17px}
+ .asset-v2-panel{padding:14px}
+ .asset-v2-crumb{font-size:11px}
+ .asset-v2-top .back{font-size:12px}
+}
+@media(max-width:480px){
+ .asset-v2-brand{font-size:16px}
+ .asset-v2-hero h1{font-size:30px}
+ .asset-v2-lead{font-size:14px}
+ .asset-v2-section h2{font-size:20px}
+ .asset-v2-panel p,.asset-v2-bullets li,.asset-v2-inline-note{font-size:12px}
+ .asset-v2-grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
