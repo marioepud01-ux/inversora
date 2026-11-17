@@ -60,7 +60,7 @@ function readInputs(asset,rateOverride){
  return {
   capital:num('netCapital'),monthly:num('netMonthly'),years:num('netYears'),
   rate:rateOverride??(asset?scenarioRate(asset):num('netManualRate')),
-  entryFee:num('netEntryFee'),annualFee:num('netAnnualFee'),exitFee:num('netExitFee'),
+  entryFee:num('netEntryFee'),entryFixed:num('netEntryFixed'),annualFee:num('netAnnualFee'),annualFixed:num('netAnnualFixed'),exitFee:num('netExitFee'),exitFixed:num('netExitFixed'),
   taxRate:$('netTaxRate').value.trim()===''?null:num('netTaxRate'),
   inflation:num('netInflation'),vacancy:num('netVacancy')
  };
@@ -79,8 +79,11 @@ function loadAssetDefaults(asset){
  currentAsset=asset;
  const d=assetDefaults(asset);
  $('netEntryFee').value=d.entryFee.toFixed(2);
+ $('netEntryFixed').value='0';
  $('netAnnualFee').value=d.annualFee.toFixed(2);
+ $('netAnnualFixed').value='0';
  $('netExitFee').value=d.exitFee.toFixed(2);
+ $('netExitFixed').value='0';
  $('netManualRate').value=asset?scenarioRate(asset).toFixed(2):'5';
  $('netAssetHint').textContent=asset
   ?'Rango de rentabilidad de la ficha: '+(asset.ret||'no indicado')+'. Se usa el escenario seleccionado; puedes ajustar los supuestos.'
@@ -201,7 +204,7 @@ function setCompareOptions(){
  $('netCompare1').value=first;$('netCompare2').value=second;
 }
 function shareLink(){
- const state={asset:$('netAsset').value,capital:$('netCapital').value,monthly:$('netMonthly').value,years:$('netYears').value,scenario:selectedScenario,entry:$('netEntryFee').value,annual:$('netAnnualFee').value,exit:$('netExitFee').value,tax:$('netTaxRate').value,inflation:$('netInflation').value,vacancy:$('netVacancy').value,manual:$('netManualRate').value};
+ const state={asset:$('netAsset').value,capital:$('netCapital').value,monthly:$('netMonthly').value,years:$('netYears').value,scenario:selectedScenario,entry:$('netEntryFee').value,entryFixed:$('netEntryFixed').value,annual:$('netAnnualFee').value,annualFixed:$('netAnnualFixed').value,exit:$('netExitFee').value,exitFixed:$('netExitFixed').value,tax:$('netTaxRate').value,inflation:$('netInflation').value,vacancy:$('netVacancy').value,manual:$('netManualRate').value};
  const url=location.href.split('#')[0]+'#net-sim='+encodeURIComponent(JSON.stringify(state));
  if(navigator.share){navigator.share({title:'Mi simulación en Inversora',url}).catch(()=>{});}
  else if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>toast('Enlace copiado. Reproduce los mismos supuestos.')).catch(()=>prompt('Copia este enlace',url));}
@@ -213,7 +216,7 @@ function loadShared(){
   const s=JSON.parse(decodeURIComponent(raw[1]));
   $('netAsset').value=s.asset||'__manual__';
   ['capital','monthly','years'].forEach(k=>{if(s[k]!==undefined)$('net'+k[0].toUpperCase()+k.slice(1)).value=s[k];});
-  $('netEntryFee').value=s.entry??0;$('netAnnualFee').value=s.annual??0;$('netExitFee').value=s.exit??0;$('netTaxRate').value=s.tax??'';
+  $('netEntryFee').value=s.entry??0;$('netEntryFixed').value=s.entryFixed??0;$('netAnnualFee').value=s.annual??0;$('netAnnualFixed').value=s.annualFixed??0;$('netExitFee').value=s.exit??0;$('netExitFixed').value=s.exitFixed??0;$('netTaxRate').value=s.tax??'';
   $('netInflation').value=s.inflation??2;$('netVacancy').value=s.vacancy??0;$('netManualRate').value=s.manual??5;
   selectedScenario=s.scenario||'base';
   document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.netScenario===selectedScenario)));
@@ -225,7 +228,7 @@ function loadShared(){
 function saveLocal(){
  const key='inversora_net_simulations';let items=[];
  try{items=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
- const state={...window.invSimulationState,savedAt:new Date().toISOString(),inflation:num('netInflation'),entryFee:num('netEntryFee'),annualFee:num('netAnnualFee'),exitFee:num('netExitFee'),taxRate:$('netTaxRate').value};
+ const state={...window.invSimulationState,savedAt:new Date().toISOString(),inflation:num('netInflation'),entryFee:num('netEntryFee'),entryFixed:num('netEntryFixed'),annualFee:num('netAnnualFee'),annualFixed:num('netAnnualFixed'),exitFee:num('netExitFee'),exitFixed:num('netExitFixed'),taxRate:$('netTaxRate').value};
  items.unshift(state);localStorage.setItem(key,JSON.stringify(items.slice(0,20)));toast('Simulación guardada en este dispositivo.');
 }
 function openNetReport(){
@@ -240,10 +243,10 @@ function init(){
  fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();if(location.hash.includes('net-sim=')){loadShared();}else{$('netAsset').value=findAsset('Fondos indexados')?'Fondos indexados':(assetList()[0]?.name||'__manual__');loadAssetDefaults(findAsset($('netAsset').value));}setCompareOptions();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
  $('netAssetSearch').addEventListener('input',e=>populateAssetOptions(e.target.value));
  $('netAsset').addEventListener('change',()=>loadAssetDefaults(findAsset($('netAsset').value)));
- ['netCapital','netMonthly','netYears','netEntryFee','netAnnualFee','netExitFee','netTaxRate','netInflation','netVacancy','netManualRate'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
+ ['netCapital','netMonthly','netYears','netEntryFee','netEntryFixed','netAnnualFee','netAnnualFixed','netExitFee','netExitFixed','netTaxRate','netInflation','netVacancy','netManualRate'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.netScenario)));
  document.querySelectorAll('[data-net-mode]').forEach(b=>b.addEventListener('click',()=>renderMode(b.dataset.netMode)));
- $('netResetAdvanced').addEventListener('click',()=>{loadAssetDefaults(currentAsset);$('netTaxRate').value='';$('netInflation').value='2';$('netVacancy').value='0';runNetSimulation();});
+ $('netResetAdvanced').addEventListener('click',()=>{loadAssetDefaults(currentAsset);$('netEntryFixed').value='0';$('netAnnualFixed').value='0';$('netExitFixed').value='0';$('netTaxRate').value='';$('netInflation').value='2';$('netVacancy').value='0';runNetSimulation();});
  ['netWhatInflation','netWhatRate','netWhatMonthly'].forEach(id=>$(id).addEventListener('input',()=>runWhatIf(currentResult)));
  [1,2,3,4].forEach(n=>$('netCompare'+n).addEventListener('change',renderComparison));
  $('netSave').addEventListener('click',saveLocal);$('netShare').addEventListener('click',shareLink);$('netPdf').addEventListener('click',openNetReport);
