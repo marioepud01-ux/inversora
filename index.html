@@ -2852,13 +2852,15 @@ function refreshAccountNav(){
 <style id="inversora-header-reference-refinement-v3">
 @media(min-width:801px){
  /* Keep the header content aligned to the same page gutters as the official site. */
- .inv-header{width:100%;max-width:none;margin:0 0 22px;padding:11px 18px;min-height:66px;height:66px;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:20px;border-radius:0;box-shadow:none;background:rgba(255,255,255,.97)}
+ .inv-header{width:100vw;max-width:none;margin:0 0 22px calc(50% - 50vw);padding:11px max(18px,calc((100vw - 1200px)/2 + 18px));min-height:66px;height:66px;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:20px;border-radius:0;box-shadow:none;background:rgba(255,255,255,.97)}
  .inv-header .header-brand-group{justify-self:start}
  .inv-header .logo{font-size:25px;font-weight:850;letter-spacing:-1px}
  /* Official logo asset is supplied by the existing .logo:before rule. Do not redraw or replace it. */
  .inv-header .logo:before{background-image:url('/icon-192.svg');background-size:cover;background-position:center;background-color:transparent;box-shadow:0 4px 12px #155eef25}
  .inv-header .desktop-main-nav{gap:clamp(18px,2vw,30px);padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
  .inv-header .desktop-nav-link{height:100%;position:relative;padding:0 1px;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#344054;font-size:13px;font-weight:600;transition:color .18s}
+ .inv-header .desktop-main-nav,.inv-header .desktop-nav-link,.inv-header .desktop-nav-link:hover,.inv-header .desktop-nav-link.active{box-shadow:none!important;filter:none!important;text-shadow:none!important}
+ .inv-header .desktop-nav-link.active:before{display:none!important}
  .inv-header .desktop-nav-link:hover{background:transparent!important;color:#155eef}
  .inv-header .desktop-nav-link.active{background:transparent!important;border:0!important;box-shadow:none!important;color:#155eef;font-weight:700}
  .inv-header .desktop-nav-link.active:after{content:"";position:absolute;left:-7px;right:-7px;bottom:5px;height:2px;border-radius:0;background:#155eef}
