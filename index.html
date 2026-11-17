@@ -3420,5 +3420,28 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
 }
 </style>
 
+<style id="inversora-mobile-sidebar-matching-desktop-icons-v1">
+/* Los cinco accesos principales del menú móvil usan exactamente los símbolos de la navegación de escritorio. */
+@media(max-width:800px){
+ #invSidebar .inv-sidebar-link[data-view="home"] .inv-sidebar-icon,
+ #invSidebar .inv-sidebar-link[data-view="explore"] .inv-sidebar-icon,
+ #invSidebar .inv-sidebar-link[data-view="tools"] .inv-sidebar-icon,
+ #invSidebar .inv-sidebar-link[data-view="community"] .inv-sidebar-icon,
+ #invSidebar .inv-sidebar-link[data-view="favorites"] .inv-sidebar-icon{
+   font-size:0!important;line-height:1!important;
+ }
+ #invSidebar .inv-sidebar-link[data-view="home"] .inv-sidebar-icon:before{content:"⌂"}
+ #invSidebar .inv-sidebar-link[data-view="explore"] .inv-sidebar-icon:before{content:"⌕"}
+ #invSidebar .inv-sidebar-link[data-view="tools"] .inv-sidebar-icon:before{content:"⚙"}
+ #invSidebar .inv-sidebar-link[data-view="community"] .inv-sidebar-icon:before{content:"♧"}
+ #invSidebar .inv-sidebar-link[data-view="favorites"] .inv-sidebar-icon:before{content:"♡"}
+ #invSidebar .inv-sidebar-icon:before{
+   display:block!important;font-size:18px!important;line-height:1!important;
+   font-family:inherit!important;font-weight:500!important;
+   color:inherit!important;
+ }
+}
+</style>
+
 </body>
 </html>
