@@ -1388,7 +1388,7 @@ td,th{border-color:#e7eef8!important}
 <button class="header-icon-btn" id="invGlobalSearchToggle" type="button" onclick="invToggleGlobalSearch()" aria-label="Buscar en toda la web" title="Buscar"><span class="reference-search-icon" aria-hidden="true"></span></button>
 <button class="menu-toggle" type="button" onclick="invToggleMenu()" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="invSidebar"><span></span><span></span><span></span></button>
 <div class="profile-menu-wrap">
-<button class="profile-nav-btn" type="button" id="accountNav" onclick="invToggleProfileMenu()" aria-label="Abrir menú de perfil" title="Mi perfil" aria-expanded="false" aria-controls="invProfileMenu"><span class="profile-nav-avatar-fallback">M</span><svg class="reference-profile-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg></button>
+<button class="profile-nav-btn" type="button" id="accountNav" onclick="invToggleProfileMenu()" aria-label="Abrir menú de perfil" title="Mi perfil" aria-expanded="false" aria-controls="invProfileMenu"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span><span class="profile-dropdown-cue" aria-hidden="true"><svg class="reference-profile-chevron" viewBox="0 0 12 12"><path d="m2 4 4 4 4-4"/></svg></span></button>
 <div class="profile-dropdown" id="invProfileMenu" hidden>
 <div class="profile-dropdown-heading" id="invProfileHeading">Tu espacio en Inversora</div>
 <button type="button" onclick="invProfileNavigate('account')">Mi perfil <span>›</span></button>
@@ -3109,6 +3109,26 @@ function refreshAccountNav(){
     backdrop-filter:blur(22px) saturate(165%)!important;
     box-shadow:0 9px 26px rgba(28,52,84,.10),inset 0 1px 0 rgba(255,255,255,.82)!important;
   }
+}
+</style>
+
+<style id="inversora-profile-dropdown-cue-v1">
+.inv-header .profile-nav-btn{gap:9px!important}
+.inv-header .profile-nav-label{display:inline!important;font-size:13px!important;font-weight:650!important;color:#344054!important;letter-spacing:-.01em}
+.inv-header .profile-dropdown-cue{
+  width:23px;height:23px;flex:0 0 23px;display:inline-grid;place-items:center;
+  border:1px solid rgba(91,119,157,.20);border-radius:50%;
+  background:rgba(255,255,255,.62);transition:background .18s,border-color .18s,transform .18s;
+}
+.inv-header .profile-dropdown-cue .reference-profile-chevron{
+  display:block;width:11px;height:11px;fill:none;stroke:#526783;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;transition:transform .2s;
+}
+.inv-header .profile-nav-btn:hover .profile-dropdown-cue{background:#fff;border-color:rgba(21,94,239,.30)}
+.inv-header .profile-nav-btn[aria-expanded="true"] .profile-dropdown-cue{background:#fff;border-color:#b2ccff}
+@media(max-width:800px){
+  .inv-header .profile-nav-label{display:none!important}
+  .inv-header .profile-dropdown-cue{width:22px;height:22px;flex-basis:22px}
 }
 </style>
 </body>
