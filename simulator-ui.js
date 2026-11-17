@@ -147,7 +147,7 @@ function runNetSimulation(){
   comment:'Capital neto real estimado después de costes, impuestos e inflación.',
   netReal:true,assumptions:active.assumptions,costs:active.costs,taxes:active.taxes,netNominal:active.netNominal,realFinal:active.realFinal
  };
- runWhatIf(results.base);
+ runWhatIf(active);
 }
 function runWhatIf(base){
  if(!currentResult)return;
@@ -166,7 +166,7 @@ function renderMode(mode){
  document.querySelectorAll('[data-net-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.netMode===mode)));
  if(mode==='two')renderComparison();
 }
-function compareAssets(){
+function renderComparison(){compareAssets();}\nfunction compareAssets(){
  const selected=[1,2,3,4].map(n=>$('netCompare'+n).value).filter(Boolean);
  const unique=[...new Set(selected)].slice(0,4);
  compareResults=unique.map(name=>{const asset=findAsset(name),d=assetDefaults(asset),rate=scenarioRate(asset);const res=engine.calculate({...readInputs(asset,rate),entryFee:d.entryFee,annualFee:d.annualFee,exitFee:d.exitFee},fiscalConfig);return {asset,result:res};}).filter(x=>!x.result.error);
