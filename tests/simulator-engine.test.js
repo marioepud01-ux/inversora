@@ -50,3 +50,8 @@ test('valores inválidos devuelven error legible',()=>{
 test('escala progresiva de la base del ahorro',()=>{
  near(engine.progressiveTax(7000,fiscal.savingsTaxBrackets),1350);
 });
+
+test('costes fijos de entrada, anuales y de salida',()=>{
+ const r=engine.calculate({capital:1000,monthly:0,years:1,rate:0,entryFee:0,entryFixed:10,annualFee:0,annualFixed:12,exitFee:0,exitFixed:5,taxRate:0,inflation:0},fiscal);
+ near(r.costs.entry,10);near(r.costs.recurring,12);near(r.costs.exit,5);near(r.costs.total,27);near(r.netNominal,973);
+});
