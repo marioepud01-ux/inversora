@@ -31,6 +31,7 @@ function assetDefaults(asset){
  const entry=feeFromText(asset?.entrycosts),annual=feeFromText(asset?.costs),extra=String(asset?.costsextra||''),exit=/(salida|venta|reembolso|transmisi[oó]n|cancelaci[oó]n|liquidaci[oó]n)/i.test(extra)?feeFromText(extra):{value:0,known:false};
  return {entryFee:entry.value,annualFee:annual.value,exitFee:exit.value,known:entry.known||annual.known||exit.known};
 }
+function isRentalAsset(asset){return asset?.cat==='Inmobiliario'&&/(vivienda|local(es)? comerciales|plaza(s)? de garaje|trastero|oficina|nave(s)? industriales|edificio|inmueble(s)? tur[ií]stico)/i.test(asset.name||'')}
 function categoryOf(asset){return asset?.cat||'Otros'}
 function subtypeOf(asset){return asset?.catalogSubtype||(typeof subtypeFor==='function'?subtypeFor(asset):'')||asset?.subtype||'Otros'}
 function populateAssetOptions(query=''){
@@ -62,7 +63,7 @@ function readInputs(asset,rateOverride){
   rate:rateOverride??(asset?scenarioRate(asset):num('netManualRate')),
   entryFee:num('netEntryFee'),entryFixed:num('netEntryFixed'),annualFee:num('netAnnualFee'),annualFixed:num('netAnnualFixed'),exitFee:num('netExitFee'),exitFixed:num('netExitFixed'),
   taxRate:$('netTaxRate').value.trim()===''?null:num('netTaxRate'),
-  inflation:num('netInflation'),vacancy:num('netVacancy')
+  inflation:num('netInflation'),vacancy:isRentalAsset(asset)?num('netVacancy'):0
  };
 }
 function calculate(asset,scenario=selectedScenario,overrides={}){
@@ -85,6 +86,8 @@ function loadAssetDefaults(asset){
  $('netExitFee').value=d.exitFee.toFixed(2);
  $('netExitFixed').value='0';
  $('netManualRate').value=asset?scenarioRate(asset).toFixed(2):'5';
+ $('netVacancyWrap').classList.toggle('net-sim-hidden',!isRentalAsset(asset));
+ if(!isRentalAsset(asset))$('netVacancy').value='0';
  $('netAssetHint').textContent=asset
   ?'Rango de rentabilidad de la ficha: '+(asset.ret||'no indicado')+'. Se usa el escenario seleccionado; puedes ajustar los supuestos.'
   :'Introduce una rentabilidad manual. No se ha seleccionado un activo del catálogo.';
