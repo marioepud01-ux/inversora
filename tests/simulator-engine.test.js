@@ -28,6 +28,7 @@ test('inmueble con gastos, vacancia y costes de entrada/salida',()=>{
  const r=engine.calculate({capital:100000,monthly:0,years:1,rate:5,entryFee:2,annualFee:1,exitFee:3,taxRate:0,inflation:0,vacancy:10},fiscal);
  assert.ok(r.costs.entry>0&&r.costs.recurring>0&&r.costs.exit>0);
  assert.ok(r.realFinal<r.grossFinal);
+ near(r.grossFinal-r.costs.total-r.taxes,r.netNominal);
  near(r.assumptions.rate,4.5);
 });
 test('cero años no produce NaN ni infinito',()=>{
