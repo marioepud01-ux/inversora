@@ -1378,8 +1378,8 @@ td,th{border-color:#e7eef8!important}
 <button class="logo" type="button" onclick="showView('home')" aria-label="Inversora, volver al inicio"><span class="brand-word">Invers<span>ora</span></span></button>
 </div>
 <nav class="desktop-main-nav" id="desktopMainNav" aria-label="Navegación principal">
-<button class="desktop-nav-link" data-view="home" onclick="showView('home')">Inicio</button>
-<button class="desktop-nav-link active" data-view="explore" onclick="showView('explore')">Explorar</button>
+<button class="desktop-nav-link active" data-view="home" onclick="showView('home')">Inicio</button>
+<button class="desktop-nav-link" data-view="explore" onclick="showView('explore')">Explorar</button>
 <button class="desktop-nav-link" data-view="tools" onclick="showView('tools')">Herramientas</button>
 <button class="desktop-nav-link" data-view="community" onclick="showView('community')">Comunidad</button>
 <button class="desktop-nav-link" data-view="favorites" onclick="showView('favorites')">Favoritos</button>
@@ -3016,5 +3016,19 @@ function refreshAccountNav(){
   }
 }
 </style>
+
+<script id="inversora-initial-home-and-title-v1">
+(function(){
+  function syncInitialPage(){
+    const home=document.getElementById('home');
+    if(!home)return;
+    document.querySelectorAll('.view').forEach(view=>view.classList.toggle('hidden',view!==home));
+    document.querySelectorAll('.desktop-nav-link,.inv-sidebar-link').forEach(link=>link.classList.toggle('active',link.dataset.view==='home'));
+    invSetPageTitle('Inicio');
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',syncInitialPage,{once:true});
+  else syncInitialPage();
+})();
+</script>
 </body>
 </html>
