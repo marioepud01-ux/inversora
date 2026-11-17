@@ -1474,7 +1474,7 @@ td,th{border-color:#e7eef8!important}
       <div><label class="net-sim-label" for="netExitFee">Coste de salida (%)</label><input class="net-sim-input" id="netExitFee" type="number" min="0" max="100" step="0.01" value="0"></div>
       <div><label class="net-sim-label" for="netExitFixed">Coste fijo de salida (€)</label><input class="net-sim-input" id="netExitFixed" type="number" min="0" step="0.01" value="0"></div>
       <div><label class="net-sim-label" for="netTaxRate">Tipo impositivo medio (%)</label><input class="net-sim-input" id="netTaxRate" type="number" min="0" max="100" step="0.1" placeholder="Automático"></div>
-      <div><label class="net-sim-label" for="netVacancy">Vacancia (% de ingresos)</label><input class="net-sim-input" id="netVacancy" type="number" min="0" max="100" step="0.5" value="0"></div>
+      <div id="netVacancyWrap" class="net-sim-hidden"><label class="net-sim-label" for="netVacancy">Vacancia (% de ingresos)</label><input class="net-sim-input" id="netVacancy" type="number" min="0" max="100" step="0.5" value="0"></div>
      </div>
      <p class="net-sim-hint" id="netCostHint">Los costes numéricos de la ficha se proponen como punto de partida; puedes cambiarlos.</p>
      <p class="net-sim-hint">Si dejas vacío el tipo impositivo, se aplica la escala de la base del ahorro sobre la ganancia positiva al final. Es una aproximación, no el cálculo de tu IRPF.</p>
