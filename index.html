@@ -3343,5 +3343,82 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
   }
 }
 </style>
+
+<style id="inversora-mobile-menu-desktop-nav-match-v2">
+/* Menú lateral móvil: mismos criterios tipográficos y de navegación que la barra de escritorio, sin tarjetas individuales. */
+@media(max-width:800px){
+  /* Asegurar que el isotipo original azul se muestre también en la cabecera móvil. */
+  .inv-header .logo:before{
+    content:""!important;
+    display:grid!important;
+    visibility:visible!important;
+    opacity:1!important;
+    width:36px!important;height:36px!important;flex:0 0 36px!important;
+    background-image:url('/icon-192.svg?v=20261117')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+    background-size:cover!important;
+    background-color:transparent!important;
+  }
+  #invSidebar .inv-sidebar-content{padding:17px 22px 24px!important}
+  #invSidebar .inv-sidebar-group{
+    display:block!important;
+    margin:0!important;padding:0!important;
+    border:0!important;border-radius:0!important;
+    background:transparent!important;box-shadow:none!important;
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  }
+  #invSidebar .inv-sidebar-group-title{display:none!important}
+  #invSidebar .inv-sidebar-link,
+  #invSidebar .inv-sidebar-link[data-view="community"]{
+    position:relative!important;
+    display:flex!important;align-items:center!important;
+    gap:10px!important;
+    width:100%!important;min-height:49px!important;
+    margin:0!important;padding:0 3px!important;
+    border:0!important;border-bottom:1px solid rgba(21,94,239,.16)!important;
+    border-radius:0!important;
+    background:transparent!important;background-image:none!important;
+    box-shadow:none!important;transform:none!important;
+    color:#344054!important;
+    font-family:'DM Sans',sans-serif!important;
+    font-size:15px!important;font-weight:600!important;
+    letter-spacing:.005em!important;line-height:1.2!important;
+    transition:color .18s ease,border-color .18s ease!important;
+    -webkit-tap-highlight-color:transparent!important;
+  }
+  #invSidebar .inv-sidebar-link:last-child{border-bottom:1px solid rgba(21,94,239,.16)!important}
+  #invSidebar .inv-sidebar-link:before{display:none!important}
+  #invSidebar .inv-sidebar-link:active{
+    background:transparent!important;border-color:rgba(21,94,239,.16)!important;
+    color:#155eef!important;transform:none!important;
+  }
+  #invSidebar .inv-sidebar-link.active{
+    background:transparent!important;border-color:#155eef!important;
+    color:#155eef!important;box-shadow:none!important;font-weight:700!important;
+  }
+  #invSidebar .inv-sidebar-link[data-view="community"]{
+    background:transparent!important;border-color:rgba(21,94,239,.16)!important;
+    color:#344054!important;font-weight:600!important;
+  }
+  #invSidebar .inv-sidebar-link[data-view="community"].active{
+    color:#155eef!important;border-color:#155eef!important;font-weight:700!important;
+  }
+  #invSidebar .inv-sidebar-link[data-view="community"]:after{display:none!important}
+  #invSidebar .inv-sidebar-icon,
+  #invSidebar .inv-sidebar-link.active .inv-sidebar-icon,
+  #invSidebar .inv-sidebar-link[data-view="community"] .inv-sidebar-icon{
+    display:grid!important;place-items:center!important;
+    width:21px!important;height:21px!important;flex:0 0 21px!important;
+    margin:0!important;padding:0!important;
+    border:0!important;border-radius:0!important;
+    background:transparent!important;box-shadow:none!important;
+    color:#526783!important;font-size:17px!important;
+  }
+  #invSidebar .inv-sidebar-link.active .inv-sidebar-icon{color:#155eef!important}
+  #invSidebar .inv-sidebar-link[data-view="community"] .inv-sidebar-icon{color:#526783!important}
+}
+</style>
+
 </body>
 </html>
