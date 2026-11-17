@@ -45,13 +45,11 @@ function populateAssetOptions(query=''){
   if(!groups.has(key))groups.set(key,[]);
   groups.get(key).push(a);
  });
- const cats=new Map();
  for(const [key,items] of groups){
   const [cat,sub]=key.split('|||');
-  if(!cats.has(cat)){const og=document.createElement('optgroup');og.label=cat;cats.set(cat,og);select.appendChild(og);}
-  const optgroup=cats.get(cat);
-  if(items.length===1){const opt=document.createElement('option');opt.value=items[0].name;opt.textContent=items[0].name;optgroup.appendChild(opt);}
-  else{const subGroup=document.createElement('optgroup');subGroup.label='  '+sub;items.forEach(a=>{const opt=document.createElement('option');opt.value=a.name;opt.textContent=a.name;subGroup.appendChild(opt)});optgroup.appendChild(subGroup);}
+  const optgroup=document.createElement('optgroup');optgroup.label=cat+' · '+sub;
+  items.forEach(a=>{const opt=document.createElement('option');opt.value=a.name;opt.textContent=a.name;optgroup.appendChild(opt)});
+  select.appendChild(optgroup);
  }
  if([...select.options].some(o=>o.value===keep))select.value=keep;
  else if(select.options.length>1)select.selectedIndex=1;
@@ -251,7 +249,16 @@ function init(){
  $('netCompareLaunch').addEventListener('click',simulateComparedAssets);
  const originalShow=window.showView;
  if(typeof originalShow==='function')window.showView=function(id){originalShow(id);if(id==='sim')runNetSimulation();};
- window.simulate=runNetSimulation;
+ window.shareSimulationToCommunity=async function(){
+ if(!invUser){showView('account');return alert('Inicia sesión para compartir una simulación.');}
+ if(!window.invSimulationState)return;
+ const body=prompt('Añade un comentario a tu simulación:','Comparto este escenario para conocer otros puntos de vista.');if(body===null)return;
+ const snapshot={type:'net_real_simulation',...window.invSimulationState,assumptions:window.invSimulationState.assumptions,costs:window.invSimulationState.costs,taxes:window.invSimulationState.taxes};
+ const {error}=await invDb.from('community_posts').insert({user_id:invUser.id,topic:'Simulación de dinero neto real',body:body.trim()||'Comparto mi simulación de inversión.',list_snapshot:snapshot});
+ if(error)return alert('No se ha podido compartir la simulación: '+error.message);
+ await renderCommunity();showView('community');if(typeof invNotice==='function')invNotice('Tu simulación se ha compartido en Comunidad.');
+};
+window.simulate=runNetSimulation;
  window.populateSimulatorInvestments=()=>populateAssetOptions();
  window.applyInvestmentAssumption=()=>loadAssetDefaults(findAsset($('netAsset').value));
  window.simulateInvestment=function(name){$('netAsset').value=name||'__manual__';loadAssetDefaults(findAsset(name));showView('sim');};
