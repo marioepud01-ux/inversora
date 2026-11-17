@@ -78,13 +78,13 @@
     const tax=taxableGain>0?(taxOverride!==null?taxableGain*taxOverride/100:progressiveTax(taxableGain,brackets)):0;
     const netNominal=Math.max(0,afterExit-tax);
     const realFinal=netNominal/Math.pow(1+inflation/100,years);
-    const totalCosts=entryCosts+recurringCosts+exitCosts;
+    const directCosts=entryCosts+recurringCosts+exitCosts;\n    const totalCosts=Math.max(0,gross-afterExit);
     const realGain=realFinal-contributedReal;
     const annualized=years>0?monthlyIrr([...realCashflows,realFinal]):0;
     const realAnnualRate=annualized===null?null:(Math.pow(1+annualized,12)-1)*100;
     if(![gross,netNominal,realFinal,totalCosts,tax,contributedReal].every(Number.isFinite))return {error:'No se ha podido calcular este escenario. Comprueba los valores.'};
     return {
-      grossFinal:gross,costs:{entry:entryCosts,recurring:recurringCosts,exit:exitCosts,total:totalCosts},
+      grossFinal:gross,costs:{entry:entryCosts,recurring:recurringCosts,exit:exitCosts,directTotal:directCosts,total:totalCosts},
       taxes:tax,netNominal,realFinal,contributedNominal:contributed,contributedReal,
       realGain,realAnnualRate,points,months,adjustedRate,taxableGain,
       assumptions:{...p,rate:adjustedRate},taxMethod:taxOverride!==null?'tipo medio manual':'escala de la base del ahorro, simplificada'
