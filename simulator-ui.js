@@ -241,7 +241,7 @@ function openNetReport(){
 }
 function init(){
  fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();if(location.hash.includes('net-sim=')){loadShared();}else{$('netAsset').value=findAsset('Fondos indexados')?'Fondos indexados':(assetList()[0]?.name||'__manual__');loadAssetDefaults(findAsset($('netAsset').value));}setCompareOptions();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
- $('netAssetSearch').addEventListener('input',e=>populateAssetOptions(e.target.value));
+ $('netAssetSearch').addEventListener('input',e=>{const before=$('netAsset').value;populateAssetOptions(e.target.value);if(before!==$('netAsset').value&&$('netAsset').value==='__manual__')loadAssetDefaults(null);});
  $('netAsset').addEventListener('change',()=>loadAssetDefaults(findAsset($('netAsset').value)));
  ['netCapital','netMonthly','netYears','netEntryFee','netEntryFixed','netAnnualFee','netAnnualFixed','netExitFee','netExitFixed','netTaxRate','netInflation','netVacancy','netManualRate'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.netScenario)));
