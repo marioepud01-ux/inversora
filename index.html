@@ -1375,20 +1375,20 @@ td,th{border-color:#e7eef8!important}
 <div class="app">
 <header class="inv-header">
 <div class="header-brand-group">
-<button class="logo" type="button" onclick="showView('home')" aria-label="Inversora, volver al inicio"><span class="brand-word">Invers<span>ora</span></span></button>
+<button class="logo" type="button" onclick="showView('home')" aria-label="Inversora, volver al inicio"><svg class="inv-reference-mark" viewBox="0 0 30 30" aria-hidden="true"><rect x="2" y="17" width="6" height="11" rx="1.5"/><rect x="11" y="9" width="6" height="19" rx="1.5"/><rect x="20" y="2" width="6" height="26" rx="1.5"/></svg><span class="brand-word">Inversora</span></button>
 </div>
 <nav class="desktop-main-nav" id="desktopMainNav" aria-label="Navegación principal">
-<button class="desktop-nav-link active" data-view="home" onclick="showView('home')">Inicio</button>
-<button class="desktop-nav-link" data-view="explore" onclick="showView('explore')">Explorar</button>
-<button class="desktop-nav-link" data-view="tools" onclick="showView('tools')">Herramientas Inversora</button>
+<button class="desktop-nav-link" data-view="home" onclick="showView('home')">Inicio</button>
+<button class="desktop-nav-link active" data-view="explore" onclick="showView('explore')">Inversiones <span class="reference-chevron">⌄</span></button>
+<button class="desktop-nav-link" data-view="sim" onclick="showView('sim')">Simulador</button>
 <button class="desktop-nav-link" data-view="community" onclick="showView('community')">Comunidad</button>
-<button class="desktop-nav-link" data-view="favorites" onclick="showView('favorites')">Favoritos</button>
+<button class="desktop-nav-link" data-view="glossary" onclick="showView('glossary')">Noticias</button>
 </nav>
 <div class="header-actions" aria-label="Accesos rápidos">
-<button class="header-icon-btn" type="button" onclick="showView('favorites')" aria-label="Mis favoritos" title="Mis favoritos"><span aria-hidden="true">♡</span></button>
-<button class="header-icon-btn" type="button" onclick="invHeaderSearch()" aria-label="Buscar inversiones" title="Buscar"><span aria-hidden="true">⌕</span></button>
+<button class="header-icon-btn" type="button" onclick="invHeaderSearch()" aria-label="Buscar inversiones" title="Buscar"><span class="reference-search-icon" aria-hidden="true"></span></button>
+<button class="header-icon-btn" type="button" onclick="showView('favorites')" aria-label="Mis favoritos" title="Mis favoritos"><span class="reference-heart-icon" aria-hidden="true">♡</span></button>
 <button class="menu-toggle" type="button" onclick="invToggleMenu()" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="invSidebar"><span></span><span></span><span></span></button>
-<button class="profile-nav-btn" type="button" id="accountNav" onclick="showView('account')" aria-label="Mi perfil" title="Mi perfil"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span></button>
+<button class="profile-nav-btn" type="button" id="accountNav" onclick="showView('account')" aria-label="Mi perfil" title="Mi perfil"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label"></span><svg class="reference-profile-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg></button>
 </div>
 </header>
 <div class="inv-menu-backdrop" id="invMenuBackdrop" onclick="invToggleMenu(false)" aria-hidden="true"></div>
@@ -2711,5 +2711,51 @@ window.addEventListener('load',()=>{const sharedId=new URLSearchParams(window.lo
 <div id="scoreMethodModal" class="score-modal" hidden onclick="if(event.target===this)closeScoreBreakdown()"><section class="score-modal-card" role="dialog" aria-modal="true" aria-labelledby="scoreModalTitle"><button type="button" class="score-modal-close" aria-label="Cerrar explicación" onclick="closeScoreBreakdown()">×</button><div id="scoreModalContent"></div></section></div>
 <script src="/asset-detail-template.js"></script>
 <script src="/auth-enhancements.js"></script>
+
+<style id="inversora-header-reference-replica">
+/* Replicación de la referencia facilitada: cabecera desktop. Móvil conserva su menú actual. */
+@media(min-width:801px){
+ .app{padding-top:0}
+ .inv-header{width:100vw;max-width:none;margin:0 0 22px calc(50% - 50vw);padding:0 40px;min-height:63px;height:63px;display:grid;grid-template-columns:minmax(240px,1fr) auto minmax(240px,1fr);align-items:center;gap:24px;position:sticky;top:0;z-index:100;background:linear-gradient(105deg,rgba(255,255,255,.99),rgba(247,249,255,.97));backdrop-filter:blur(16px);border:0;border-bottom:1px solid #e3e8f1;border-radius:0;box-shadow:0 2px 9px rgba(18,42,82,.035)}
+ .inv-header .header-brand-group{grid-column:1;justify-self:start}
+ .inv-header .logo{display:flex;align-items:center;gap:10px;padding:0;background:transparent;color:#11294e;font-size:27px;font-weight:780;letter-spacing:-1.05px;box-shadow:none;border:0}
+ .inv-header .logo:before{display:none}
+ .inv-reference-mark{width:30px;height:30px;fill:#0860df;flex:0 0 30px}
+ .inv-header .brand-word{color:#10294e;letter-spacing:-1.05px}
+ .inv-header .brand-word>span{color:inherit}
+ .inv-header .desktop-main-nav{grid-column:2;display:flex;align-items:stretch;justify-content:center;gap:27px;height:100%;padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;white-space:nowrap}
+ .inv-header .desktop-nav-link{position:relative;display:flex;align-items:center;gap:5px;padding:0 1px;border:0;border-radius:0;background:transparent;color:#172b4d;font-size:13px;font-weight:520;letter-spacing:0;box-shadow:none;transform:none}
+ .inv-header .desktop-nav-link:hover{background:transparent;color:#0755d9;box-shadow:none;transform:none}
+ .inv-header .desktop-nav-link.active{background:transparent;color:#064fc7;font-weight:650;box-shadow:none}
+ .inv-header .desktop-nav-link.active:after{content:"";position:absolute;left:-10px;right:-10px;bottom:5px;height:2px;border-radius:2px;background:#075ce5}
+ .inv-header .reference-chevron{font-size:16px;line-height:1;transform:translateY(-2px)}
+ .inv-header .header-actions{grid-column:3;justify-self:end;display:flex;align-items:center;gap:27px;min-width:0}
+ .inv-header .header-icon-btn{width:24px;height:32px;display:grid;place-items:center;padding:0;border:0;background:transparent;color:#102a52;font-size:25px;line-height:1;transition:color .18s,transform .18s}
+ .inv-header .header-icon-btn:hover{background:transparent;color:#0755d9;transform:translateY(-1px)}
+ .reference-search-icon{display:block;width:16px;height:16px;border:1.8px solid currentColor;border-radius:50%;position:relative}
+ .reference-search-icon:after{content:"";position:absolute;width:7px;height:1.8px;background:currentColor;right:-5px;bottom:-2px;transform:rotate(48deg);border-radius:2px}
+ .reference-heart-icon{font-family:Arial,sans-serif;font-size:27px;font-weight:400;line-height:1}
+ .inv-header .profile-nav-btn{height:42px;display:flex;align-items:center;gap:8px;padding:0;border:0;border-radius:0;background:transparent;color:#102a52}
+ .inv-header .profile-nav-btn:hover{background:transparent;color:#0755d9}
+ .inv-header .profile-nav-avatar-fallback{width:37px;height:37px;flex:0 0 37px;border:1px solid #cbd8e8;color:transparent;background:linear-gradient(155deg,#d7eaff 0 37%,#7298bd 38% 56%,#314f42 57% 75%,#193b32 76%);box-shadow:0 1px 3px #102a521a}
+ .inv-header .profile-nav-avatar-fallback:after{content:"";position:absolute;width:37px;height:37px;border-radius:50%;background:linear-gradient(140deg,transparent 50%,#193d34aa 51%);pointer-events:none}
+ .inv-header .profile-nav-label{display:none}
+ .inv-header .reference-profile-chevron{width:12px;height:12px;fill:none;stroke:#102a52;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+ .inv-header .menu-toggle{display:none}
+}
+@media(max-width:1100px) and (min-width:801px){
+ .inv-header{padding-left:22px;padding-right:22px;grid-template-columns:minmax(190px,1fr) auto minmax(150px,1fr);gap:12px}
+ .inv-header .desktop-main-nav{gap:18px}
+ .inv-header .header-actions{gap:19px}
+ .inv-header .logo{font-size:24px}
+}
+@media(max-width:800px){
+ .inv-header .logo:before{display:grid}
+ .inv-reference-mark{display:none}
+ .inv-header .desktop-main-nav{display:none}
+ .inv-header .profile-nav-label{display:inline}
+ .inv-header .reference-profile-chevron{display:none}
+}
+</style>
 </body>
 </html>
