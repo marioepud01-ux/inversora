@@ -67,12 +67,13 @@ function readInputs(asset,rateOverride){
  };
 }
 function calculate(asset,scenario=selectedScenario,overrides={}){
- const rate=overrides.rate??(asset?scenarioRate(asset,scenario):num('netManualRate'));
+ const rate=overrides.rate??(scenario==='custom'?num('netManualRate'):(asset?scenarioRate(asset,scenario):num('netManualRate')));
  const params={...readInputs(asset,rate),...overrides};
  return engine.calculate(params,fiscalConfig);
 }
 function setScenario(value){
  selectedScenario=value;
+ if(currentAsset)$('netManualRate').value=scenarioRate(currentAsset,value).toFixed(2);
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.netScenario===value)));
  runNetSimulation();
 }
@@ -85,7 +86,9 @@ function loadAssetDefaults(asset){
  $('netAnnualFixed').value='0';
  $('netExitFee').value=d.exitFee.toFixed(2);
  $('netExitFixed').value='0';
- $('netManualRate').value=asset?scenarioRate(asset).toFixed(2):'5';
+ $('netManualRate').value=asset?scenarioRate(asset,'base').toFixed(2):'5';
+ selectedScenario='base';
+ document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.netScenario==='base')));
  $('netVacancyWrap').classList.toggle('net-sim-hidden',!isRentalAsset(asset));
  if(!isRentalAsset(asset))$('netVacancy').value='0';
  $('netAssetHint').textContent=asset
@@ -94,7 +97,7 @@ function loadAssetDefaults(asset){
  $('netCostHint').textContent=d.known
   ?'Se han detectado porcentajes en los costes descritos en la ficha. Comprueba que corresponden a tu producto concreto.'
   :'La ficha no contiene porcentajes de costes verificables. Se parte de 0 % y puedes introducirlos manualmente.';
- $('netManualRateWrap').classList.toggle('net-sim-hidden',!!asset);
+ $('netManualRateWrap').classList.remove('net-sim-hidden');
  runNetSimulation();
 }
 function buildWaterfall(result){
@@ -110,7 +113,7 @@ function buildWaterfall(result){
  $('netWaterfall').innerHTML=rows.map(r=>'<div class="net-sim-water-row '+(r.deduction?'is-deduction ':'')+(r.final?'is-final':'')+'"><span>'+r.label+'</span><div class="net-sim-track" title="'+esc(r.desc)+'"><i style="width:'+Math.max(0,Math.min(100,Math.abs(r.value)/max*100))+'%"></i></div><b>'+((r.deduction&&r.value<0)?'− ':'')+euro(Math.abs(r.value))+'</b></div>').join('');
 }
 function graphSvg(prudent,base,optimistic){
- const n=Math.max(prudent.points.length,base.points.length,optimistic.points.length),w=640,h=210,pad=24;
+ const n=Math.max(prudent.points.length,base.points.length,optimistic.points.length),w=640,h=230,pad=30;
  const vals=[...prudent.points,...base.points,...optimistic.points].map(p=>p.real);
  const min=Math.min(0,...vals),max=Math.max(1,...vals);
  const x=i=>pad+(w-pad*2)*(i/Math.max(1,n-1));
@@ -118,16 +121,31 @@ function graphSvg(prudent,base,optimistic){
  const path=arr=>arr.map((p,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(p.real).toFixed(1)).join(' ');
  const upper=optimistic.points,lower=prudent.points;
  const band='M'+upper.map((p,i)=>x(i).toFixed(1)+' '+y(p.real).toFixed(1)).join(' L')+' L'+lower.slice().reverse().map((p,i)=>x(lower.length-1-i).toFixed(1)+' '+y(p.real).toFixed(1)).join(' L')+' Z';
- const contributed=base.points.map((p,i)=>({real:p.contributedReal}));
- const table=base.points.map(p=>'<tr><td>'+fmt(p.year)+'</td><td>'+euro(p.real)+'</td><td>'+euro(p.contributedReal)+'</td></tr>').join('');
- $('netGraph').innerHTML='<div class="net-sim-chart-legend"><span><i class="net-sim-legend-dot"></i>Capital neto real</span><span><i class="net-sim-legend-dot gray"></i>Dinero aportado en euros de hoy</span><span>Franja: prudente–optimista</span></div><svg class="net-sim-chart" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Evolución estimada del capital neto real entre los escenarios prudente y optimista, frente al dinero aportado."><g stroke="#e7edf5" stroke-dasharray="4 5"><line x1="'+pad+'" y1="'+y(max)+'" x2="'+(w-pad)+'" y2="'+y(max)+'"/><line x1="'+pad+'" y1="'+y((max+min)/2)+'" x2="'+(w-pad)+'" y2="'+y((max+min)/2)+'"/><line x1="'+pad+'" y1="'+y(min)+'" x2="'+(w-pad)+'" y2="'+y(min)+'"/></g><path d="'+band+'" fill="#155eef" opacity=".12"/><path d="'+path(contributed)+'" fill="none" stroke="#98a2b3" stroke-width="2" stroke-dasharray="5 5"/><path d="'+path(base.points)+'" fill="none" stroke="#155eef" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><details><summary style="cursor:pointer;font-size:12px;color:#475467">Ver tabla de datos del gráfico</summary><div class="net-sim-table-wrap"><table class="net-sim-chart-table"><thead><tr><th>Año</th><th>Capital neto real</th><th>Aportado en euros de hoy</th></tr></thead><tbody>'+table+'</tbody></table></div></details>';
+ const contributed=base.points.map(p=>({real:p.contributedReal}));
+ const table=base.points.map(p=>'<tr><td>'+fmt(p.year)+' años</td><td>'+euro(p.real)+'</td><td>'+euro(p.contributedReal)+'</td><td>'+euro(p.real-p.contributedReal)+'</td></tr>').join('');
+ const ticks=[0,Math.round((n-1)/2),n-1].filter((v,i,a)=>a.indexOf(v)===i);
+ $('netGraph').innerHTML='<div class="net-sim-chart-legend"><span><i class="net-sim-legend-dot"></i>Capital neto real (€ de hoy)</span><span><i class="net-sim-legend-dot gray"></i>Dinero aportado (€ de hoy)</span><span>Franja: prudente–optimista</span></div><div id="netChartWrap" style="position:relative;touch-action:pan-y"><svg id="netInteractiveChart" class="net-sim-chart" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Gráfico interactivo: toca o mueve el cursor para consultar cada año."><g stroke="#e7edf5" stroke-dasharray="4 5"><line x1="'+pad+'" y1="'+y(max)+'" x2="'+(w-pad)+'" y2="'+y(max)+'"/><line x1="'+pad+'" y1="'+y((max+min)/2)+'" x2="'+(w-pad)+'" y2="'+y((max+min)/2)+'"/><line x1="'+pad+'" y1="'+y(min)+'" x2="'+(w-pad)+'" y2="'+y(min)+'"/></g><path d="'+band+'" fill="#155eef" opacity=".12"/><path d="'+path(contributed)+'" fill="none" stroke="#98a2b3" stroke-width="2" stroke-dasharray="5 5"/><path d="'+path(base.points)+'" fill="none" stroke="#155eef" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><g id="netChartMarker" style="pointer-events:none"><line id="netChartGuide" x1="'+pad+'" y1="'+pad+'" x2="'+pad+'" y2="'+(h-pad)+'" stroke="#155eef" stroke-dasharray="3 4" opacity="0"/><circle id="netChartDot" cx="'+pad+'" cy="'+y(base.points[0].real)+'" r="5" fill="#155eef" stroke="#fff" stroke-width="2" opacity="0"/></g><g fill="#667085" font-size="11" text-anchor="middle">'+ticks.map(i=>'<text x="'+x(i)+'" y="'+(h-5)+'">'+fmt(base.points[i]?.year||0)+' años</text>').join('')+'</g></svg><div id="netChartTooltip" role="status" aria-live="polite" style="display:none;position:absolute;z-index:2;top:8px;left:8px;max-width:min(260px,90%);padding:10px 12px;background:#10294e;color:#fff;border-radius:10px;box-shadow:0 6px 20px #10294e33;font-size:12px;line-height:1.55;pointer-events:none"></div></div><p class="net-sim-hint">Mueve el cursor o desliza el dedo sobre el gráfico para consultar cada año.</p><details><summary style="cursor:pointer;font-size:12px;color:#475467">Ver tabla de datos del gráfico</summary><div class="net-sim-table-wrap"><table class="net-sim-chart-table"><thead><tr><th>Año</th><th>Capital neto real</th><th>Aportado en euros de hoy</th><th>Ganancia real</th></tr></thead><tbody>'+table+'</tbody></table></div></details>';
+ const svg=$('netInteractiveChart'),wrap=$('netChartWrap'),tip=$('netChartTooltip'),guide=$('netChartGuide'),dot=$('netChartDot');
+ const points=base.points;
+ function inspect(event){
+  const rect=svg.getBoundingClientRect(),ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width));
+  const index=Math.round(ratio*(points.length-1)),point=points[index],cx=x(index),cy=y(point.real);
+  const vbX=cx/640*rect.width,tipWidth=Math.min(260,rect.width*.9);
+  guide.setAttribute('x1',cx);guide.setAttribute('x2',cx);guide.setAttribute('opacity','1');
+  dot.setAttribute('cx',cx);dot.setAttribute('cy',cy);dot.setAttribute('opacity','1');
+  tip.style.display='block';tip.style.left=Math.max(4,Math.min(rect.width-tipWidth-4,vbX-tipWidth/2))+'px';
+  tip.innerHTML='<strong>Año '+fmt(point.year)+'</strong><br>Capital neto real: <b>'+euro(point.real)+'</b><br>Dinero aportado: '+euro(point.contributedReal)+'<br>Ganancia real: '+euro(point.real-point.contributedReal);
+ }
+ svg.addEventListener('pointermove',inspect);
+ svg.addEventListener('pointerdown',inspect);
+ svg.addEventListener('pointerleave',()=>{tip.style.display='none';guide.setAttribute('opacity','0');dot.setAttribute('opacity','0');});
 }
 function runNetSimulation(){
  if(!engine||!fiscalConfig)return;
  const assetName=$('netAsset').value,asset=assetName==='__manual__'?null:findAsset(assetName);
  currentAsset=asset;
  const results={prudente:calculate(asset,'prudente'),base:calculate(asset,'base'),optimista:calculate(asset,'optimista')};
- const active=results[selectedScenario]||results.base;
+ const active=selectedScenario==='custom'?calculate(asset,'custom'):results[selectedScenario]||results.base;
  if(active.error){$('netSimError').textContent=active.error;$('netSimError').classList.remove('net-sim-hidden');return;}
  $('netSimError').classList.add('net-sim-hidden');currentResult=active;
  const lo=Math.min(results.prudente.realFinal,results.base.realFinal,results.optimista.realFinal),hi=Math.max(results.prudente.realFinal,results.base.realFinal,results.optimista.realFinal);
@@ -139,7 +157,7 @@ function runNetSimulation(){
  $('netAnnualized').textContent=active.realAnnualRate===null?'—':pct(active.realAnnualRate);
  const liq=asset&&Number.isFinite(Number(asset.liq))?'Nivel '+fmt(asset.liq)+'/10':'No especificada';
  $('netLiquidity').textContent=liq;
- buildWaterfall(active);graphSvg(results.prudente,results.base,results.optimista);
+ buildWaterfall(active);graphSvg(results.prudente,selectedScenario==='custom'?active:results.base,results.optimista);
  $('netAssumptionLine').textContent='Rentabilidad: '+pct(active.assumptions.rate)+' · Inflación: '+pct(active.assumptions.inflation)+' · Costes: '+euro(active.costs.total)+' · Impuestos: '+euro(active.taxes)+' · Revisión fiscal: '+(fiscalConfig.lastReviewed||'no indicada')+'.';
  $('netUnknownCosts').classList.toggle('net-sim-hidden',!!assetDefaults(asset).known);
  const mgmt=asset&&asset.management!==undefined&&asset.management!==null&&asset.management!==''?Number(asset.management):NaN;
@@ -157,7 +175,7 @@ function runNetSimulation(){
 function runWhatIf(base){
  if(!currentResult)return;
  const inflationAlt=calculate(currentAsset,selectedScenario,{inflation:num('netWhatInflation')});
- const lessRate=calculate(currentAsset,selectedScenario,{rate:(currentAsset?scenarioRate(currentAsset):num('netManualRate'))-num('netWhatRate')});
+ const lessRate=calculate(currentAsset,selectedScenario,{rate:num('netManualRate')-num('netWhatRate')});
  const extraMonthly=calculate(currentAsset,selectedScenario,{monthly:num('netMonthly')+num('netWhatMonthly')});
  const show=(id,res)=>{if(res.error){$(id).textContent='No disponible';return;}const diff=res.realFinal-base.realFinal;$(id).textContent=(diff>=0?'+':'−')+euro(Math.abs(diff))+' frente al escenario inicial';};
  $('netWhatInflationLabel').textContent=pct(num('netWhatInflation'));
@@ -246,7 +264,8 @@ function init(){
  fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();if(location.hash.includes('net-sim=')){loadShared();}else{$('netAsset').value=findAsset('Fondos indexados')?'Fondos indexados':(assetList()[0]?.name||'__manual__');loadAssetDefaults(findAsset($('netAsset').value));}setCompareOptions();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
  $('netAssetSearch').addEventListener('input',e=>{const before=$('netAsset').value;populateAssetOptions(e.target.value);if(before!==$('netAsset').value&&$('netAsset').value==='__manual__')loadAssetDefaults(null);});
  $('netAsset').addEventListener('change',()=>loadAssetDefaults(findAsset($('netAsset').value)));
- ['netCapital','netMonthly','netYears','netEntryFee','netEntryFixed','netAnnualFee','netAnnualFixed','netExitFee','netExitFixed','netTaxRate','netInflation','netVacancy','netManualRate'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
+ ['netCapital','netMonthly','netYears','netEntryFee','netEntryFixed','netAnnualFee','netAnnualFixed','netExitFee','netExitFixed','netTaxRate','netInflation','netVacancy'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
+ $('netManualRate').addEventListener('input',()=>{selectedScenario='custom';document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed','false'));runNetSimulation();});
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.netScenario)));
  document.querySelectorAll('[data-net-mode]').forEach(b=>b.addEventListener('click',()=>renderMode(b.dataset.netMode)));
  $('netResetAdvanced').addEventListener('click',()=>{loadAssetDefaults(currentAsset);$('netEntryFixed').value='0';$('netAnnualFixed').value='0';$('netExitFixed').value='0';$('netTaxRate').value='';$('netInflation').value='2';$('netVacancy').value='0';runNetSimulation();});
