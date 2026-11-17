@@ -33,7 +33,8 @@
   function calculate(input,config){
     const p={...input};
     const capital=number(p.capital),monthly=number(p.monthly),years=number(p.years),rate=number(p.rate);
-    const entryFee=number(p.entryFee??0),annualFee=number(p.annualFee??0),exitFee=number(p.exitFee??0);\n    const entryFixed=number(p.entryFixed??0),annualFixed=number(p.annualFixed??0),exitFixed=number(p.exitFixed??0);
+    const entryFee=number(p.entryFee??0),annualFee=number(p.annualFee??0),exitFee=number(p.exitFee??0);
+    const entryFixed=number(p.entryFixed??0),annualFixed=number(p.annualFixed??0),exitFixed=number(p.exitFixed??0);
     const inflation=number(p.inflation??2),vacancy=number(p.vacancy??0);
     const taxOverride=p.taxRate===''||p.taxRate==null?null:number(p.taxRate);
     const values=[capital,monthly,years,rate,entryFee,annualFee,exitFee,entryFixed,annualFixed,exitFixed,inflation,vacancy];
@@ -41,7 +42,8 @@
     if(capital<0||monthly<0)return {error:'El dinero inicial y la aportación no pueden ser negativos.'};
     if(years<0||years>60)return {error:'El plazo debe estar entre 0 y 60 años.'};
     if(rate< -100||rate>1000)return {error:'La rentabilidad debe estar entre -100 % y 1.000 %.'};
-    if([entryFee,annualFee,exitFee,vacancy].some(v=>v<0||v>100))return {error:'Los costes porcentuales y la vacancia deben estar entre 0 % y 100 %.'};\n    if([entryFixed,annualFixed,exitFixed].some(v=>v<0||v>1e12))return {error:'Los costes fijos deben ser importes positivos dentro del límite admitido.'};
+    if([entryFee,annualFee,exitFee,vacancy].some(v=>v<0||v>100))return {error:'Los costes porcentuales y la vacancia deben estar entre 0 % y 100 %.'};
+    if([entryFixed,annualFixed,exitFixed].some(v=>v<0||v>1e12))return {error:'Los costes fijos deben ser importes positivos dentro del límite admitido.'};
     if(inflation< -20||inflation>100)return {error:'La inflación debe estar entre -20 % y 100 %.'};
     if(taxOverride!==null&&(!Number.isFinite(taxOverride)||taxOverride<0||taxOverride>100))return {error:'El tipo impositivo debe estar entre 0 % y 100 %.'};
     const months=Math.round(years*12),contributed=capital+monthly*months;
