@@ -1432,7 +1432,7 @@ td,th{border-color:#e7eef8!important}
 <button class="inv-sidebar-link" data-view="account" onclick="invMenuNavigate('account')"><span class="inv-sidebar-icon">◉</span><span>Mi perfil</span></button>
 </div>
 </div>
-<div class="inv-sidebar-foot"><span class="inv-sidebar-foot-mark">I</span><span>Tu espacio para entender tus inversiones.</span></div>
+<div class="inv-sidebar-foot"><div class="inv-sidebar-brand" aria-label="Inversora"><img src="/icon-192.svg?v=20261117" alt="" width="34" height="34"><span class="inv-sidebar-brand-word">Invers<span>ora</span></span></div></div>
 </aside>
 
 <div id="invGlobalNotice" role="status" hidden style="position:fixed;z-index:1000;bottom:18px;left:50%;transform:translateX(-50%);max-width:min(92vw,620px);padding:13px 18px;background:#101828;color:white;border-radius:12px;box-shadow:0 8px 30px #0003"></div>
@@ -3440,6 +3440,54 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
    font-family:inherit!important;font-weight:500!important;
    color:inherit!important;
  }
+}
+</style>
+
+
+<style id="inversora-mobile-sidebar-brand-and-neutral-tools-v1">
+/* Ajustes de prueba sobre la versión estable: engranaje neutro y marca al pie del menú. */
+@media(max-width:800px){
+  #invSidebar .inv-sidebar-link[data-view="tools"] .inv-sidebar-icon:before,
+  #invSidebar .inv-sidebar-link[data-view="tools"].active .inv-sidebar-icon:before{
+    content:"⚙︎"!important;
+    color:#526783!important;
+    font-family:Arial,sans-serif!important;
+    font-size:18px!important;
+    font-weight:400!important;
+    line-height:1!important;
+  }
+  #invSidebar .inv-sidebar-foot{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    min-height:76px!important;
+    padding:14px 24px calc(14px + env(safe-area-inset-bottom,0px))!important;
+    background:rgba(234,241,251,.30)!important;
+    border-top:1px solid rgba(255,255,255,.7)!important;
+  }
+  #invSidebar .inv-sidebar-brand{
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:10px!important;
+    margin:0!important;
+    padding:0!important;
+    color:#142b50!important;
+    font-family:'DM Sans',sans-serif!important;
+    font-size:23px!important;
+    font-weight:850!important;
+    letter-spacing:-1.1px!important;
+    line-height:1!important;
+  }
+  #invSidebar .inv-sidebar-brand img{
+    display:block!important;
+    width:34px!important;
+    height:34px!important;
+    flex:0 0 34px!important;
+    object-fit:cover!important;
+    border-radius:10px!important;
+  }
+  #invSidebar .inv-sidebar-brand-word{display:inline-flex!important;align-items:center!important}
+  #invSidebar .inv-sidebar-brand-word span{color:#155eef!important;margin-left:0!important}
 }
 </style>
 
