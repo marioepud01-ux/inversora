@@ -78,7 +78,8 @@
     const tax=taxableGain>0?(taxOverride!==null?taxableGain*taxOverride/100:progressiveTax(taxableGain,brackets)):0;
     const netNominal=Math.max(0,afterExit-tax);
     const realFinal=netNominal/Math.pow(1+inflation/100,years);
-    const directCosts=entryCosts+recurringCosts+exitCosts;\n    const totalCosts=Math.max(0,gross-afterExit);
+    const directCosts=entryCosts+recurringCosts+exitCosts;
+    const totalCosts=Math.max(0,gross-afterExit);
     const realGain=realFinal-contributedReal;
     const annualized=years>0?monthlyIrr([...realCashflows,realFinal]):0;
     const realAnnualRate=annualized===null?null:(Math.pow(1+annualized,12)-1)*100;
