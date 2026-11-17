@@ -32,7 +32,7 @@ function assetDefaults(asset){
  return {entryFee:entry.value,annualFee:annual.value,exitFee:exit.value,known:entry.known||annual.known||exit.known};
 }
 function categoryOf(asset){return asset?.cat||'Otros'}
-function subtypeOf(asset){return asset?.catalogSubtype||asset?.subtype||'Otros'}
+function subtypeOf(asset){return asset?.catalogSubtype||(typeof subtypeFor==='function'?subtypeFor(asset):'')||asset?.subtype||'Otros'}
 function populateAssetOptions(query=''){
  const select=$('netAsset'),keep=select?.value||'Fondos indexados';if(!select)return;
  const q=query.trim().toLocaleLowerCase('es');
