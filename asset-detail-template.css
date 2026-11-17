@@ -318,3 +318,103 @@
  .asset-v2-section{padding:12px!important}
  .asset-v2-index a{font-size:10px;padding:8px 9px}
 }
+
+
+.asset-v2-hero{position:static!important;top:auto!important;z-index:auto!important;}
+
+
+/* Optimización móvil de las fichas: cabecera, hero azul y panel de costes.
+   Reglas limitadas a móvil; el diseño de escritorio permanece intacto. */
+@media(max-width:760px){
+ .asset-v2{width:100%;max-width:100%;min-width:0}
+ .asset-v2-top{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:8px!important;
+  width:100%;
+  min-width:0;
+  margin:0 0 12px!important;
+  padding:0!important;
+ }
+ .asset-v2-top .asset-v2-brand{
+  grid-column:1!important;grid-row:1!important;
+  justify-self:center!important;
+  max-width:100%;
+ }
+ .asset-v2-top .asset-v2-crumb{
+  grid-column:1!important;grid-row:2!important;
+  justify-self:stretch!important;
+  width:100%;max-width:100%!important;
+  padding:0 4px;
+  text-align:center!important;
+  line-height:1.55;
+  white-space:normal;
+  overflow-wrap:anywhere;
+ }
+ .asset-v2-top .back{
+  grid-column:1!important;grid-row:3!important;
+  justify-self:start!important;
+  max-width:100%;
+ }
+ .asset-v2-hero{
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:15px!important;
+  width:100%;min-width:0;
+  padding:18px!important;
+  border-radius:16px!important;
+ }
+ .asset-v2-hero>div{min-width:0;max-width:100%}
+ .asset-v2-hero h1{font-size:clamp(25px,7vw,32px)!important;line-height:1.12;overflow-wrap:anywhere}
+ .asset-v2-lead,.asset-v2-panel p,.asset-v2-bullets li,.asset-v2-inline-note{
+  overflow-wrap:anywhere;word-break:normal
+ }
+ .asset-v2-chips{align-items:stretch;min-width:0}
+ .asset-v2-chips span{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.4}
+ .asset-v2-actions{min-width:0}
+ .asset-v2-actions .asset-v2-btn{min-width:0;white-space:normal;line-height:1.3}
+ .asset-v2-ratings{grid-template-columns:repeat(2,minmax(0,1fr))!important;min-width:0}
+ .asset-v2-rating{min-width:0;padding:11px}
+ .asset-v2-rating-head{flex-wrap:wrap;line-height:1.35}
+ .asset-v2-rating-main{flex-wrap:wrap}
+ .asset-v2-section{min-width:0;overflow:hidden}
+ .asset-v2-panel{min-width:0;overflow-wrap:anywhere}
+ .asset-v2-grid.two,.asset-v2-grid.three,.asset-v2-grid.four{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important
+ }
+ .asset-v2-index{max-width:100%;overscroll-behavior-x:contain}
+ .asset-v2-prevnext{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .asset-v2-prevnext button{min-width:0;overflow-wrap:anywhere}
+ .asset-v2-prevnext strong{display:block;overflow-wrap:anywhere}
+}
+@media(max-width:520px){
+ .asset-v2-top{gap:7px!important}
+ .asset-v2-brand{font-size:16px!important}
+ .asset-v2-mark{width:25px;height:25px;flex-basis:25px}
+ .asset-v2-crumb{font-size:10px!important}
+ .asset-v2-hero{padding:15px!important;gap:13px!important}
+ .asset-v2-hero h1{font-size:27px!important;letter-spacing:-.7px!important}
+ .asset-v2-ratings{grid-template-columns:minmax(0,1fr)!important}
+ .asset-v2-section{padding:14px!important;border-radius:12px}
+ .asset-v2-section h2{font-size:19px;line-height:1.2}
+ .asset-v2-grid.two,.asset-v2-grid.three,.asset-v2-grid.four{
+  grid-template-columns:minmax(0,1fr)!important
+ }
+ /* Los importes y descripciones de costes se leen mejor a ancho completo. */
+ #asset-v2-4 .asset-v2-grid.three{grid-template-columns:minmax(0,1fr)!important}
+ #asset-v2-4 .asset-v2-panel{padding:14px}
+ #asset-v2-4 .asset-v2-panel strong{font-size:15px;line-height:1.4}
+ #asset-v2-4 .asset-v2-panel p{font-size:13px;line-height:1.55}
+ .asset-v2-actions .asset-v2-btn{flex:1 1 100%;width:100%}
+ .asset-v2-index{gap:6px;padding-bottom:8px}
+ .asset-v2-index a{font-size:11px;padding:9px 11px}
+ .asset-v2-bottom{padding:18px 14px}
+ .asset-v2-prevnext{grid-template-columns:minmax(0,1fr);gap:8px}
+ .asset-v2-prevnext button,.asset-v2-prevnext button:last-child{text-align:left}
+}
+@media(max-width:360px){
+ .asset-v2-hero h1{font-size:24px!important}
+ .asset-v2-rating{padding:10px}
+ .asset-v2-rating-main strong{font-size:15px}
+ .asset-v2-section{padding:12px!important}
+ .asset-v2-index a{font-size:10px;padding:8px 9px}
+}

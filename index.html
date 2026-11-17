@@ -1313,15 +1313,26 @@ td,th{border-color:#e7eef8!important}
 <nav class="desktop-main-nav" id="desktopMainNav" aria-label="Navegación principal">
 <button class="desktop-nav-link active" data-view="home" onclick="showView('home')">Inicio</button>
 <button class="desktop-nav-link" data-view="explore" onclick="showView('explore')">Explorar</button>
-<button class="desktop-nav-link" data-view="tools" onclick="showView('tools')">Herramientas Inversora</button>
+<button class="desktop-nav-link" data-view="tools" onclick="showView('tools')">Herramientas</button>
 <button class="desktop-nav-link" data-view="community" onclick="showView('community')">Comunidad</button>
 <button class="desktop-nav-link" data-view="favorites" onclick="showView('favorites')">Favoritos</button>
 </nav>
 <div class="header-actions" aria-label="Accesos rápidos">
-<button class="header-icon-btn" type="button" onclick="showView('favorites')" aria-label="Mis favoritos" title="Mis favoritos"><span aria-hidden="true">♡</span></button>
-<button class="header-icon-btn" type="button" onclick="invHeaderSearch()" aria-label="Buscar inversiones" title="Buscar"><span aria-hidden="true">⌕</span></button>
+<button class="header-icon-btn" id="invGlobalSearchToggle" type="button" onclick="invToggleGlobalSearch()" aria-label="Buscar en toda la web" title="Buscar"><span class="reference-search-icon" aria-hidden="true"></span></button>
 <button class="menu-toggle" type="button" onclick="invToggleMenu()" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="invSidebar"><span></span><span></span><span></span></button>
-<button class="profile-nav-btn" type="button" id="accountNav" onclick="showView('account')" aria-label="Mi perfil" title="Mi perfil"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span></button>
+<div class="profile-menu-wrap">
+<button class="profile-nav-btn" type="button" id="accountNav" onclick="invToggleProfileMenu()" aria-label="Abrir menú de perfil" title="Mi perfil" aria-expanded="false" aria-controls="invProfileMenu"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span><span class="profile-dropdown-cue" aria-hidden="true"><svg class="reference-profile-chevron" viewBox="0 0 12 12"><path d="m2 4 4 4 4-4"/></svg></span></button>
+<div class="profile-dropdown" id="invProfileMenu" hidden>
+<div class="profile-dropdown-heading" id="invProfileHeading">Tu espacio en Inversora</div>
+<button type="button" onclick="invProfileNavigate('account')">Mi perfil <span>›</span></button>
+<button type="button" onclick="invProfileNavigate('favorites')">Mis favoritos <span>›</span></button>
+<button type="button" id="invProfileLogout" onclick="logoutLocal();invToggleProfileMenu(false)" hidden>Cerrar sesión</button>
+</div>
+</div>
+</div>
+<div class="global-search-panel" id="invGlobalSearchPanel" hidden>
+<div class="global-search-input-wrap"><span class="reference-search-icon" aria-hidden="true"></span><input id="invGlobalSearchInput" type="search" placeholder="Busca activos, herramientas, páginas o conceptos…" autocomplete="off" oninput="invRenderGlobalSearch(this.value)" onkeydown="invGlobalSearchKeydown(event)" aria-label="Buscar en toda la web"><kbd>ESC</kbd></div>
+<div class="global-search-results" id="invGlobalSearchResults"><div class="global-search-empty">Busca cualquier contenido de Inversora.</div></div>
 </div>
 </header>
 <div class="inv-menu-backdrop" id="invMenuBackdrop" onclick="invToggleMenu(false)" aria-hidden="true"></div>
@@ -2744,6 +2755,499 @@ async function removeFavoriteFromList(name,list,modal,detail){
  }catch(e){if(remove){remove.disabled=false;remove.textContent='Quitar de la lista seleccionada'}invNotice('No se ha podido quitar el activo: '+e.message)}
 }
 
+function invToggleGlobalSearch(force){
+ const panel=document.getElementById('invGlobalSearchPanel'),field=document.getElementById('invGlobalSearchInput');
+ if(!panel)return;
+ const open=typeof force==='boolean'?force:panel.hidden;
+ panel.hidden=!open;
+ if(open){invToggleProfileMenu(false);setTimeout(()=>field?.focus(),30)}
+ else if(field){field.value='';invRenderGlobalSearch('')}
+}
+function invToggleProfileMenu(force){
+ const panel=document.getElementById('invProfileMenu'),btn=document.getElementById('accountNav');
+ if(!panel||!btn)return;
+ const open=typeof force==='boolean'?force:panel.hidden;
+ panel.hidden=!open;btn.setAttribute('aria-expanded',String(open));
+ if(open)invToggleGlobalSearch(false);
+}
+function invProfileNavigate(view){invToggleProfileMenu(false);showView(view)}
+function invEscapeHtml(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function invGetGlobalSearchItems(){
+ const items=[];
+ const pageItems=[['Inicio','Página principal','home','⌂'],['Inversiones','Explorar todos los activos','explore','↗'],['Herramientas','Comparador, simulador y glosario','tools','▦'],['Simulador','Calcula escenarios de inversión','sim','◷'],['Comparador','Compara alternativas de inversión','compare','⇄'],['Comunidad','Ideas y opiniones de la comunidad','community','◎'],['Favoritos','Tus inversiones guardadas','favorites','♡'],['Mi perfil','Tu cuenta y preferencias','account','◉'],['Glosario financiero','Definiciones y conceptos','glossary','Aa']];
+ pageItems.forEach(x=>items.push({title:x[0],detail:x[1],type:'Página',icon:x[3],view:x[2]}));
+ if(Array.isArray(investments))investments.forEach(x=>items.push({title:x.name,detail:[x.cat,x.sub].filter(Boolean).join(' · ')||'Activo de inversión',type:'Activo',icon:'↗',asset:x.name}));
+ if(Array.isArray(terms))terms.forEach(x=>items.push({title:x[0],detail:x[1],type:'Glosario',icon:'Aa',term:x[0]}));
+ return items;
+}
+function invRenderGlobalSearch(query){
+ const box=document.getElementById('invGlobalSearchResults');if(!box)return;
+ const q=String(query||'').trim().toLocaleLowerCase('es');
+ if(!q){box.innerHTML='<div class="global-search-empty">Busca activos, herramientas, páginas o conceptos financieros.</div>';return}
+ const matches=invGetGlobalSearchItems().filter(x=>(x.title+' '+x.detail+' '+x.type).toLocaleLowerCase('es').includes(q)).slice(0,12);
+ if(!matches.length){box.innerHTML='<div class="global-search-empty">No hemos encontrado resultados. Prueba con otra palabra.</div>';return}
+ box.innerHTML=matches.map((x,i)=>'<button type="button" class="global-search-result" data-search-index="'+i+'"><span class="global-search-result-icon">'+invEscapeHtml(x.icon)+'</span><span class="global-search-result-copy"><strong>'+invEscapeHtml(x.title)+'</strong><small>'+invEscapeHtml(x.type+' · '+x.detail)+'</small></span></button>').join('');
+ box.querySelectorAll('[data-search-index]').forEach((btn,i)=>btn.addEventListener('click',()=>invOpenGlobalSearchResult(matches[i])));
+}
+function invOpenGlobalSearchResult(item){
+ invToggleGlobalSearch(false);
+ if(item.asset){showView('explore');setTimeout(()=>openDetail(item.asset),50);return}
+ if(item.term){showView('glossary');const field=document.getElementById('glossSearch');if(field){field.value=item.term;renderGlossary()}return}
+ showView(item.view||'home');
+}
+function invGlobalSearchKeydown(event){
+ if(event.key==='Escape'){invToggleGlobalSearch(false);document.getElementById('invGlobalSearchToggle')?.focus();return}
+ if(event.key==='Enter'){const first=document.querySelector('#invGlobalSearchResults .global-search-result');first?.click()}
+}
+document.addEventListener('click',function(event){
+ const search=document.getElementById('invGlobalSearchPanel'),searchBtn=document.getElementById('invGlobalSearchToggle'),profile=document.getElementById('invProfileMenu'),profileWrap=document.querySelector('.profile-menu-wrap');
+ if(search&&!search.hidden&&!search.contains(event.target)&&!searchBtn?.contains(event.target))invToggleGlobalSearch(false);
+ if(profile&&!profile.hidden&&!profileWrap?.contains(event.target))invToggleProfileMenu(false);
+});
+document.addEventListener('keydown',function(event){if(event.key==='Escape'){invToggleGlobalSearch(false);invToggleProfileMenu(false)}});
+
 </script>
+<style id="inversora-header-reference-preview-v2">
+@media(min-width:801px){
+ .inv-header{width:100vw;max-width:none;margin:0 0 22px calc(50% - 50vw);padding:0 40px;height:63px;min-height:63px;display:grid;grid-template-columns:minmax(230px,1fr) auto minmax(210px,1fr);align-items:center;gap:20px;position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border:0;border-bottom:1px solid #e5e9f0;border-radius:0;box-shadow:0 2px 10px rgba(18,42,82,.035)}
+ .inv-header .header-brand-group{grid-column:1;justify-self:start}
+ .inv-header .logo{display:flex;align-items:center;gap:9px;padding:0;background:transparent;color:#10294e;font-size:27px;font-weight:800;letter-spacing:-1px;box-shadow:none;border:0}
+ .inv-header .logo:before{display:grid}
+ .inv-header .brand-word{color:#10294e;letter-spacing:-1px}
+ .inv-header .brand-word>span{color:var(--accent);margin-left:0}
+ .inv-header .desktop-main-nav{grid-column:2;display:flex;align-items:stretch;justify-content:center;gap:27px;height:100%;padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;white-space:nowrap}
+ .inv-header .desktop-nav-link{position:relative;display:flex;align-items:center;gap:5px;padding:0 1px;border:0;border-radius:0;background:transparent;color:#172b4d;font-size:13px;font-weight:550;letter-spacing:0;box-shadow:none;transform:none}
+ .inv-header .desktop-nav-link:hover{background:transparent;color:#0755d9;box-shadow:none;transform:none}
+ .inv-header .desktop-nav-link.active{background:transparent;color:#064fc7;font-weight:700;box-shadow:none}
+ .inv-header .desktop-nav-link.active:after{content:"";position:absolute;left:-10px;right:-10px;bottom:5px;height:2px;border-radius:2px;background:#075ce5}
+ .inv-header .reference-chevron{font-size:16px;line-height:1;transform:translateY(-2px)}
+ .inv-header .header-actions{grid-column:3;justify-self:end;display:flex;align-items:center;gap:28px;min-width:0}
+ .inv-header .header-icon-btn{width:24px;height:32px;display:grid;place-items:center;padding:0;border:0;background:transparent;color:#102a52}
+ .inv-header .header-icon-btn:hover{background:transparent;color:#0755d9}
+ .inv-header .profile-menu-wrap{position:relative}
+ .inv-header .profile-nav-btn{height:42px;display:flex;align-items:center;gap:9px;padding:0;border:0;border-radius:0;background:transparent;color:#102a52}
+ .inv-header .profile-nav-btn:hover{background:transparent;color:#0755d9}
+ .inv-header .profile-nav-avatar-fallback{width:37px;height:37px;flex:0 0 37px;border-radius:50%;border:1px solid #d6e0ee;background:linear-gradient(155deg,#d7eaff 0 37%,#7298bd 38% 56%,#315b43 57% 75%,#193b32 76%);color:transparent}
+ .inv-header .reference-profile-chevron{width:12px;height:12px;fill:none;stroke:#102a52;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+ .inv-header .profile-nav-btn[aria-expanded="true"] .reference-profile-chevron{transform:rotate(180deg)}
+ .inv-header .menu-toggle{display:none}
+ .inv-header .global-search-panel{position:absolute;right:105px;top:calc(100% + 10px);width:min(520px,calc(100vw - 48px));z-index:120}
+}
+.global-search-panel{background:#fff;border:1px solid #e4eaf3;border-radius:16px;box-shadow:0 18px 50px rgba(16,42,82,.16);padding:12px}
+.global-search-panel[hidden],.profile-dropdown[hidden]{display:none!important}
+.global-search-input-wrap{height:46px;display:flex;align-items:center;gap:12px;padding:0 13px;border:1px solid #cbdaf0;border-radius:11px;background:#f9fbff}
+.global-search-input-wrap input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#10294e;font:500 14px Inter,system-ui,sans-serif}
+.global-search-input-wrap kbd{font-size:10px;color:#8491a5;border:1px solid #e0e6ef;border-radius:5px;padding:3px 5px}
+.reference-search-icon{display:block;width:16px;height:16px;border:1.8px solid currentColor;border-radius:50%;position:relative;flex:0 0 16px}
+.reference-search-icon:after{content:"";position:absolute;width:7px;height:1.8px;background:currentColor;right:-5px;bottom:-2px;transform:rotate(48deg);border-radius:2px}
+.global-search-results{max-height:360px;overflow:auto;padding-top:7px}
+.global-search-result{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:10px 9px;border:0;border-radius:9px;background:transparent;color:#142b50;cursor:pointer}
+.global-search-result:hover,.global-search-result:focus{background:#f1f6ff;outline:0}
+.global-search-result-icon{width:32px;height:32px;flex:0 0 32px;display:grid;place-items:center;border-radius:9px;background:#edf4ff;color:#0755d9;font-size:16px}
+.global-search-result-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.global-search-result-copy strong{font-size:13px;font-weight:700}
+.global-search-result-copy small{font-size:11px;color:#75829a}
+.global-search-empty{padding:18px 10px;text-align:center;color:#8491a5;font-size:12px}
+.profile-dropdown{position:absolute;right:0;top:calc(100% + 12px);width:220px;padding:8px;background:#fff;border:1px solid #e4eaf3;border-radius:14px;box-shadow:0 16px 42px rgba(16,42,82,.16);z-index:125}
+.profile-dropdown-heading{padding:10px 11px 12px;color:#7a879b;font-size:11px;font-weight:700;border-bottom:1px solid #edf1f6;margin-bottom:5px}
+.profile-dropdown button{width:100%;display:flex;justify-content:space-between;align-items:center;padding:11px;border:0;border-radius:8px;background:transparent;color:#172b4d;text-align:left;font-size:13px;cursor:pointer}
+.profile-dropdown button:hover{background:#f1f6ff;color:#0755d9}
+@media(max-width:1100px) and (min-width:801px){
+ .inv-header{padding-left:22px;padding-right:22px;grid-template-columns:minmax(190px,1fr) auto minmax(160px,1fr);gap:12px}
+ .inv-header .desktop-main-nav{gap:19px}
+ .inv-header .header-actions{gap:20px}
+ .inv-header .logo{font-size:24px}
+}
+@media(max-width:800px){
+ .inv-header .desktop-main-nav{display:none}
+ .inv-header .header-actions{gap:12px}
+ .inv-header .profile-menu-wrap{position:relative}
+ .inv-header .profile-nav-label{display:none}
+ .inv-header .global-search-panel{position:absolute;left:12px;right:12px;top:calc(100% + 8px);width:auto;z-index:120}
+ .inv-header .profile-dropdown{right:0;top:calc(100% + 8px)}
+}
+</style>
+
+<style id="inversora-header-reference-refinement-v3">
+@media(min-width:801px){
+ /* Keep the header content aligned to the same page gutters as the official site. */
+ .inv-header{width:100vw;max-width:none;margin:0 0 22px calc(50% - 50vw);padding:12px max(22px,calc((100vw - 1500px)/2));min-height:74px;height:74px;box-sizing:border-box;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:20px;border-radius:0;box-shadow:none;background:rgba(255,255,255,.97)}
+ .inv-header .header-brand-group{justify-self:start}
+ .inv-header .logo{font-size:25px;font-weight:850;letter-spacing:-1px}
+ /* Official logo asset is supplied by the existing .logo:before rule. Do not redraw or replace it. */
+ .inv-header .logo:before{background-image:url('/icon-192.svg');background-size:cover;background-position:center;background-color:transparent;box-shadow:0 4px 12px #155eef25}
+ .inv-header .desktop-main-nav{gap:clamp(18px,2vw,30px);padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+ .inv-header .desktop-nav-link{height:100%;position:relative;padding:0 1px;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#344054;font-size:13px;font-weight:600;transition:color .18s}
+ .inv-header .desktop-main-nav,.inv-header .desktop-nav-link,.inv-header .desktop-nav-link:hover,.inv-header .desktop-nav-link.active{box-shadow:none!important;filter:none!important;text-shadow:none!important}
+ .inv-header .desktop-nav-link.active:before{display:none!important}
+ .inv-header .desktop-nav-link:hover{background:transparent!important;color:#155eef}
+ .inv-header .desktop-nav-link.active{background:transparent!important;border:0!important;box-shadow:none!important;color:#155eef;font-weight:700}
+ .inv-header .desktop-nav-link.active:after{content:"";position:absolute;left:-7px;right:-7px;bottom:5px;height:2px;border-radius:0;background:#155eef}
+ .inv-header .header-actions{justify-self:end;gap:18px}
+ .inv-header .profile-nav-avatar-fallback{width:34px;height:34px;flex-basis:34px;border-radius:50%;background:#eef2f7;border:1px solid #e4e7ec;color:#155eef;display:grid;place-items:center;font-size:13px;font-weight:850}
+ .inv-header .reference-profile-chevron{stroke:#344054}
+}
+@media(max-width:1100px) and (min-width:801px){
+ .inv-header{padding-left:18px;padding-right:18px;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px}
+ .inv-header .desktop-main-nav{gap:15px}
+ .inv-header .header-actions{gap:12px}
+}
+</style>
+
+<style id="inversora-header-remove-blue-shadows-v1">
+.inv-header,.inv-header *,.inv-header *::before,.inv-header *::after{box-shadow:none!important}
+</style>
+
+<style id="inversora-header-remove-nav-blue-box-v2">
+@media(min-width:801px){
+.inv-header .desktop-main-nav,.inv-header button.desktop-nav-link,.inv-header button.desktop-nav-link:hover,.inv-header button.desktop-nav-link:active,.inv-header button.desktop-nav-link:focus,.inv-header button.desktop-nav-link:focus-visible,.inv-header button.desktop-nav-link.active,.inv-header button.desktop-nav-link.active:hover,.inv-header button.desktop-nav-link.active:focus{background:transparent!important;background-color:transparent!important;background-image:none!important;border:0!important;border-radius:0!important;outline:0!important;box-shadow:none!important;filter:none!important;-webkit-tap-highlight-color:transparent!important}
+.inv-header button.desktop-nav-link:before{display:none!important}
+.inv-header button.desktop-nav-link.active:after{content:""!important;display:block!important;position:absolute!important;left:-7px!important;right:-7px!important;bottom:5px!important;height:2px!important;background:#155eef!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+}
+</style>
+
+<style id="inversora-header-height-type-v4">
+@media(min-width:801px){
+  .inv-header{
+    height:82px!important;
+    min-height:82px!important;
+  }
+  .inv-header .desktop-nav-link{
+    font-size:14px!important;
+  }
+}
+@media(min-width:801px) and (max-width:1100px){
+  .inv-header .desktop-main-nav{gap:13px!important}
+  .inv-header .desktop-nav-link{font-size:13px!important}
+}
+</style>
+
+<style id="inversora-header-nav-icons-type-v5">
+@media(min-width:801px){
+  .inv-header .desktop-main-nav{
+    gap:clamp(20px,2.1vw,32px)!important;
+  }
+  .inv-header .desktop-nav-link{
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    padding-left:2px!important;
+    padding-right:2px!important;
+    font-size:15px!important;
+    font-weight:600!important;
+    letter-spacing:.005em!important;
+  }
+  .inv-header .desktop-nav-link:before{
+    display:inline-block!important;
+    position:static!important;
+    width:auto!important;
+    height:auto!important;
+    margin:0!important;
+    padding:0!important;
+    background:none!important;
+    border:0!important;
+    box-shadow:none!important;
+    color:#526783!important;
+    font-family:inherit!important;
+    font-size:17px!important;
+    line-height:1!important;
+    font-weight:500!important;
+  }
+  .inv-header .desktop-nav-link[data-view="home"]:before{content:"⌂"!important}
+  .inv-header .desktop-nav-link[data-view="explore"]:before{content:"⌕"!important}
+  .inv-header .desktop-nav-link[data-view="tools"]:before{content:"⚙"!important}
+  .inv-header .desktop-nav-link[data-view="community"]:before{content:"♧"!important}
+  .inv-header .desktop-nav-link[data-view="favorites"]:before{content:"♡"!important}
+  .inv-header .desktop-nav-link.active:before{color:#155eef!important}
+}
+@media(min-width:801px) and (max-width:1100px){
+  .inv-header .desktop-main-nav{gap:clamp(12px,1.3vw,20px)!important}
+  .inv-header .desktop-nav-link{font-size:14px!important;gap:6px!important}
+  .inv-header .desktop-nav-link:before{font-size:16px!important}
+}
+</style>
+
+<style id="inversora-header-icons-force-v6">
+@media(min-width:801px){
+  .inv-header button.desktop-nav-link:before{
+    display:inline-block!important;
+    position:static!important;
+    width:auto!important;height:auto!important;
+    margin:0!important;padding:0!important;
+    background:transparent!important;border:0!important;
+    box-shadow:none!important;filter:none!important;
+    color:#526783!important;
+    font-family:inherit!important;font-size:18px!important;
+    font-weight:500!important;line-height:1!important;
+    opacity:1!important;visibility:visible!important;
+  }
+  .inv-header button.desktop-nav-link[data-view="home"]:before{content:"⌂"!important}
+  .inv-header button.desktop-nav-link[data-view="explore"]:before{content:"⌕"!important}
+  .inv-header button.desktop-nav-link[data-view="tools"]:before{content:"⚙"!important}
+  .inv-header button.desktop-nav-link[data-view="community"]:before{content:"♧"!important}
+  .inv-header button.desktop-nav-link[data-view="favorites"]:before{content:"♡"!important}
+  .inv-header button.desktop-nav-link.active:before{color:#155eef!important}
+}
+</style>
+
+<style id="inversora-header-official-dimensions-v7">
+/* Igualar dimensiones de la cabecera a la web oficial */
+@media(min-width:801px){
+  .inv-header{
+    box-sizing:border-box!important;
+    height:74px!important;
+    min-height:74px!important;
+  }
+  .inv-header .logo{
+    font-size:26px!important;
+    line-height:1!important;
+  }
+  .inv-header .logo:before{
+    width:39px!important;
+    height:39px!important;
+    flex:0 0 39px!important;
+  }
+}
+@media(max-width:800px){
+  .inv-header{
+    box-sizing:border-box!important;
+    height:78px!important;
+    min-height:78px!important;
+  }
+  .inv-header .logo{
+    font-size:23px!important;
+    line-height:1!important;
+  }
+  .inv-header .logo:before{
+    width:36px!important;
+    height:36px!important;
+    flex:0 0 36px!important;
+  }
+}
+</style>
+
+<style id="inversora-header-official-height-v8">
+@media(min-width:801px){
+  .inv-header{
+    height:82px!important;
+    min-height:82px!important;
+    padding-top:12px!important;
+    padding-bottom:12px!important;
+  }
+}
+</style>
+
+<style id="inversora-nav-spacing-v1">
+@media(min-width:801px){
+  .inv-header .desktop-main-nav{gap:clamp(8px,.8vw,14px)!important}
+  .inv-header .desktop-nav-link{padding-left:clamp(10px,.9vw,15px)!important;padding-right:clamp(10px,.9vw,15px)!important}
+}
+</style>
+
+<style id="inversora-header-blue-tint-v1">
+@media(min-width:801px){
+  .inv-header{
+    background:#eaf1fb!important;
+    border-bottom:1px solid #d8e4f4!important;
+  }
+}
+@media(max-width:800px){
+  .inv-header{
+    background:#eaf1fb!important;
+    border-bottom:1px solid #d8e4f4!important;
+  }
+}
+</style>
+
+<style id="inversora-floating-header-v1">
+@media(min-width:801px){
+  .inv-header{
+    width:calc(100% - 48px)!important;
+    max-width:1500px!important;
+    margin:14px auto 22px!important;
+    padding-left:clamp(22px,calc((100vw - 1500px)/2),54px)!important;
+    padding-right:clamp(22px,calc((100vw - 1500px)/2),54px)!important;
+    border:1px solid #d8e4f4!important;
+    border-radius:18px!important;
+    background:#eaf1fb!important;
+    box-shadow:0 8px 28px rgba(16,42,82,.09),0 2px 6px rgba(16,42,82,.04)!important;
+    position:sticky!important;
+    top:14px!important;
+    z-index:100!important;
+  }
+}
+@media(max-width:800px){
+  .inv-header{
+    width:calc(100% - 24px)!important;
+    margin:12px auto 16px!important;
+    border:1px solid #d8e4f4!important;
+    border-radius:17px!important;
+    background:#eaf1fb!important;
+    box-shadow:0 7px 22px rgba(16,42,82,.08),0 2px 5px rgba(16,42,82,.035)!important;
+  }
+}
+</style>
+
+<style id="inversora-glass-pill-header-v1">
+@media(min-width:801px){
+  .inv-header{
+    width:calc(100vw - 48px)!important;
+    max-width:none!important;
+    margin:14px 0 24px calc(50% - 50vw + 24px)!important;
+    padding-left:clamp(24px,2vw,56px)!important;
+    padding-right:clamp(24px,2vw,56px)!important;
+    border:1px solid rgba(255,255,255,.78)!important;
+    border-radius:999px!important;
+    background:rgba(234,241,251,.78)!important;
+    -webkit-backdrop-filter:blur(22px) saturate(165%)!important;
+    backdrop-filter:blur(22px) saturate(165%)!important;
+    box-shadow:0 12px 34px rgba(28,52,84,.11),inset 0 1px 0 rgba(255,255,255,.8)!important;
+  }
+}
+@media(max-width:800px){
+  .inv-header{
+    width:calc(100vw - 32px)!important;
+    margin:12px 0 16px calc(50% - 50vw + 16px)!important;
+    border:1px solid rgba(255,255,255,.82)!important;
+    border-radius:999px!important;
+    background:rgba(234,241,251,.80)!important;
+    -webkit-backdrop-filter:blur(22px) saturate(165%)!important;
+    backdrop-filter:blur(22px) saturate(165%)!important;
+    box-shadow:0 9px 26px rgba(28,52,84,.10),inset 0 1px 0 rgba(255,255,255,.82)!important;
+  }
+}
+</style>
+
+<style id="inversora-profile-dropdown-cue-v1">
+.inv-header .profile-nav-btn{gap:9px!important}
+.inv-header .profile-nav-label{display:inline!important;font-size:13px!important;font-weight:650!important;color:#344054!important;letter-spacing:-.01em}
+.inv-header .profile-dropdown-cue{
+  width:23px;height:23px;flex:0 0 23px;display:inline-grid;place-items:center;
+  border:1px solid rgba(91,119,157,.20);border-radius:50%;
+  background:rgba(255,255,255,.62);transition:background .18s,border-color .18s,transform .18s;
+}
+.inv-header .profile-dropdown-cue .reference-profile-chevron{
+  display:block;width:11px;height:11px;fill:none;stroke:#526783;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;transition:transform .2s;
+}
+.inv-header .profile-nav-btn:hover .profile-dropdown-cue{background:#fff;border-color:rgba(21,94,239,.30)}
+.inv-header .profile-nav-btn[aria-expanded="true"] .profile-dropdown-cue{background:#fff;border-color:#b2ccff}
+@media(max-width:800px){
+  .inv-header .profile-nav-label{display:none!important}
+  .inv-header .profile-dropdown-cue{width:22px;height:22px;flex-basis:22px}
+}
+</style>
+
+<style id="inversora-profile-dropdown-cue-v2">
+@media(min-width:801px){
+  .inv-header .profile-nav-btn{display:inline-flex!important;align-items:center!important;gap:9px!important}
+  .inv-header .profile-nav-label{
+    display:inline!important;visibility:visible!important;opacity:1!important;
+    font-family:'DM Sans',sans-serif!important;font-size:15px!important;
+    font-weight:600!important;line-height:1.2!important;color:#344054!important;
+    letter-spacing:0!important;white-space:nowrap!important
+  }
+  .inv-header .profile-dropdown-cue{
+    display:inline-flex!important;visibility:visible!important;opacity:1!important;
+    width:24px!important;height:24px!important;flex:0 0 24px!important;
+    align-items:center!important;justify-content:center!important;
+    border:1px solid #cbd8e8!important;border-radius:50%!important;
+    background:rgba(255,255,255,.82)!important
+  }
+  .inv-header .profile-dropdown-cue .reference-profile-chevron{
+    width:12px!important;height:12px!important;stroke:#344054!important;stroke-width:2!important
+  }
+}
+</style>
+
+<style id="inversora-profile-dropdown-cue-v4">
+@media(min-width:801px){
+  .inv-header #accountNav{gap:8px!important}
+  .inv-header #accountNav::after{
+    content:""!important;
+    display:inline-block!important;
+    width:8px!important;height:8px!important;flex:0 0 8px!important;
+    border-right:1.7px solid currentColor!important;
+    border-bottom:1.7px solid currentColor!important;
+    border-radius:0!important;border-top:0!important;border-left:0!important;
+    background:transparent!important;
+    color:#667085!important;
+    transform:translateY(-2px) rotate(45deg)!important;
+    transition:transform .22s cubic-bezier(.2,.75,.25,1),color .18s!important;
+  }
+  .inv-header #accountNav:hover::after{color:#155eef!important}
+  .inv-header #accountNav[aria-expanded="true"]::after{
+    transform:translateY(2px) rotate(225deg)!important;
+    color:#155eef!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+ .inv-header #accountNav::after{transition:none!important}
+}
+</style>
+
+<style id="inversora-default-profile-avatar-v1">
+@media(min-width:801px){
+  .inv-header .profile-nav-avatar-fallback{
+    position:relative!important;overflow:hidden!important;
+    display:inline-block!important;flex:0 0 37px!important;
+    width:37px!important;height:37px!important;
+    border-radius:50%!important;
+    background:#e9edf3!important;border:1px solid #d7dee8!important;
+    color:transparent!important;font-size:0!important;
+  }
+}
+.inv-header .profile-nav-avatar-fallback{
+  position:relative!important;overflow:hidden!important;
+  background:#e9edf3!important;border:1px solid #d7dee8!important;
+  color:transparent!important;font-size:0!important;
+}
+.inv-header .profile-nav-avatar-fallback::before{
+  content:""!important;position:absolute!important;
+  width:29%!important;height:29%!important;border-radius:50%!important;
+  left:35.5%!important;top:19%!important;
+  background:#98a2b3!important;border:0!important;
+}
+.inv-header .profile-nav-avatar-fallback::after{
+  content:""!important;position:absolute!important;
+  width:66%!important;height:43%!important;
+  left:17%!important;bottom:-4%!important;
+  border-radius:50% 50% 0 0!important;
+  background:#98a2b3!important;border:0!important;
+}
+</style>
+
+<style id="inversora-profile-header-alignment-v1">
+/* Centrar verticalmente el avatar y «Mi perfil» con la navegación */
+.inv-header .profile-menu-wrap{
+  display:inline-flex!important;
+  align-items:center!important;
+  align-self:center!important;
+  position:relative!important;
+  top:-2px!important;
+}
+.inv-header .profile-nav-btn{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:1!important;
+  vertical-align:middle!important;
+}
+.inv-header .profile-nav-label{
+  line-height:1.2!important;
+  align-self:center!important;
+}
+.inv-header .profile-nav-avatar,
+.inv-header .profile-nav-avatar-fallback{
+  align-self:center!important;
+  vertical-align:middle!important;
+}
+</style>
+
+<style id="inversora-background-blue-grey-v1">
+:root{--bg:#e7edf7}
+html,body{background:#e7edf7!important;background-color:#e7edf7!important}
+</style>
+
 </body>
 </html>
