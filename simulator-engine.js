@@ -59,7 +59,9 @@
     for(let m=1;m<=months;m++){
       gross=gross*(1+monthlyRate)+monthly;
       const beforeFee=net*(1+monthlyRate);
-      net=beforeFee*monthlyFeeFactor;
+      const afterPercentFee=beforeFee*monthlyFeeFactor;
+      const fixedMonthly=Math.min(afterPercentFee,annualFixed/12);
+      net=afterPercentFee-fixedMonthly;
       recurringCosts+=beforeFee-net;
       const deposit=monthly*(1-entryFee/100);
       net+=deposit;
@@ -73,7 +75,9 @@
       }
       if(!Number.isFinite(gross)||!Number.isFinite(net)||Math.abs(gross)>1e15||Math.abs(net)>1e15)return {error:'El resultado supera el límite de cálculo. Reduce el importe, plazo o rentabilidad.'};
     }
-    const exitCosts=net*exitFee/100;
+    const variableExit=net*exitFee/100;
+    const fixedExit=Math.min(Math.max(0,net-variableExit),exitFixed);
+    const exitCosts=variableExit+fixedExit;
     const afterExit=Math.max(0,net-exitCosts);
     const taxableGain=Math.max(0,afterExit-contributed);
     const brackets=config?.savingsTaxBrackets||[];
