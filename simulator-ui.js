@@ -28,7 +28,7 @@ function feeFromText(text){
  return {value:matches.reduce((a,b)=>a+b,0)/matches.length,known:true};
 }
 function assetDefaults(asset){
- const entry=feeFromText(asset?.entrycosts),annual=feeFromText(asset?.costs),exit=feeFromText(asset?.costsextra);
+ const entry=feeFromText(asset?.entrycosts),annual=feeFromText(asset?.costs),extra=String(asset?.costsextra||''),exit=/(salida|venta|reembolso|transmisi[oó]n|cancelaci[oó]n|liquidaci[oó]n)/i.test(extra)?feeFromText(extra):{value:0,known:false};
  return {entryFee:entry.value,annualFee:annual.value,exitFee:exit.value,known:entry.known||annual.known||exit.known};
 }
 function categoryOf(asset){return asset?.cat||'Otros'}
