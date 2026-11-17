@@ -1454,7 +1454,7 @@ td,th{border-color:#e7eef8!important}
     <input class="net-sim-input" id="netCapital" type="number" min="0" step="100" inputmode="decimal" value="10000">
     <label class="net-sim-label" for="netMonthly">Aportación mensual</label>
     <input class="net-sim-input" id="netMonthly" type="number" min="0" step="25" inputmode="decimal" value="300">
-    <label class="net-sim-label" for="netYears">Duración</label>
+    <label class="net-sim-label" for="netYears">Duración (años)</label>
     <input class="net-sim-input" id="netYears" type="number" min="0" max="60" step="1" inputmode="numeric" value="15">
     <span class="net-sim-label">Escenario de rentabilidad</span>
     <div class="net-sim-scenario" role="group" aria-label="Escenario de rentabilidad">
@@ -1465,7 +1465,7 @@ td,th{border-color:#e7eef8!important}
     <details class="net-sim-advanced" id="netAdvanced">
      <summary>Ajustar supuestos</summary>
      <div class="net-sim-advanced-grid">
-      <div id="netManualRateWrap" class="net-sim-hidden"><label class="net-sim-label" for="netManualRate">Rentabilidad anual manual (%)</label><input class="net-sim-input" id="netManualRate" type="number" min="-100" max="1000" step="0.1" value="5"></div>
+      <div id="netManualRateWrap"><label class="net-sim-label" for="netManualRate">Rentabilidad anual (%) · editable</label><input class="net-sim-input" id="netManualRate" type="number" min="-100" max="1000" step="0.1" value="5"></div>
       <div><label class="net-sim-label" for="netInflation">Inflación anual (%)</label><input class="net-sim-input" id="netInflation" type="number" min="-20" max="100" step="0.1" value="2"></div>
       <div><label class="net-sim-label" for="netEntryFee">Coste de entrada (%)</label><input class="net-sim-input" id="netEntryFee" type="number" min="0" max="100" step="0.01" value="0"></div>
       <div><label class="net-sim-label" for="netEntryFixed">Coste fijo de entrada (€)</label><input class="net-sim-input" id="netEntryFixed" type="number" min="0" step="0.01" value="0"></div>
@@ -3368,6 +3368,7 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
   }
 }
 </style>
+<style id="net-sim-chart-touch-v1">#netInteractiveChart{display:block;width:100%;height:auto;overflow:visible;cursor:crosshair;touch-action:pan-y}#netChartTooltip{font-variant-numeric:tabular-nums}.net-sim-chart-table th,.net-sim-chart-table td{white-space:nowrap}</style>
 <script src="/simulator-engine.js"></script>
 <script src="/simulator-ui.js"></script>
 </body>
