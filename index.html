@@ -3154,35 +3154,32 @@ function refreshAccountNav(){
 }
 </style>
 
-<style id="inversora-profile-dropdown-cue-v3">
+
+<style id="inversora-profile-dropdown-cue-v4">
 @media(min-width:801px){
-  .inv-header #accountNav{
-    display:inline-flex!important;
-    align-items:center!important;
-    gap:9px!important;
-    white-space:nowrap!important;
-  }
-  /* Render the cue on the button itself so profile refreshes cannot remove it. */
-  .inv-header #accountNav .profile-dropdown-cue{display:none!important}
+  .inv-header #accountNav{gap:8px!important}
   .inv-header #accountNav::after{
-    content:"⌄"!important;
-    display:inline-flex!important;
-    width:23px!important;height:23px!important;flex:0 0 23px!important;
-    align-items:center!important;justify-content:center!important;
-    box-sizing:border-box!important;
-    border:1px solid #b8c9df!important;border-radius:50%!important;
-    background:rgba(255,255,255,.9)!important;
-    color:#344054!important;
-    font-family:Arial,sans-serif!important;font-size:17px!important;
-    font-weight:600!important;line-height:1!important;
-    opacity:1!important;visibility:visible!important;
-    transform:translateY(-1px)!important;
+    content:""!important;
+    display:inline-block!important;
+    width:8px!important;height:8px!important;flex:0 0 8px!important;
+    border-right:1.7px solid currentColor!important;
+    border-bottom:1.7px solid currentColor!important;
+    border-radius:0!important;border-top:0!important;border-left:0!important;
+    background:transparent!important;
+    color:#667085!important;
+    transform:translateY(-2px) rotate(45deg)!important;
+    transition:transform .22s cubic-bezier(.2,.75,.25,1),color .18s!important;
   }
+  .inv-header #accountNav:hover::after{color:#155eef!important}
   .inv-header #accountNav[aria-expanded="true"]::after{
-    content:"⌃"!important;
-    border-color:#8eacd4!important;
+    transform:translateY(2px) rotate(225deg)!important;
+    color:#155eef!important;
   }
 }
+@media(prefers-reduced-motion:reduce){
+ .inv-header #accountNav::after{transition:none!important}
+}
 </style>
+
 </body>
 </html>
