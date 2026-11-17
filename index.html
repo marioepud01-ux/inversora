@@ -3250,5 +3250,23 @@ document.addEventListener('keydown',function(event){if(event.key==='Escape'){inv
 html,body{background:#e7edf7!important;background-color:#e7edf7!important}
 </style>
 
+
+<style id="inversora-mobile-sticky-header-v1">
+@media(max-width:800px){
+  .app{padding-top:106px!important}
+  .inv-header{
+    position:fixed!important;
+    top:calc(env(safe-area-inset-top,0px) + 12px)!important;
+    left:12px!important;
+    right:12px!important;
+    width:calc(100vw - 24px)!important;
+    max-width:none!important;
+    margin:0!important;
+    z-index:1200!important;
+    transform:translateZ(0)!important;
+    -webkit-transform:translateZ(0)!important;
+  }
+}
+</style>
 </body>
 </html>
