@@ -3052,5 +3052,34 @@ function refreshAccountNav(){
   }
 }
 </style>
+
+<style id="inversora-floating-header-v1">
+@media(min-width:801px){
+  .inv-header{
+    width:calc(100% - 48px)!important;
+    max-width:1500px!important;
+    margin:14px auto 22px!important;
+    padding-left:clamp(22px,calc((100vw - 1500px)/2),54px)!important;
+    padding-right:clamp(22px,calc((100vw - 1500px)/2),54px)!important;
+    border:1px solid #d8e4f4!important;
+    border-radius:18px!important;
+    background:#eaf1fb!important;
+    box-shadow:0 8px 28px rgba(16,42,82,.09),0 2px 6px rgba(16,42,82,.04)!important;
+    position:sticky!important;
+    top:14px!important;
+    z-index:100!important;
+  }
+}
+@media(max-width:800px){
+  .inv-header{
+    width:calc(100% - 24px)!important;
+    margin:12px auto 16px!important;
+    border:1px solid #d8e4f4!important;
+    border-radius:17px!important;
+    background:#eaf1fb!important;
+    box-shadow:0 7px 22px rgba(16,42,82,.08),0 2px 5px rgba(16,42,82,.035)!important;
+  }
+}
+</style>
 </body>
 </html>
