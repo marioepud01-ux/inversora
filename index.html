@@ -1765,55 +1765,7 @@ function printComparisonSheet(){
  if(!win){invNotice('El navegador ha bloqueado la nueva pestaña. Permite las ventanas emergentes para Inversora.');return}
  const printCss='<style>html,body{background:#fff!important;color:#101828!important;margin:0!important;padding:0!important}.compare-page{display:block!important;max-width:none!important;width:100%!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}.compare-page button{display:none!important}.compare-table-wrap,.compare-card{break-inside:avoid;box-shadow:none!important}@page{size:A4 landscape;margin:10mm}</style>';
  win.document.open();
- win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparativa · Inversora</title>'+styles+printCss+'</head><body>'+page.outerHTML+'
-<style id="inversora-header-remove-blue-shadows-v1">
-/* Cabecera limpia: conserva bordes y línea activa, elimina cualquier sombra de sus elementos. */
-.inv-header,
-.inv-header *,
-.inv-header *::before,
-.inv-header *::after {
-  box-shadow: none !important;
-}
-</style>
-
-<style id="inversora-header-remove-nav-blue-box-v2">
-@media (min-width:801px){
-  .inv-header .desktop-main-nav,
-  .inv-header button.desktop-nav-link,
-  .inv-header button.desktop-nav-link:hover,
-  .inv-header button.desktop-nav-link:active,
-  .inv-header button.desktop-nav-link:focus,
-  .inv-header button.desktop-nav-link:focus-visible,
-  .inv-header button.desktop-nav-link.active,
-  .inv-header button.desktop-nav-link.active:hover,
-  .inv-header button.desktop-nav-link.active:focus {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    outline: 0 !important;
-    box-shadow: none !important;
-    filter: none !important;
-    -webkit-tap-highlight-color: transparent !important;
-  }
-  .inv-header button.desktop-nav-link:before { display:none !important; }
-  .inv-header button.desktop-nav-link.active:after {
-    content:"" !important;
-    display:block !important;
-    position:absolute !important;
-    left:-7px !important;
-    right:-7px !important;
-    bottom:5px !important;
-    height:2px !important;
-    background:#155eef !important;
-    border:0 !important;
-    border-radius:0 !important;
-    box-shadow:none !important;
-  }
-}
-</style>
-</body></html>');
+ win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparativa · Inversora</title>'+styles+printCss+'</head><body>'+page.outerHTML+'</body></html>');
  win.document.close();
  const doPrint=()=>setTimeout(()=>{try{win.focus();win.print()}catch(err){console.error('Print comparison:',err)}},450);
  if(win.document.readyState==='complete')doPrint();else win.addEventListener('load',doPrint,{once:true});
@@ -2920,6 +2872,17 @@ function refreshAccountNav(){
  .inv-header{padding-left:18px;padding-right:18px;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px}
  .inv-header .desktop-main-nav{gap:15px}
  .inv-header .header-actions{gap:12px}
+}
+</style>
+
+<style id="inversora-header-remove-blue-shadows-v1">
+.inv-header,.inv-header *,.inv-header *::before,.inv-header *::after{box-shadow:none!important}
+</style>
+<style id="inversora-header-remove-nav-blue-box-v2">
+@media(min-width:801px){
+.inv-header .desktop-main-nav,.inv-header button.desktop-nav-link,.inv-header button.desktop-nav-link:hover,.inv-header button.desktop-nav-link:active,.inv-header button.desktop-nav-link:focus,.inv-header button.desktop-nav-link:focus-visible,.inv-header button.desktop-nav-link.active,.inv-header button.desktop-nav-link.active:hover,.inv-header button.desktop-nav-link.active:focus{background:transparent!important;background-color:transparent!important;background-image:none!important;border:0!important;border-radius:0!important;outline:0!important;box-shadow:none!important;filter:none!important;-webkit-tap-highlight-color:transparent!important}
+.inv-header button.desktop-nav-link:before{display:none!important}
+.inv-header button.desktop-nav-link.active:after{content:""!important;display:block!important;position:absolute!important;left:-7px!important;right:-7px!important;bottom:5px!important;height:2px!important;background:#155eef!important;border:0!important;border-radius:0!important;box-shadow:none!important}
 }
 </style>
 </body>
