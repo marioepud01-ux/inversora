@@ -3182,13 +3182,34 @@ function refreshAccountNav(){
 </style>
 
 
-<style id="inversora-floating-header-width-v2">
+<style id="inversora-default-profile-avatar-v1">
 @media(min-width:801px){
-  .inv-header{
-    width:calc(100vw - 96px)!important;
-    margin-left:calc(50% - 50vw + 48px)!important;
-    margin-right:0!important;
+  .inv-header .profile-nav-avatar-fallback{
+    position:relative!important;overflow:hidden!important;
+    display:inline-block!important;flex:0 0 37px!important;
+    width:37px!important;height:37px!important;
+    border-radius:50%!important;
+    background:#e9edf3!important;border:1px solid #d7dee8!important;
+    color:transparent!important;font-size:0!important;
   }
+}
+.inv-header .profile-nav-avatar-fallback{
+  position:relative!important;overflow:hidden!important;
+  background:#e9edf3!important;border:1px solid #d7dee8!important;
+  color:transparent!important;font-size:0!important;
+}
+.inv-header .profile-nav-avatar-fallback::before{
+  content:""!important;position:absolute!important;
+  width:29%!important;height:29%!important;border-radius:50%!important;
+  left:35.5%!important;top:19%!important;
+  background:#98a2b3!important;border:0!important;
+}
+.inv-header .profile-nav-avatar-fallback::after{
+  content:""!important;position:absolute!important;
+  width:66%!important;height:43%!important;
+  left:17%!important;bottom:-4%!important;
+  border-radius:50% 50% 0 0!important;
+  background:#98a2b3!important;border:0!important;
 }
 </style>
 </body>
