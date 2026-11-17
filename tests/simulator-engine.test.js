@@ -45,3 +45,7 @@ test('valores inválidos devuelven error legible',()=>{
  const r=engine.calculate({capital:-1,monthly:0,years:1,rate:5},fiscal);
  assert.equal(typeof r.error,'string');
 });
+
+test('escala progresiva de la base del ahorro',()=>{
+ near(engine.progressiveTax(7000,fiscal.savingsTaxBrackets),1350);
+});
