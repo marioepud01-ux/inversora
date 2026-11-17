@@ -52,6 +52,7 @@ function populateAssetOptions(query=''){
   select.appendChild(optgroup);
  }
  if([...select.options].some(o=>o.value===keep))select.value=keep;
+ else if(q)select.value='__manual__';
  else if(select.options.length>1)select.selectedIndex=1;
 }
 function readInputs(asset,rateOverride){
@@ -236,7 +237,7 @@ function openNetReport(){
  win.document.close();
 }
 function init(){
- fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();setCompareOptions();loadShared();if(!$('netAsset').value){$('netAsset').value='Fondos indexados';}loadAssetDefaults(findAsset($('netAsset').value));runNetSimulation();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
+ fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();if(location.hash.includes('net-sim=')){loadShared();}else{$('netAsset').value=findAsset('Fondos indexados')?'Fondos indexados':(assetList()[0]?.name||'__manual__');loadAssetDefaults(findAsset($('netAsset').value));}setCompareOptions();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
  $('netAssetSearch').addEventListener('input',e=>populateAssetOptions(e.target.value));
  $('netAsset').addEventListener('change',()=>loadAssetDefaults(findAsset($('netAsset').value)));
  ['netCapital','netMonthly','netYears','netEntryFee','netAnnualFee','netExitFee','netTaxRate','netInflation','netVacancy','netManualRate'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
