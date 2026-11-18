@@ -111,14 +111,14 @@ function loadAssetDefaults(asset){
  $('netIbiEnabled').checked=hasIbi;$('netIbiAnnual').value='0';
  $('netAcquisitionTaxEnabled').checked=hasIva||hasItp;
  $('netAcquisitionTaxType').value=hasIva&&!hasItp?'iva':(hasItp&&!hasIva?'itp':'none');
- const ivaMatch=fiscalText.match(/iva[^.\\n]{0,55}?(\\d+(?:[.,]\\d+)?)\\s*%/i);
- const itpHasRange=/itp[^.\\n]{0,55}\\d+\\s*%?\\s*(?:-|–|a)\\s*\\d+/i.test(fiscalText);
- const itpMatch=itpHasRange?null:fiscalText.match(/itp[^.\\n]{0,55}?(\\d+(?:[.,]\\d+)?)\\s*%/i);
- const ajdMatch=fiscalText.match(/ajd[^.\\n]{0,55}?(\\d+(?:[.,]\\d+)?)\\s*%/i);
+ const ivaMatch=fiscalText.match(/iva[^.\n]{0,55}?(\d+(?:[.,]\d+)?)\s*%/i);
+ const itpHasRange=/itp[^.\n]{0,55}\d+\s*%?\s*(?:-|–|a)\s*\d+/i.test(fiscalText);
+ const itpMatch=itpHasRange?null:fiscalText.match(/itp[^.\n]{0,55}?(\d+(?:[.,]\d+)?)\s*%/i);
+ const ajdMatch=fiscalText.match(/ajd[^.\n]{0,55}?(\d+(?:[.,]\d+)?)\s*%/i);
  $('netAcquisitionTaxType').dataset.ivaRate=ivaMatch?ivaMatch[1].replace(',','.'):'';
  $('netAcquisitionTaxType').dataset.itpRate=itpMatch?itpMatch[1].replace(',','.'):'';
  $('netAcquisitionTaxRate').value=$('netAcquisitionTaxType').value==='iva'&&ivaMatch?ivaMatch[1].replace(',','.'):($('netAcquisitionTaxType').value==='itp'&&itpMatch?itpMatch[1].replace(',','.'):'');
- $('netAjdEnabled').checked=hasAjd;$('netAjdRate').value='';
+ $('netAjdEnabled').checked=hasAjd;$('netAjdRate').value=ajdMatch?ajdMatch[1].replace(',','.'):'';
  $('netMunicipalEnabled').checked=hasPlusvalia;$('netMunicipalExitTax').value='0';
  $('netOtherTaxEnabled').checked=false;$('netOtherEntryTax').value='0';$('netOtherAnnualTax').value='0';
  $('netTaxProfileHint').textContent=asset
