@@ -163,14 +163,12 @@ function updateTaxControls(){
  // El porcentaje del IS debe seguir visible y editable; solo ocultamos el selector de base del IRPF.
  $('netIrpfFields').classList.remove('net-sim-hidden');
  $('netIncomeTaxBaseWrap').classList.toggle('net-sim-hidden',company);
- $('netIncomeTaxRateWrap').classList.toggle('net-sim-hidden',!company&&savings);
- $('netIncomeTaxRate').disabled=!company&&savings;
- $('netIncomeTaxRateLabel').textContent=company?'Tipo del Impuesto sobre Sociedades':'Tipo marginal estimado';
+ $('netIncomeTaxRateWrap').classList.remove('net-sim-hidden');
+ $('netIncomeTaxRate').disabled=false;
+ $('netIncomeTaxRateLabel').textContent=company?'Tipo del Impuesto sobre Sociedades':'Tipo de IRPF personalizado';
  if(company)$('netIncomeTaxHint').textContent='Se aplica el porcentaje introducido sobre la ganancia imponible estimada. Se propone el 25 % como tipo general, pero puedes cambiarlo (por ejemplo, al 15 % si cumples los requisitos u otro tipo aplicable).';
  else if(!enabled)$('netIncomeTaxHint').textContent='Activa la casilla IRPF para incluir este impuesto en el cálculo.';
- else $('netIncomeTaxHint').textContent=savings?'En la base del ahorro no se utiliza un porcentaje manual: el simulador aplica automáticamente los tramos progresivos configurados. Si quieres introducir tu propio tipo, selecciona «Base general».':'El porcentaje que introduzcas se aplica a la ganancia imponible estimada. Al modificarlo, se recalculan el impuesto y el capital neto final. Es una aproximación: tu tipo marginal real depende del conjunto de tus rentas.';
- // El tipo del IS y el tipo marginal de base general se pueden editar; la casilla solo activa o desactiva el impuesto.
- $('netIncomeTaxRate').disabled=!company&&savings;
+ else $('netIncomeTaxHint').textContent=savings?'Puedes dejar el campo vacío para aplicar la escala progresiva de la base del ahorro, o introducir un porcentaje para sustituirla por tu tipo personalizado.':'Introduce tu tipo marginal estimado. El porcentaje se aplica a la ganancia imponible; es una aproximación y no una liquidación completa del IRPF.';
 }
 function buildWaterfall(result){
  const rows=[
