@@ -133,12 +133,14 @@ function loadAssetDefaults(asset){
  runNetSimulation();
 }
 function updateTaxControls(){
- const company=$('netTaxSubject').value==='company',savings=$('netIncomeTaxBase').value==='savings';
+ const company=$('netTaxSubject').value==='company',savings=$('netIncomeTaxBase').value==='savings',enabled=$('netIncomeTaxEnabled').checked;
  $('netIncomeTaxTitle').textContent=company?'Impuesto sobre Sociedades':'IRPF';
  $('netIrpfFields').classList.toggle('net-sim-hidden',company);
  $('netIncomeTaxRateWrap').classList.toggle('net-sim-hidden',!company&&!savings);
- if(company)$('netIncomeTaxHint').textContent='Se aplica el tipo introducido sobre el beneficio estimado al final. El tipo general es 25 % en 2026, pero existen tipos reducidos y regímenes especiales.';
- else $('netIncomeTaxHint').textContent=savings?'Se aplica la escala progresiva de la base del ahorro al beneficio estimado al final.':'Introduce tu tipo marginal aproximado de IRPF. No se puede deducir sin conocer el resto de tus rentas.';
+ $('netIncomeTaxRate').disabled=!enabled||(!company&&savings);
+ if(company)$('netIncomeTaxHint').textContent='Se aplica el porcentaje introducido sobre la ganancia imponible estimada. Se propone el 25 % como tipo general, pero puedes cambiarlo (por ejemplo, al 15 % si cumples los requisitos u otro tipo aplicable).';
+ else if(!enabled)$('netIncomeTaxHint').textContent='Activa la casilla IRPF para incluir este impuesto en el cálculo.';
+ else $('netIncomeTaxHint').textContent=savings?'En la base del ahorro no se utiliza un porcentaje manual: el simulador aplica automáticamente los tramos progresivos configurados. Si quieres introducir tu propio tipo, selecciona «Base general».':'El porcentaje que introduzcas se aplica a la ganancia imponible estimada. Al modificarlo, se recalculan el impuesto y el capital neto final. Es una aproximación: tu tipo marginal real depende del conjunto de tus rentas.';
  $('netAcquisitionTaxRate').disabled=!$('netAcquisitionTaxEnabled').checked||$('netAcquisitionTaxType').value==='none';
  $('netAjdRate').disabled=!$('netAjdEnabled').checked;
  $('netIbiAnnual').disabled=!$('netIbiEnabled').checked;
@@ -318,6 +320,8 @@ function init(){
  document.querySelectorAll('[data-net-mode]').forEach(b=>b.addEventListener('click',()=>renderMode(b.dataset.netMode)));
  $('netResetAdvanced').addEventListener('click',()=>{loadAssetDefaults(currentAsset);$('netEntryFixed').value='0';$('netAnnualFixed').value='0';$('netExitFixed').value='0';$('netInflation').value='2';$('netVacancy').value='0';runNetSimulation();});
  ['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherEntryTax','netOtherAnnualTax'].forEach(id=>$(id).addEventListener('input',()=>{updateTaxControls();runNetSimulation();}));
+ $('netIncomeTaxRate').addEventListener('change',()=>{updateTaxControls();runNetSimulation();});
+ $('netIncomeTaxRate').addEventListener('blur',()=>{updateTaxControls();runNetSimulation();});
  $('netTaxSubject').addEventListener('change',()=>{if($('netTaxSubject').value==='company')$('netIncomeTaxRate').value='25';else $('netIncomeTaxRate').value='';$('netIncomeTaxTitle').textContent=$('netTaxSubject').value==='company'?'Impuesto sobre Sociedades':'IRPF';updateTaxControls();runNetSimulation();});
  $('netAcquisitionTaxType').addEventListener('change',()=>{const el=$('netAcquisitionTaxType');if(el.value==='iva'&&el.dataset.ivaRate)$('netAcquisitionTaxRate').value=el.dataset.ivaRate;else if(el.value==='itp'&&el.dataset.itpRate)$('netAcquisitionTaxRate').value=el.dataset.itpRate;else $('netAcquisitionTaxRate').value='';updateTaxControls();runNetSimulation();});
  $('netIncomeTaxBase').addEventListener('change',()=>{updateTaxControls();runNetSimulation();});
