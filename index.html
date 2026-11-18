@@ -1303,7 +1303,84 @@ td,th{border-color:#e7eef8!important}
 }
 </style>
 
-<link rel="stylesheet" href="simulator-net.css">\n</head>
+
+<style id="inversora-mobile-menu-glass-preview">
+/* Preview: el panel lateral adopta el acabado glass de la cabecera. Solo móvil. */
+@media(max-width:800px){
+ #invSidebar{
+  background:rgba(234,241,251,.84)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(165%)!important;
+  backdrop-filter:blur(24px) saturate(165%)!important;
+  border-left:1px solid rgba(255,255,255,.72)!important;
+  border-right:0!important;
+  box-shadow:-18px 8px 48px rgba(28,53,91,.16),inset 1px 0 0 rgba(255,255,255,.48)!important;
+ }
+ #invSidebar .inv-sidebar-head{
+  background:rgba(234,241,251,.34)!important;
+  border-bottom:1px solid rgba(255,255,255,.68)!important;
+ }
+ #invSidebar .inv-sidebar-head:after{display:none!important}
+ #invSidebar .inv-sidebar-eyebrow{color:#52709e!important}
+ #invSidebar .inv-sidebar-head h2{font-family:'DM Sans',sans-serif!important;color:#203653!important}
+ #invSidebar .inv-sidebar-close{
+  background:rgba(255,255,255,.52)!important;
+  border:1px solid rgba(255,255,255,.82)!important;
+  color:#36577f!important;
+  box-shadow:0 3px 12px rgba(28,53,91,.07)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+  backdrop-filter:blur(12px)!important;
+ }
+ #invSidebar .inv-sidebar-group{
+  background:rgba(255,255,255,.27)!important;
+  border:1px solid rgba(255,255,255,.62)!important;
+  box-shadow:0 3px 14px rgba(28,53,91,.035)!important;
+  -webkit-backdrop-filter:blur(10px)!important;
+  backdrop-filter:blur(10px)!important;
+ }
+ #invSidebar .inv-sidebar-group-title{color:#7185a6!important}
+ #invSidebar .inv-sidebar-link{
+  font-family:'DM Sans',sans-serif!important;
+  font-size:14px!important;
+  font-weight:650!important;
+  letter-spacing:-.012em!important;
+  color:#475b76!important;
+  background:transparent!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+ }
+ #invSidebar .inv-sidebar-link:active{
+  background:rgba(255,255,255,.55)!important;
+  border-color:rgba(255,255,255,.8)!important;
+ }
+ #invSidebar .inv-sidebar-link.active{
+  background:rgba(255,255,255,.66)!important;
+  border-color:rgba(255,255,255,.88)!important;
+  color:#155eef!important;
+  box-shadow:0 3px 12px rgba(28,72,139,.08)!important;
+ }
+ #invSidebar .inv-sidebar-link[data-view="community"]{
+  background:rgba(255,255,255,.38)!important;
+  border-color:rgba(255,255,255,.7)!important;
+  color:#24528e!important;
+ }
+ #invSidebar .inv-sidebar-icon{
+  background:rgba(255,255,255,.56)!important;
+  border-color:rgba(255,255,255,.8)!important;
+ }
+ #invSidebar .inv-sidebar-link.active .inv-sidebar-icon{
+  background:#155eef!important;border-color:#155eef!important;color:#fff!important;
+ }
+ #invSidebar .inv-sidebar-foot{
+  background:rgba(234,241,251,.38)!important;
+  border-top:1px solid rgba(255,255,255,.7)!important;
+  color:#617894!important;
+ }
+}
+</style>
+
+<link rel="stylesheet" href="simulator-net.css">
+<link rel="stylesheet" href="inversora-card-interaction.css">
+</head>
 <body>
 <div class="app">
 <header class="inv-header">
@@ -1357,7 +1434,7 @@ td,th{border-color:#e7eef8!important}
 <button class="inv-sidebar-link" data-view="account" onclick="invMenuNavigate('account')"><span class="inv-sidebar-icon">◉</span><span>Mi perfil</span></button>
 </div>
 </div>
-<div class="inv-sidebar-foot"><span class="inv-sidebar-foot-mark">I</span><span>Tu espacio para entender tus inversiones.</span></div>
+<div class="inv-sidebar-foot"><div class="logo inv-sidebar-brand" aria-label="Inversora"><span class="brand-word">Invers<span>ora</span></span></div></div>
 </aside>
 
 <div id="invGlobalNotice" role="status" hidden style="position:fixed;z-index:1000;bottom:18px;left:50%;transform:translateX(-50%);max-width:min(92vw,620px);padding:13px 18px;background:#101828;color:white;border-radius:12px;box-shadow:0 8px 30px #0003"></div>
@@ -3420,6 +3497,161 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
   }
 }
 </style>
+
+<style id="inversora-mobile-menu-desktop-nav-match-v2">
+/* Menú lateral móvil: mismos criterios tipográficos y de navegación que la barra de escritorio, sin tarjetas individuales. */
+@media(max-width:800px){
+  /* Asegurar que el isotipo original azul se muestre también en la cabecera móvil. */
+  .inv-header .logo:before{
+    content:""!important;
+    display:grid!important;
+    visibility:visible!important;
+    opacity:1!important;
+    width:36px!important;height:36px!important;flex:0 0 36px!important;
+    background-image:url('/icon-192.svg?v=20261117')!important;
+    background-repeat:no-repeat!important;
+    background-position:center!important;
+    background-size:cover!important;
+    background-color:transparent!important;
+  }
+  #invSidebar .inv-sidebar-content{padding:17px 22px 24px!important}
+  #invSidebar .inv-sidebar-group{
+    display:block!important;
+    margin:0!important;padding:0!important;
+    border:0!important;border-radius:0!important;
+    background:transparent!important;box-shadow:none!important;
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  }
+  #invSidebar .inv-sidebar-group-title{display:none!important}
+  #invSidebar .inv-sidebar-link,
+  #invSidebar .inv-sidebar-link[data-view="community"]{
+    position:relative!important;
+    display:flex!important;align-items:center!important;
+    gap:10px!important;
+    width:100%!important;min-height:49px!important;
+    margin:0!important;padding:0 3px!important;
+    border:0!important;border-bottom:1px solid rgba(21,94,239,.16)!important;
+    border-radius:0!important;
+    background:transparent!important;background-image:none!important;
+    box-shadow:none!important;transform:none!important;
+    color:#344054!important;
+    font-family:'DM Sans',sans-serif!important;
+    font-size:15px!important;font-weight:600!important;
+    letter-spacing:.005em!important;line-height:1.2!important;
+    transition:color .18s ease,border-color .18s ease!important;
+    -webkit-tap-highlight-color:transparent!important;
+  }
+  #invSidebar .inv-sidebar-link:last-child{border-bottom:1px solid rgba(21,94,239,.16)!important}
+  #invSidebar .inv-sidebar-link:before{display:none!important}
+  #invSidebar .inv-sidebar-link:active{
+    background:transparent!important;border-color:rgba(21,94,239,.16)!important;
+    color:#155eef!important;transform:none!important;
+  }
+  #invSidebar .inv-sidebar-link.active{
+    background:transparent!important;border-color:#155eef!important;
+    color:#155eef!important;box-shadow:none!important;font-weight:700!important;
+  }
+  #invSidebar .inv-sidebar-link[data-view="community"]{
+    background:transparent!important;border-color:rgba(21,94,239,.16)!important;
+    color:#344054!important;font-weight:600!important;
+  }
+  #invSidebar .inv-sidebar-link[data-view="community"].active{
+    color:#155eef!important;border-color:#155eef!important;font-weight:700!important;
+  }
+  #invSidebar .inv-sidebar-link[data-view="community"]:after{display:none!important}
+  #invSidebar .inv-sidebar-icon,
+  #invSidebar .inv-sidebar-link.active .inv-sidebar-icon,
+  #invSidebar .inv-sidebar-link[data-view="community"] .inv-sidebar-icon{
+    display:grid!important;place-items:center!important;
+    width:21px!important;height:21px!important;flex:0 0 21px!important;
+    margin:0!important;padding:0!important;
+    border:0!important;border-radius:0!important;
+    background:transparent!important;box-shadow:none!important;
+    color:#526783!important;font-size:17px!important;
+  }
+  #invSidebar .inv-sidebar-link.active .inv-sidebar-icon{color:#155eef!important}
+  #invSidebar .inv-sidebar-link[data-view="community"] .inv-sidebar-icon{color:#526783!important}
+}
+</style>
+
+<style id="inversora-mobile-sidebar-matching-desktop-icons-v1">
+/* Los cinco accesos principales del menú móvil usan exactamente los símbolos de la navegación de escritorio. */
+@media(max-width:800px){
+ #invSidebar .inv-sidebar-link[data-view="home"] .inv-sidebar-icon,
+ #invSidebar .inv-sidebar-link[data-view="explore"] .inv-sidebar-icon,
+ #invSidebar .inv-sidebar-link[data-view="tools"] .inv-sidebar-icon,
+ #invSidebar .inv-sidebar-link[data-view="community"] .inv-sidebar-icon,
+ #invSidebar .inv-sidebar-link[data-view="favorites"] .inv-sidebar-icon{
+   font-size:0!important;line-height:1!important;
+ }
+ #invSidebar .inv-sidebar-link[data-view="home"] .inv-sidebar-icon:before{content:"⌂"}
+ #invSidebar .inv-sidebar-link[data-view="explore"] .inv-sidebar-icon:before{content:"⌕"}
+ #invSidebar .inv-sidebar-link[data-view="tools"] .inv-sidebar-icon:before{content:"⚙"}
+ #invSidebar .inv-sidebar-link[data-view="community"] .inv-sidebar-icon:before{content:"♧"}
+ #invSidebar .inv-sidebar-link[data-view="favorites"] .inv-sidebar-icon:before{content:"♡"}
+ #invSidebar .inv-sidebar-icon:before{
+   display:block!important;font-size:18px!important;line-height:1!important;
+   font-family:inherit!important;font-weight:500!important;
+   color:inherit!important;
+ }
+}
+</style>
+
+
+<style id="inversora-mobile-sidebar-brand-and-neutral-tools-v1">
+/* Ajustes de prueba sobre la versión estable: engranaje neutro y marca al pie del menú. */
+@media(max-width:800px){
+  #invSidebar .inv-sidebar-link[data-view="tools"] .inv-sidebar-icon:before,
+  #invSidebar .inv-sidebar-link[data-view="tools"].active .inv-sidebar-icon:before{
+    content:"⚙︎"!important;
+    color:#526783!important;
+    font-family:Arial,sans-serif!important;
+    font-size:18px!important;
+    font-weight:400!important;
+    line-height:1!important;
+  }
+  #invSidebar .inv-sidebar-foot{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    min-height:76px!important;
+    padding:14px 24px calc(14px + env(safe-area-inset-bottom,0px))!important;
+    background:rgba(234,241,251,.30)!important;
+    border-top:1px solid rgba(255,255,255,.7)!important;
+  }
+  /* El pie reutiliza el mismo marcado, tipografía e isotipo oficial de la cabecera. */
+  #invSidebar .inv-sidebar-brand{
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:9px!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:#10294e!important;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+    font-size:24px!important;
+    font-weight:850!important;
+    letter-spacing:-1px!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+  }
+  #invSidebar .inv-sidebar-brand:before{
+    content:""!important;
+    display:grid!important;
+    width:36px!important;height:36px!important;flex:0 0 36px!important;
+    background:transparent url('/icon-192.svg?v=20261117') center/cover no-repeat!important;
+    border-radius:12px!important;
+    box-shadow:0 4px 12px #155eef25!important;
+  }
+  #invSidebar .inv-sidebar-brand .brand-word{display:inline-flex!important;align-items:center!important;letter-spacing:-1px!important;color:#10294e!important}
+  #invSidebar .inv-sidebar-brand .brand-word>span{color:#155eef!important;margin-left:0!important}
+  /* Evita que el botón flotante de IA se superponga al logo mientras el menú está abierto. */
+  body:has(#invSidebar.is-open) #inversoraChatLaunch{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+}
+</style>
+
 <style id="net-sim-chart-touch-v1">#netInteractiveChart{display:block;width:100%;height:auto;overflow:visible;cursor:crosshair;touch-action:pan-y}#netChartTooltip{font-variant-numeric:tabular-nums}.net-sim-chart-table th,.net-sim-chart-table td{white-space:nowrap}</style>
 <script src="/simulator-engine.js"></script>
 <script src="/simulator-ui.js"></script>
