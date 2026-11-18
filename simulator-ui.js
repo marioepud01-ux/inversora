@@ -217,7 +217,7 @@ function updateTaxControls(){
  $('netIrpfFields').classList.remove('net-sim-hidden');
  $('netIncomeTaxBaseWrap').classList.toggle('net-sim-hidden',company);
  $('netIncomeTaxRateWrap').classList.remove('net-sim-hidden');
- $('netIncomeTaxRate').disabled=false;
+ $('netIncomeTaxRate').disabled=!enabled;
  $('netIncomeTaxRateLabel').textContent=company?'Tipo del Impuesto sobre Sociedades':'Tipo de IRPF personalizado';
  if(company)$('netIncomeTaxHint').textContent='Se aplica el porcentaje introducido sobre la ganancia imponible estimada. Se propone el 25 % como tipo general, pero puedes cambiarlo (por ejemplo, al 15 % si cumples los requisitos u otro tipo aplicable).';
  else if(!enabled)$('netIncomeTaxHint').textContent='Activa la casilla IRPF para incluir este impuesto en el cálculo.';
