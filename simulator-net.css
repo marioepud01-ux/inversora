@@ -132,3 +132,5 @@
 .net-sim-tax-card .net-sim-hint{font-size:10px;line-height:1.45;margin-top:8px}
 .net-sim-tax-card input:disabled,.net-sim-tax-card select:disabled{background:#f2f4f7;color:#98a2b3;cursor:not-allowed}
 @media(max-width:560px){.net-sim-tax-grid{grid-template-columns:1fr}.net-sim-tax-card-wide{grid-column:auto}.net-sim-tax-fields{grid-template-columns:1fr}.net-sim-tax-heading{flex-direction:column}.net-sim-tax-card-head{align-items:flex-start;flex-direction:column}.net-sim-tax-card-head .net-sim-select{width:100%}}
+
+.net-sim-subheading{margin:14px 0 4px;color:#101828;font-size:14px;letter-spacing:-.2px}
