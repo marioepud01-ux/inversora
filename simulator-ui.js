@@ -142,7 +142,7 @@ function renderAssetTaxAdvice(asset){
   lines.push(['Costes de entrada y salida','Comisión de compra/venta, cambio de divisa y diferencial entre precio comprador y vendedor, si tu intermediario los cobra.']);
   lines.push(['Costes periódicos','Custodia, administración o asesoramiento, si existen. En fondos y ETF revisa los gastos corrientes/TER: suelen estar descontados del valor liquidativo o del fondo; evita duplicarlos.']);
   lines.push(['Impuestos sobre rendimientos','Intereses y dividendos suelen tributar en la base del ahorro del IRPF para personas físicas residentes en España; el tratamiento concreto depende del producto y del titular.']);
-  lines.push(['Impuestos al reembolso o venta','La ganancia o pérdida puede tributar en IRPF (o IS si invierte una sociedad). En fondos, los traspasos que cumplan requisitos pueden diferir la tributación.']);
+  lines.push(['Impuestos al reembolso o venta','La ganancia o pérdida puede tributar en IRPF (o IS si invierte una sociedad). Algunos fondos de inversión no cotizados permiten diferir la tributación al traspasar si se cumplen los requisitos; este régimen no se aplica a los ETF cotizados.']);
  }else if(/empresas y negocios/.test(cat)||/(empresa|negocio|franquicia|startup|participaci[oó]n|pr[eé]stamo participativo)/.test(name+' '+sub)){
   lines.push(['Costes de entrada','Due diligence, asesoría legal/contable, valoración, notaría y gastos de constitución o adquisición, si corresponden.']);
   lines.push(['Costes periódicos','Personal, alquiler, suministros, seguros, mantenimiento, licencias, gestoría y financiación; introduce solo los costes atribuibles a tu inversión.']);
