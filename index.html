@@ -1498,7 +1498,7 @@ td,th{border-color:#e7eef8!important}
        <article class="net-sim-tax-card">
         <label class="net-sim-tax-check"><input type="checkbox" id="netIbiEnabled"><span><b>IBI</b><small>Impuesto municipal recurrente</small></span></label>
         <label class="net-sim-label" for="netIbiAnnual">Cuota anual real</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netIbiAnnual" type="number" min="0" step="0.01" value="0"><span class="net-sim-input-unit">€/año</span></div>
-        <p class="net-sim-hint">Introduce el recibo anual. No existe un porcentaje estatal único: depende del valor catastral y del municipio.</p>
+        <p class="net-sim-hint" id="netIbiHint">Introduce el recibo anual. Se reparte en 12 partes durante cada año; al terminar cada año se habrá contabilizado exactamente una cuota anual.</p>
        </article>
        <article class="net-sim-tax-card">
         <label class="net-sim-tax-check"><input type="checkbox" id="netAcquisitionTaxEnabled"><span><b>Impuesto de adquisición</b><small>IVA o ITP, según la operación</small></span></label>
