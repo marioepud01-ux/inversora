@@ -3,7 +3,7 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const engine=window.InversoraNetEngine;
-let fiscalConfig=null,selectedScenario='base',currentResult=null,currentAsset=null,compareResults=[];
+let fiscalConfig=null,selectedScenario='base',currentResult=null,currentAsset=null,compareResults=[],assetCategoryFilter='';
 const fmt=n=>Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:0,maximumFractionDigits:2});
 const euro=n=>Number(n||0).toLocaleString('es-ES',{style:'currency',currency:'EUR',minimumFractionDigits:0,maximumFractionDigits:0});
 const pct=n=>Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:2})+' %';
@@ -71,8 +71,12 @@ function assetDefaults(asset){
  return {entryFee:entry.value,annualFee:annual.value,exitFee:exit.value,known:entry.known||annual.known||exit.known};
 }
 function isRentalAsset(asset){return asset?.cat==='Inmobiliario'&&/(vivienda|local(es)? comerciales|plaza(s)? de garaje|trastero|oficina|nave(s)? industriales|edificio|inmueble(s)? tur[ií]stico)/i.test(asset.name||'')}
-function categoryOf(asset){return asset?.cat||'Otros'}
-function subtypeOf(asset){return asset?.catalogSubtype||(typeof subtypeFor==='function'?subtypeFor(asset):'')||asset?.subtype||'Otros'}
+function catalogMetaFor(asset){
+ const name=String(asset?.name||'').toLocaleLowerCase('es');
+ return typeof catalogTypeNames!=='undefined'?catalogTypeNames.find(x=>String(x.name).toLocaleLowerCase('es')===name)||null:null;
+}
+function categoryOf(asset){return catalogMetaFor(asset)?.cat||asset?.cat||'Otros'}
+function subtypeOf(asset){return catalogMetaFor(asset)?.sub||asset?.catalogSubtype||(typeof subtypeFor==='function'?subtypeFor(asset):'')||asset?.subtype||'Otros'}
 function populateAssetOptions(query='',open=false){
  const select=$('netAsset'),keep=select?.value||'Fondos indexados';if(!select)return;
  const q=query.trim().toLocaleLowerCase('es');
@@ -91,23 +95,22 @@ function renderAssetPicker(query='',open=false){
  const q=String(query||'').trim();
  input.setAttribute('aria-expanded',String(!!open));clear.hidden=!input.value;
  if(!open){panel.hidden=true;panel.innerHTML='';return;}
- const all=assetList().slice().sort((a,b)=>a.name.localeCompare(b.name,'es'));
- const matches=q?all.map(a=>({asset:a,score:assetSearchScore(a,q)})).filter(x=>x.score>=0).sort((a,b)=>b.score-a.score||a.asset.name.localeCompare(b.asset.name,'es')).map(x=>x.asset):all;
+ const all=assetList().slice().sort((a,b)=>categoryOf(a).localeCompare(categoryOf(b),'es')||subtypeOf(a).localeCompare(subtypeOf(b),'es')||a.name.localeCompare(b.name,'es'));
+ const scoped=assetCategoryFilter?all.filter(a=>categoryOf(a)===assetCategoryFilter):all;
+ const matches=q?scoped.map(a=>({asset:a,score:assetSearchScore(a,q)})).filter(x=>x.score>=0).sort((a,b)=>b.score-a.score||a.asset.name.localeCompare(b.asset.name,'es')).map(x=>x.asset):scoped;
  const categories=[...new Set(all.map(categoryOf))].sort((a,b)=>a.localeCompare(b,'es'));
- const shown=matches.slice(0,20);
- let content='';
- if(!q){
-  content+='<div class="net-asset-explore"><small>EXPLORAR POR CATEGORÍA</small><div>'+categories.map(c=>'<button type="button" data-net-asset-category="'+esc(c)+'">'+esc(c)+'</button>').join('')+'</div></div>';
-  content+='<div class="net-asset-results-label">ACTIVOS DEL CATÁLOGO <span>'+all.length+'</span></div>';
- }else content+='<div class="net-asset-results-label">RESULTADOS <span>'+matches.length+'</span></div>';
- let last='';
+ const shown=q?matches.slice(0,30):matches;
+ let content='<div class="net-asset-explore"><div class="net-asset-explore-heading"><small>EXPLORAR POR CATEGORÍA</small><span>'+all.length+' activos</span></div><div class="net-asset-category-filters"><button type="button" class="net-asset-category-chip'+(!assetCategoryFilter?' is-active':'')+'" data-net-asset-category="">Todas</button>'+categories.map(cat=>'<button type="button" class="net-asset-category-chip'+(assetCategoryFilter===cat?' is-active':'')+'" data-net-asset-category="'+esc(cat)+'">'+esc(cat)+'</button>').join('')+'</div></div>';
+ content+='<div class="net-asset-results-label">'+(q?'SUGERENCIAS':'CATÁLOGO CLASIFICADO')+' <span>'+matches.length+' resultados</span></div>';
+ let lastCat='',lastSub='';
  shown.forEach(a=>{
-  const cat=categoryOf(a);
-  if(cat!==last){content+='<div class="net-asset-group-label">'+esc(cat)+'</div>';last=cat;}
-  content+='<button type="button" class="net-asset-option'+(select.value===a.name?' is-selected':'')+'" role="option" aria-selected="'+(select.value===a.name)+'" data-net-asset-option="'+esc(a.name)+'"><span class="net-asset-option-mark">↗</span><span class="net-asset-option-copy"><b>'+esc(a.name)+'</b><small>'+esc(cat)+' · '+esc(subtypeOf(a))+'</small></span>'+(select.value===a.name?'<span class="net-asset-option-check">✓</span>':'<span class="net-asset-option-arrow">›</span>')+'</button>';
+  const cat=categoryOf(a),sub=subtypeOf(a);
+  if(cat!==lastCat){content+='<div class="net-asset-group-label">'+esc(cat)+'</div>';lastCat=cat;lastSub='';}
+  if(sub!==lastSub){content+='<div class="net-asset-subgroup-label">'+esc(sub)+'</div>';lastSub=sub;}
+  content+='<button type="button" class="net-asset-option'+(select.value===a.name?' is-selected':'')+'" role="option" aria-selected="'+(select.value===a.name)+'" data-net-asset-option="'+esc(a.name)+'"><span class="net-asset-option-mark">↗</span><span class="net-asset-option-copy"><b>'+esc(a.name)+'</b><small>'+esc(cat)+' · '+esc(sub)+'</small></span>'+(select.value===a.name?'<span class="net-asset-option-check">✓</span>':'<span class="net-asset-option-arrow">›</span>')+'</button>';
  });
- if(!matches.length)content+='<div class="net-asset-empty"><b>No encontramos ese activo</b><span>Prueba con un nombre relacionado, una categoría o un subtipo. También puedes usar una rentabilidad manual.</span></div>';
- if(matches.length>20)content+='<div class="net-asset-more">Mostrando 20 de '+matches.length+'. Añade otra palabra para afinar la búsqueda.</div>';
+ if(!matches.length)content+='<div class="net-asset-empty"><b>No encontramos ese activo</b><span>Prueba con otro nombre, una categoría o una subcategoría. También puedes usar una rentabilidad manual.</span></div>';
+ if(q&&matches.length>30)content+='<div class="net-asset-more">Mostrando 30 de '+matches.length+'. Añade otra palabra para afinar la búsqueda.</div>';
  content+='<button type="button" class="net-asset-manual-option" data-net-asset-manual="true">Usar rentabilidad manual</button>';
  panel.innerHTML=content;panel.hidden=false;
 }
@@ -167,51 +170,134 @@ function updateTaxFieldControls(){
  pairs.forEach(([check,fields])=>fields.forEach(id=>$(id).disabled=!$(check).checked));
 }
 function showAssetTaxAdvice(asset){
- const name=String(asset?.name||'').toLocaleLowerCase('es');
- const cat=String(asset?.cat||'').toLocaleLowerCase('es');
- const sub=String(asset?.catalogSubtype||asset?.subtype||'').toLocaleLowerCase('es');
+ const name=String(asset?.name||'Rentabilidad manual'),n=name.toLocaleLowerCase('es');
+ const cat=categoryOf(asset),sub=subtypeOf(asset);
  const lines=[];
- if(/inmobiliario/.test(cat)||/(vivienda|piso|local|garaje|trastero|plaza de aparcamiento|oficina|nave|terreno|suelo|edificio|inmueble)/.test(name)){
-  lines.push(['Costes de entrada','Notaría, registro, gestoría, tasación e intermediación, si los pagas.']);
-  lines.push(['Costes periódicos','IBI, comunidad, seguro, mantenimiento, reparaciones y periodos sin alquilar. En alquiler, gestión si la contratas.']);
-  lines.push(['Costes de salida','Agencia, cancelación de cargas o hipoteca y certificados, si proceden.']);
-  lines.push(['Impuestos al comprar','En segunda mano suele corresponder ITP; determinadas compras sujetas a IVA pueden llevar IVA y AJD. Depende del inmueble, vendedor, uso y comunidad autónoma.']);
-  lines.push(['Impuestos durante la tenencia','IBI. Si alquilas, IRPF por el rendimiento para persona física o IS para sociedad, según titularidad y régimen.']);
-  lines.push(['Impuestos al vender','IRPF por la ganancia patrimonial o IS si vende una sociedad. Puede existir plusvalía municipal (IIVTNU) en terrenos urbanos, según el caso.']);
- }else if(/mercados financieros/.test(cat)||/(fondo|acciones|etf|bono|obligaci[oó]n|letra del tesoro|dep[oó]sito|cuenta remunerada|plan de pensiones|divisa|materia prima)/.test(name+' '+sub)){
-  lines.push(['Costes de entrada y salida','Comisión de compra/venta, cambio de divisa y diferencial comprador-vendedor, si los cobra el intermediario.']);
-  lines.push(['Costes periódicos','Custodia, administración o asesoramiento, si existen. En fondos y ETF revisa los gastos corrientes/TER: suelen estar descontados del valor del producto; evita duplicarlos.']);
-  lines.push(['Impuestos sobre rendimientos','Intereses y dividendos suelen tributar en la base del ahorro del IRPF para personas físicas residentes en España; depende del producto y del titular.']);
-  lines.push(['Impuestos al reembolso o venta','La ganancia o pérdida puede tributar en IRPF o IS. Algunos fondos de inversión permiten diferir la tributación mediante traspasos si se cumplen los requisitos; no se aplica igual a los ETF cotizados.']);
- }else if(/empresas y negocios/.test(cat)||/(empresa|negocio|franquicia|startup|participaci[oó]n|pr[eé]stamo participativo)/.test(name+' '+sub)){
-  lines.push(['Costes de entrada','Due diligence, asesoría legal/contable, valoración, notaría y gastos de constitución o adquisición, si corresponden.']);
-  lines.push(['Costes periódicos','Personal, alquiler, suministros, seguros, mantenimiento, licencias, gestoría y financiación; incluye solo los atribuibles a tu inversión.']);
-  lines.push(['Costes de salida','Asesoría, intermediación, formalización y posibles costes de transmisión o cancelación.']);
-  lines.push(['Impuestos','IVA u otros tributos según actividad y operación. El beneficio puede tributar por IS o IRPF según la forma jurídica; vender participaciones o activos puede generar tributación adicional.']);
- }else if(/alternativos/.test(cat)||/(cripto|bitcoin|ethereum|oro|plata|arte|vino|reloj|coleccion|crowdfunding|crowdlending|pr[eé]stamo|token)/.test(name+' '+sub)){
-  lines.push(['Costes de entrada y salida','Comisiones de plataforma/intercambio, diferencial de compra-venta, red o intermediación, según el activo.']);
-  lines.push(['Costes periódicos','Custodia, almacenamiento, seguro o gestión, especialmente en activos físicos.']);
-  lines.push(['Impuestos','Dependen del activo y del rendimiento. Criptoactivos y ventas de bienes pueden generar ganancias/pérdidas en IRPF; intereses y rendimientos de plataformas tienen su propia calificación. IVA y otros impuestos pueden variar; el oro de inversión tiene un régimen específico.']);
+ const add=(heading,detail)=>lines.push([heading,detail]);
+ if(!asset){
+  add('Costes','Introduce manualmente comisiones, gastos de gestión, custodia, financiación o costes de operación que correspondan al producto que estás simulando.');
+  add('Fiscalidad','La rentabilidad manual no identifica el instrumento ni su tratamiento fiscal. Antes de añadir impuestos, determina si el rendimiento es interés, dividendo, alquiler, actividad económica o ganancia/pérdida patrimonial.');
+ }else if(cat==='Inmobiliario'&&sub==='Inmueble directo'){
+  const home=/viviend|habitaci[oó]n|inmueble turístico/.test(n),garage=/garaje|plaza/.test(n),storage=/trastero/.test(n),land=/suelo|finca|terreno/.test(n),bare=/nuda propiedad/.test(n),tourist=/turístic/.test(n),commercial=/local|oficina|nave|edificio/.test(n);
+  add('Compra y formalización','Segunda mano: normalmente ITP a cargo del comprador, con tipo y bonificaciones de la comunidad autónoma. Primera entrega de obra nueva: IVA (habitualmente 10 % en vivienda; el tipo puede ser distinto en locales, plazas no accesorias y otros inmuebles) y AJD cuando proceda. Añade notaría, Registro, tasación, gestoría y asesoramiento si los pagas. No sumes ITP e IVA como si fueran acumulativos en una compraventa ordinaria.');
+  if(home&&!tourist)add('Alquiler residencial','Si una persona física alquila la vivienda para uso residencial permanente, el alquiler está generalmente exento de IVA. El rendimiento neto se declara en IRPF como capital inmobiliario: pueden deducirse gastos necesarios y amortización conforme a sus reglas. La reducción sobre el rendimiento neto positivo solo procede si se cumplen los requisitos legales del contrato y del inmueble; no la presupongas en el simulador.');
+  else if(garage||storage)add('Alquiler de garaje o trastero','Si se arrienda de forma independiente, normalmente lleva IVA del 21 %. Si el garaje o trastero se alquila como anexo accesorio junto con la vivienda en el mismo contrato, puede quedar comprendido en la exención de IVA de la vivienda. Para una persona física, la renta suele ser capital inmobiliario en IRPF; no se aplica automáticamente la reducción propia del alquiler de vivienda habitual.');
+  else if(commercial)add('Alquiler de uso distinto de vivienda','El alquiler de un local u oficina está normalmente sujeto a IVA del 21 %. Para una persona física, la renta suele declararse como capital inmobiliario en IRPF y no disfruta de la reducción prevista para determinados alquileres de vivienda. Revisa retenciones y obligaciones formales según quién alquile y quién sea el inquilino.');
+  else if(tourist)add('Explotación turística','La tributación depende de los servicios prestados. El mero arrendamiento sin servicios propios de la industria hotelera puede estar exento de IVA; si se prestan servicios hoteleros, puede quedar sujeto al tipo reducido aplicable. Comprueba además normativa turística autonómica y municipal, licencias y posibles obligaciones de actividad.');
+  else if(land)add('Explotación del suelo','El tratamiento cambia según sea suelo urbano, urbanizable o rústico y según su destino. El arrendamiento de terrenos puede estar exento de IVA, pero hay excepciones (por ejemplo, aparcamiento, depósito o instalaciones empresariales). Si hay explotación agrícola/forestal, pueden existir reglas de actividad económica específicas.');
+  else if(bare)add('Nuda propiedad','La compra de la nuda propiedad no equivale a adquirir el pleno uso: normalmente el usufructuario conserva el derecho de uso o alquiler mientras dure el usufructo. No proyectes rentas de alquiler para el nudo propietario si no tiene derecho a percibirlas. La valoración y tributación de compra/venta dependen de la edad, duración y condiciones del usufructo.');
+  add('Gastos anuales y vacancia','Valora IBI, comunidad, seguro, mantenimiento, reparaciones, derramas, gestión, financiación e impagos. Para alquileres, los gastos deducibles en IRPF deben estar vinculados a la obtención de la renta y cumplir sus requisitos; los gastos de periodos no alquilados no se deducen automáticamente como si el inmueble hubiera estado arrendado todo el año.');
+  add('Venta y fiscalidad de salida','La persona física calcula la ganancia o pérdida patrimonial en IRPF (base del ahorro), incorporando valores y gastos fiscalmente computables. En terrenos urbanos puede devengarse la plusvalía municipal (IIVTNU), según el incremento de valor y la normativa local. Una sociedad integra el resultado en el Impuesto sobre Sociedades. Incluye agencia, cancelación registral de hipoteca y certificados si corresponden.');
+ }else if(cat==='Inmobiliario'&&sub==='REITs y SOCIMI'){
+  add('Costes','Comisión de compra/venta, custodia, cambio de divisa y diferencial de mercado. Revisa los gastos propios del vehículo; no añadas de nuevo gastos inmobiliarios internos que ya estén soportados por la SOCIMI/REIT y reflejados en su cotización o resultados.');
+  add('Dividendos','Para una persona física residente, los dividendos distribuidos suelen tributar en la base del ahorro del IRPF. Si inviertes mediante sociedad, se contabilizan y tributan en IS, con posibles reglas de exención/limitación según participación y requisitos; no presupongas exención.');
+  add('Venta','La ganancia o pérdida por vender las acciones/participaciones cotizadas suele integrarse en la base del ahorro del IRPF para personas físicas. No es una venta directa del inmueble: normalmente no se liquida ITP inmobiliario ni plusvalía municipal por el accionista.');
+  add('Punto clave','La rentabilidad depende de dividendos, evolución bursátil, deuda, ocupación y valoración de los inmuebles del vehículo. Los impuestos soportados por la SOCIMI/REIT no son un coste fiscal directo idéntico al de comprar un inmueble a título personal.');
+ }else if(cat==='Inmobiliario'&&sub==='Fondos inmobiliarios'){
+  add('Costes','Comisión de gestión y depositaría del fondo, gastos corrientes y posibles comisiones de suscripción/reembolso. En fondos cotizados, añade intermediación, custodia y diferencial. Los gastos corrientes suelen estar descontados del valor liquidativo o cotización: evita duplicarlos.');
+  add('Fiscalidad del reembolso','En fondos de inversión, la ganancia o pérdida se calcula al reembolsar y, para personas físicas, normalmente tributa en la base del ahorro. Algunos fondos elegibles permiten traspasos con diferimiento fiscal si se cumplen los requisitos; los ETF cotizados no disfrutan, con carácter general, de ese régimen.');
+  add('Distribuciones','Si el vehículo reparte rentas, revisa su naturaleza y el tratamiento fiscal indicado en el folleto y documentación fiscal. No confundas distribución con rentabilidad total ni supongas que todos los fondos inmobiliarios reparten dividendos.');
+ }else if(cat==='Inmobiliario'&&sub==='Crowdfunding inmobiliario'){
+  add('Costes','Comisión de plataforma, estructuración, gestión del proyecto, administración, éxito y posibles costes de salida. Comprueba si se descuentan del importe invertido o de los cobros para no contarlos dos veces.');
+  add('Fiscalidad: identifica el contrato','No adquieres necesariamente un inmueble. Si financias mediante préstamo, los intereses suelen ser rendimientos del capital mobiliario para una persona física. Si recibes participaciones o beneficios de una sociedad/proyecto, el tratamiento depende del instrumento y puede ser dividendo o ganancia patrimonial. No apliques automáticamente las reglas fiscales del alquiler residencial.');
+  add('Riesgo y salida','Valora impago, retraso, subordinación, garantías, iliquidez y pérdida parcial o total. La pérdida fiscal por crédito impagado no se deduce automáticamente al primer retraso: depende de los requisitos legales y de la situación del crédito.');
+ }else if(cat==='Mercados financieros'){
+  if(/cuentas corrientes|efectivo|cuentas remuneradas|depósitos|divisa/.test(n)){
+   add('Rendimiento','Los intereses de cuentas y depósitos de una persona física suelen ser rendimientos del capital mobiliario integrados en la base del ahorro del IRPF. En cuentas en divisa, separa el interés de la posible ganancia o pérdida por variación del tipo de cambio.');
+   add('Costes','Comisiones de mantenimiento, transferencias, retirada, cambio de divisa y posibles penalizaciones por cancelación anticipada. Comprueba si el tipo anunciado es bruto y si exige saldo máximo, permanencia o vinculación.');
+   add('Cobertura','Comprueba qué entidad recibe el depósito y si está cubierta por el Fondo de Garantía de Depósitos aplicable, con sus límites y condiciones. Un fondo monetario o producto de inversión no es un depósito garantizado.');
+  }else if(/letras del tesoro|bonos del estado|bonos ligados|bonos corporativos|bonos convertibles|obligaciones|pagarés|participaciones preferentes/.test(n)||sub==='Renta fija'){
+   add('Cupones e intereses','Los cupones y rendimientos implícitos de letras, bonos y obligaciones suelen ser rendimientos del capital mobiliario en la base del ahorro del IRPF para personas físicas. En deuda emitida con descuento, el rendimiento puede materializarse al vencimiento; no lo trates como un dividendo.');
+   add('Compra, venta y vencimiento','Añade comisión de intermediación, custodia, diferencial y, si procede, gastos de cambio de divisa. Si vendes antes del vencimiento, el precio puede generar una ganancia o pérdida adicional y puedes recuperar menos del nominal. Revisa también el riesgo de crédito y la subordinación.');
+   add('Sociedad','En una sociedad, los intereses y resultados se contabilizan y se integran en la base imponible del IS conforme a las reglas contables y fiscales aplicables. La retención soportada, si existe, es un pago a cuenta, no el impuesto definitivo.');
+  }else if(/fondos de inversión/.test(sub)||/fondos indexados|fondos de gestión|fondos mixtos|fondos de retorno|fondos de fondos/.test(n)){
+   add('Costes del fondo','Revisa gastos corrientes/TER, gestión, depositaría, suscripción y reembolso. Los gastos corrientes se descuentan normalmente del valor liquidativo: no los introduzcas otra vez si tu rentabilidad ya es neta de ellos.');
+   add('Reembolso y traspasos','Para una persona física, la ganancia o pérdida del reembolso suele ir a la base del ahorro del IRPF. Los traspasos entre fondos que cumplen los requisitos pueden diferir la tributación hasta el reembolso definitivo; no es una exención y no se aplica a todos los vehículos.');
+   add('Distribuciones','Si el fondo reparte dividendos o intereses, tributan cuando se perciben conforme a su naturaleza. En fondos de acumulación, la tributación personal suele producirse al reembolso, no por cada rendimiento reinvertido.');
+  }else if(/etf|etc/.test(n)||sub==='ETF y ETC'){
+   add('Costes','Comisión de compraventa, custodia, diferencial, cambio de divisa y gastos corrientes del ETF/ETC. El TER suele estar incorporado en el valor del producto; no lo dupliques si usas una rentabilidad histórica ya neta.');
+   add('Dividendos y venta','Las distribuciones tributan cuando se perciben y la venta genera una ganancia o pérdida patrimonial en la base del ahorro del IRPF para personas físicas. Los ETF cotizados no disfrutan, con carácter general, del diferimiento por traspaso entre fondos.');
+   add('Fiscalidad del ETC','Un ETC no siempre es un fondo: puede ser un título de deuda garantizado o estar respaldado por activos. Comprueba su estructura jurídica y fiscal en el folleto; no asumas que todo ETC tiene el mismo tratamiento que un ETF UCITS.');
+  }else if(/acciones/.test(n)||sub==='Renta variable'){
+   add('Dividendos','Los dividendos cobrados por una persona física suelen integrarse en la base del ahorro del IRPF. Si proceden del extranjero, puede haber retención en origen y, si se cumplen los requisitos, deducción por doble imposición internacional dentro de sus límites.');
+   add('Venta','La diferencia entre valor de venta y adquisición, ajustada por gastos fiscalmente computables, genera ganancia o pérdida patrimonial en la base del ahorro del IRPF. Conserva fechas, importes y comisiones de cada operación.');
+   add('Costes','Intermediación, custodia, cambio de divisa y diferencial. En acciones extranjeras, revisa también posibles costes de conversión y retenciones sobre dividendos.');
+  }else if(sub==='Derivados'){
+   add('Costes y garantías','Comisión, spread, financiación overnight, renovación/vencimiento, primas, cánones de mercado y coste de garantías. En productos apalancados, una pérdida puede ser muy superior a la prima inicial según el instrumento.');
+   add('Fiscalidad','El resultado depende de si se trata de liquidación, transmisión, ejercicio o vencimiento y de si operas como inversor particular o actividad económica. No apliques una retención o tipo fijo a todas las operaciones; documenta cada liquidación y sus gastos.');
+  }else if(sub==='Previsión y seguros de ahorro'){
+   add('Planes de pensiones y PPA','Las aportaciones pueden reducir la base imponible general dentro de los límites y requisitos vigentes. Las prestaciones tributan, en general, como rendimientos del trabajo cuando se cobran. No confundas la reducción de aportaciones con una exención.');
+   add('PIAS, SIALP y seguros','PIAS y SIALP tienen beneficios fiscales condicionados a límites, plazo, forma de cobro y demás requisitos legales. En seguros de ahorro y unit linked, la tributación depende de quién sea tomador/beneficiario, contingencia y estructura del contrato; consulta condiciones antes de simular.');
+   add('Costes','Comisión de gestión, administración, aseguramiento, riesgo biométrico, rescate o cambio de cartera. Revisa penalizaciones y valor de rescate: puede ser inferior a las primas aportadas.');
+  }else{
+   add('Costes','Comisión de compra/venta, custodia, administración, asesoramiento, cambio de divisa y diferencial, según intermediario y producto. En carteras gestionadas, suma solo los costes externos no incluidos en la comisión publicada.');
+   add('Fiscalidad','El tratamiento depende del instrumento subyacente y de si genera intereses, dividendos, ganancias patrimoniales o prestaciones de seguro. La etiqueta comercial del producto no determina por sí sola el impuesto.');
+  }
+ }else if(cat==='Empresas y negocios'){
+  if(/startup|capital riesgo|venture|semilla/.test(n)||sub==='Venture Capital'){
+   add('Entrada y mantenimiento','Due diligence, asesoría legal/fiscal, valoración, comisión de plataforma o fondo, gastos de constitución y futuras rondas. Ten en cuenta la dilución: una ampliación puede reducir tu porcentaje aunque no vendas.');
+   add('Fiscalidad de la persona inversora','Dividendos y plusvalías por venta de participaciones suelen integrarse en la base del ahorro del IRPF. Puede existir deducción por inversión en empresas nuevas si se cumplen estrictamente los requisitos estatales/autonómicos; no la des por supuesta.');
+   add('Sociedad inversora y salida','Una sociedad integra el resultado en IS; la posible exención por dividendos/plusvalías de participaciones exige requisitos específicos. La venta puede ser ilíquida y generar gastos legales y de intermediación.');
+  }else if(/webs|afiliación|software|saas|aplicaciones|plataformas|contenido|tienda online/.test(n)||sub==='Negocios digitales'){
+   add('Costes operativos','Dominio, hosting, software, publicidad, pasarelas de pago, comisiones de marketplace, contenido, mantenimiento, protección de datos, licencias y proveedores. Separa inversión inicial de gastos recurrentes.');
+   add('Fiscalidad si lo explotas tú','Si la actividad la realiza una persona física por cuenta propia, el beneficio neto puede tributar como actividad económica en IRPF y generar obligaciones de IVA, pagos fraccionados y cotización, según el caso. No equivale a una inversión pasiva.');
+   add('Fiscalidad mediante sociedad','La sociedad tributa por IS sobre su resultado; el dinero que después se distribuya al socio puede tributar además como dividendo en su IRPF. Distingue caja del negocio, beneficio contable y dinero neto disponible para el propietario.');
+   add('Venta del negocio','La transmisión de activos, unidad económica o participaciones puede tener tratamientos distintos en IVA/ITP e IRPF/IS. Valora asesoría, contratos, garantías, intermediación y posibles ajustes por contingencias.');
+  }else if(/franquicia|máquina expendedora|vending/.test(n)||sub==='Franquicias y negocios físicos'){
+   add('Costes','Canon de entrada, royalties, marketing obligatorio, alquiler, maquinaria, personal, suministros, seguros, licencias, mantenimiento y circulante. Comprueba mínimos garantizados y penalizaciones de salida.');
+   add('Fiscalidad operativa','Los ingresos y gastos forman parte de una actividad económica. Persona física: IRPF de actividades económicas; sociedad: IS. El IVA depende de la actividad y de las operaciones; el canon de franquicia puede tener su propio tratamiento.');
+   add('Punto clave','Modela el beneficio después de personal, alquiler, amortización, financiación e impuestos, no solo la facturación o el margen bruto. Incluye el tiempo de gestión y posibles inversiones de reposición.');
+  }else if(/préstamo participativo|préstamos privados|deuda corporativa|crowdlending|factoring|confirming/.test(n)||sub==='Deuda privada'){
+   add('Rendimientos','Los intereses percibidos por una persona física suelen ser rendimientos del capital mobiliario en la base del ahorro. En préstamos participativos, la remuneración fija/variable y la posición del inversor dependen del contrato.');
+   add('Costes y riesgo','Comisión de originación, plataforma, administración, cobro y salida. Analiza garantías, prelación, solvencia, concentración, vencimiento y posibilidad de impago; el interés anunciado no equivale a rentabilidad neta.');
+   add('Impagos','No conviertas automáticamente un préstamo vencido en una pérdida fiscal deducible. La imputación de pérdidas por créditos requiere que se cumplan las circunstancias y plazos previstos en la normativa.');
+  }else{
+   add('Adquisición y due diligence','Valora revisión legal, contable, laboral, fiscal y financiera; contratos, licencias, deudas, litigios, inventario, valoración y gastos de formalización. En compra de participaciones y compra de activos, los impuestos indirectos pueden ser distintos.');
+   add('Explotación','Personal, alquiler, suministros, seguros, mantenimiento, licencias, gestoría, marketing, tecnología y financiación. Incluye circulante e inversiones de reposición; no confundas caja con beneficio.');
+   add('Fiscalidad','Persona física que desarrolla la actividad: IRPF de actividades económicas y, en su caso, IVA. Sociedad: IS; si distribuye beneficios al socio, puede haber tributación adicional en IRPF. La transmisión del negocio exige analizar si se venden activos, unidad económica o participaciones.');
+  }
+ }else if(cat==='Alternativos'){
+  if(/cripto|bitcoin|ethereum|stablecoin|staking|defi|minería|monedas virtuales/.test(n)||sub==='Criptoactivos'){
+   add('Compra, venta y permutas','Para una persona física que invierte fuera de una actividad económica, vender cripto por euros o permutar una cripto por otra puede generar ganancia o pérdida patrimonial en la base del ahorro del IRPF. Calcula en euros y conserva fecha, valor y comisiones de cada operación.');
+   add('Identificación y rendimientos','La AEAT aplica criterio FIFO para unidades homogéneas del mismo criptoactivo. Staking, lending, minería y recompensas no tienen necesariamente la misma calificación que una compraventa: depende de cómo se obtengan y de la actividad realizada.');
+   add('Costes y obligaciones','Comisiones de exchange, spread, red/gas, custodia y retirada. Guarda historial de operaciones y wallets. Pueden existir obligaciones informativas por activos situados en el extranjero si se cumplen los supuestos y umbrales legales.');
+  }else if(/oro|plata|platino|paladio|metales preciosos/.test(n)||sub==='Metales preciosos'){
+   add('Compra y custodia','Spread del distribuidor, prima sobre spot, fabricación, transporte, caja de seguridad, custodia y seguro. Comprueba pureza, autenticidad, recompra y si el producto es oro de inversión a efectos legales.');
+   add('IVA y venta','El oro de inversión que cumple la definición legal tiene un régimen específico de exención de IVA; joyería, monedas de colección y otros metales no reciben automáticamente el mismo tratamiento. La venta por una persona física puede generar ganancia o pérdida patrimonial en IRPF.');
+   add('Vehículo financiero','Si inviertes mediante ETF, ETC, certificado o derivado, la fiscalidad y los costes corresponden al instrumento, no a la tenencia directa del metal. Revisa folleto y estructura jurídica.');
+  }else if(/arte|pintura|escultura|fotografía|reloj|vino|whisky|coche clásico|moneda|sello|carta|joya|antigüedad|coleccion/.test(n)||sub==='Arte'||sub==='Coleccionables'){
+   add('Compra, conservación y venta','Prima de subasta, comisión del comprador/vendedor, autenticación, tasación, restauración, almacenamiento, seguro, transporte y costes de plataforma. La iliquidez y el diferencial entre precio de compra y reventa pueden ser elevados.');
+   add('Fiscalidad','La venta ocasional por una persona física puede generar ganancia o pérdida patrimonial en IRPF; si existe actividad habitual de compraventa, puede calificarse como actividad económica y tener IVA/IRPF o IS. El IVA de objetos de arte y antigüedades puede depender del régimen y de quién vende.');
+   add('Punto clave','No extrapoles una tasación o precio de subasta a un valor de venta garantizado. Conserva factura, procedencia, gastos y documentación de autenticidad.');
+  }else if(/préstamo|deuda privada|crowdlending|factoring|confirming/.test(n)||sub==='Deuda privada'){
+   add('Intereses','Para persona física, los intereses suelen ser rendimientos del capital mobiliario en la base del ahorro. La remuneración variable y los descuentos deben revisarse según el contrato.');
+   add('Costes e impago','Comisiones de plataforma, originación, gestión y cobro. Un impago no permite deducir automáticamente todo el principal: la pérdida fiscal depende de las reglas aplicables a créditos vencidos y reclamaciones.');
+  }else if(/materias primas|petróleo|gas natural|cobre|agrícolas/.test(n)||sub==='Materias primas'){
+   add('Instrumento y costes','Distingue materia prima física, futuro, ETF, ETC o fondo. Almacenamiento, seguro y transporte solo aplican a tenencia física; los vehículos financieros pueden tener TER, roll yield, spread, garantías y financiación.');
+   add('Fiscalidad','La tributación deriva de la estructura concreta: un fondo, ETF/ETC, futuro o compraventa física no se declaran necesariamente igual. Revisa folleto y contrato antes de asignar IRPF, IVA o IS.');
+  }else{
+   add('Costes','Comisión de plataforma, intermediación, custodia, almacenamiento, seguro, mantenimiento, diferencial y gastos de salida, según el activo.');
+   add('Fiscalidad','Identifica si obtienes intereses, dividendos, alquileres, rendimientos de actividad o una ganancia patrimonial. El tratamiento cambia según instrumento, titular y forma de explotación; no hay un tipo fiscal único para “alternativos”.');
+  }
  }else{
-  lines.push(['Costes','Comprueba comisiones de entrada/salida, mantenimiento, custodia, gestión y financiación, si existen.']);
-  lines.push(['Impuestos','Dependen de la naturaleza del rendimiento, titular y operación. Puede corresponder IRPF o IS y, en su caso, IVA/ITP u otros tributos.']);
+  add('Costes','Revisa comisión de entrada y salida, mantenimiento, custodia, gestión, financiación y diferencial, según las condiciones del producto.');
+  add('Fiscalidad','El impuesto depende del instrumento jurídico, del tipo de rendimiento, de tu residencia fiscal y de si inviertes como persona física o sociedad. La categoría comercial por sí sola no permite fijar un tratamiento único.');
  }
  const escapeHtml=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
- const title=asset?.name||'Rentabilidad manual';
  let modal=$('netAssetAdviceModal');
  if(!modal){
   modal=document.createElement('div');modal.id='netAssetAdviceModal';modal.className='net-asset-advice-overlay';modal.hidden=true;
-  modal.innerHTML='<section class="net-asset-advice-dialog" role="dialog" aria-modal="true" aria-labelledby="netAssetAdviceTitle"><button type="button" class="net-asset-advice-close" aria-label="Cerrar aviso">×</button><div class="net-asset-advice-kicker">ANTES DE SIMULAR</div><h2 id="netAssetAdviceTitle"></h2><p class="net-asset-advice-intro">Estos son los conceptos que podrías valorar para este tipo de inversión. No se añade ni se activa ningún coste o impuesto: tú decides cuáles incluir en el simulador.</p><div class="net-advice-list"></div><p class="net-asset-advice-footnote">Orientación general para España, no asesoramiento fiscal. La aplicación concreta depende de la comunidad autónoma, municipio, residencia, titularidad, fecha y características de la operación. No dupliques costes ya descontados en la rentabilidad o en el producto.</p><button type="button" class="net-asset-advice-done">Entendido</button></section>';
+  modal.innerHTML='<section class="net-asset-advice-dialog" role="dialog" aria-modal="true" aria-labelledby="netAssetAdviceTitle"><button type="button" class="net-asset-advice-close" aria-label="Cerrar aviso">×</button><div class="net-asset-advice-kicker">GUÍA FISCAL Y DE COSTES · ESPAÑA</div><h2 id="netAssetAdviceTitle"></h2><p class="net-asset-advice-intro">Conceptos concretos que conviene revisar antes de simular este activo. Son orientaciones: no se activa ni se incorpora ningún importe automáticamente.</p><div class="net-advice-list"></div><p class="net-asset-advice-footnote">La aplicación final depende de tu residencia fiscal, titularidad, contrato, fecha de adquisición, comunidad autónoma y municipio. En sociedades pueden existir reglas contables y fiscales distintas. Comprueba la normativa vigente y la documentación del producto antes de presentar una declaración. No dupliques gastos ya descontados de la rentabilidad.</p><button type="button" class="net-asset-advice-done">Entendido</button></section>';
   document.body.appendChild(modal);
   const close=()=>{
-  modal.hidden=true;document.body.classList.remove('net-asset-advice-open');
-  const search=$('netAssetSearch'),selected=$('netAsset')?.value;
-  if(search&&selected){search.value=selected==='__manual__'?'Rentabilidad manual':selected;renderAssetPicker('',false);search.focus({preventScroll:true});search.select();}
- };
+   modal.hidden=true;document.body.classList.remove('net-asset-advice-open');
+   const search=$('netAssetSearch'),selected=$('netAsset')?.value;
+   if(search&&selected){search.value=selected==='__manual__'?'Rentabilidad manual':selected;renderAssetPicker('',false);search.focus({preventScroll:true});search.select();}
+  };
   modal.addEventListener('click',e=>{if(e.target===modal||e.target.closest('.net-asset-advice-close,.net-asset-advice-done'))close();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden)close();});
  }
- modal.querySelector('#netAssetAdviceTitle').textContent='Costes e impuestos que puedes valorar · '+title;
+ modal.querySelector('#netAssetAdviceTitle').textContent='Costes e impuestos · '+name;
  modal.querySelector('.net-advice-list').innerHTML=lines.map(([heading,detail])=>'<div><b>'+escapeHtml(heading)+'</b><span>'+escapeHtml(detail)+'</span></div>').join('');
  modal.hidden=false;document.body.classList.add('net-asset-advice-open');
  modal.querySelector('.net-asset-advice-close').focus({preventScroll:true});
@@ -453,7 +539,7 @@ function init(){
  // Los desplegables avanzados siempre comienzan cerrados, incluso si el navegador restaura su estado anterior.
  document.querySelectorAll('#netAdvanced, #netAdvanced > details').forEach(section=>{section.open=false;});
  fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();if(location.hash.includes('net-sim=')){loadShared();}else{$('netAsset').value=findAsset('Fondos indexados')?'Fondos indexados':(assetList()[0]?.name||'__manual__');loadAssetDefaults(findAsset($('netAsset').value));}$('netAssetSearch').value=$('netAsset').value==='__manual__'?'Rentabilidad manual':$('netAsset').value;renderAssetPicker('',false);setCompareOptions();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
- $('netAssetSearch').addEventListener('input',e=>populateAssetOptions(e.target.value,true));
+ $('netAssetSearch').addEventListener('input',e=>{assetCategoryFilter='';populateAssetOptions(e.target.value,true);});
  $('netAssetSearch').addEventListener('focus',()=>{
   const input=$('netAssetSearch'),selected=$('netAsset').value;
   if(input.value===selected||(selected==='__manual__'&&input.value==='Rentabilidad manual')){
@@ -462,7 +548,7 @@ function init(){
   renderAssetPicker(input.value,true);
  });
  $('netAssetSearch').addEventListener('keydown',e=>{if(e.key==='Escape'){renderAssetPicker($('netAssetSearch').value,false);$('netAssetSearch').blur();}else if(e.key==='Enter'){const first=$('netAssetResults')?.querySelector('[data-net-asset-option]');if(first){e.preventDefault();chooseNetAsset(first.dataset.netAssetOption);}}});
- $('netAssetResults').addEventListener('click',e=>{const option=e.target.closest('[data-net-asset-option]'),category=e.target.closest('[data-net-asset-category]'),manual=e.target.closest('[data-net-asset-manual]');if(option)chooseNetAsset(option.dataset.netAssetOption);else if(category){$('netAssetSearch').value=category.dataset.netAssetCategory;populateAssetOptions(category.dataset.netAssetCategory,true);}else if(manual)chooseNetAsset('__manual__');});
+ $('netAssetResults').addEventListener('click',e=>{const option=e.target.closest('[data-net-asset-option]'),category=e.target.closest('[data-net-asset-category]'),manual=e.target.closest('[data-net-asset-manual]');if(option)chooseNetAsset(option.dataset.netAssetOption);else if(category){assetCategoryFilter=category.dataset.netAssetCategory||'';$('netAssetSearch').value='';populateAssetOptions('',true);}else if(manual)chooseNetAsset('__manual__');});
  $('netAssetSearchClear').addEventListener('click',()=>{$('netAssetSearch').value='';populateAssetOptions('',true);$('netAssetSearch').focus();});
  document.addEventListener('click',e=>{if(!$('netAssetPicker')?.contains(e.target))renderAssetPicker($('netAssetSearch')?.value||'',false);});
  $('netAsset').addEventListener('change',()=>{loadAssetDefaults(findAsset($('netAsset').value));$('netAssetSearch').value=$('netAsset').value==='__manual__'?'Rentabilidad manual':$('netAsset').value;renderAssetPicker('',false);});
