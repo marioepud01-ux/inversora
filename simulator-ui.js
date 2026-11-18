@@ -120,7 +120,7 @@ function loadAssetDefaults(asset){
  $('netAcquisitionTaxRate').value=$('netAcquisitionTaxType').value==='iva'&&ivaMatch?ivaMatch[1].replace(',','.'):($('netAcquisitionTaxType').value==='itp'&&itpMatch?itpMatch[1].replace(',','.'):'');
  $('netAjdEnabled').checked=hasAjd;$('netAjdRate').value=ajdMatch?ajdMatch[1].replace(',','.'):'';
  $('netMunicipalEnabled').checked=hasPlusvalia;$('netMunicipalExitTax').value='0';
- $('netOtherTaxEnabled').checked=false;$('netOtherEntryTax').value='0';$('netOtherAnnualTax').value='0';
+ $('netOtherTaxEnabled').checked=false;$('netOtherTaxName').value='';$('netOtherEntryTax').value='0';$('netOtherAnnualTax').value='0';
  $('netTaxProfileHint').textContent=asset
   ?'Detección desde la ficha: '+[hasIrpf?'IRPF':null,hasIs?'Impuesto sobre Sociedades (alternativa según titular)':null,hasIbi?'IBI':null,hasIva?'IVA':null,hasItp?'ITP':null,hasAjd?'AJD':null,hasPlusvalia?'plusvalía municipal':null].filter(Boolean).join(' · ')||'La ficha no identifica impuestos concretos. Revisa los aplicables a tu caso.'
   :'Sin activo de catálogo: configura manualmente los impuestos que correspondan.';
@@ -143,6 +143,7 @@ function updateTaxControls(){
  $('netAjdRate').disabled=!$('netAjdEnabled').checked;
  $('netIbiAnnual').disabled=!$('netIbiEnabled').checked;
  $('netMunicipalExitTax').disabled=!$('netMunicipalEnabled').checked;
+ $('netOtherTaxName').disabled=!$('netOtherTaxEnabled').checked;
  $('netOtherEntryTax').disabled=!$('netOtherTaxEnabled').checked;
  $('netOtherAnnualTax').disabled=!$('netOtherTaxEnabled').checked;
 }
@@ -271,7 +272,7 @@ function setCompareOptions(){
  $('netCompare1').value=first;$('netCompare2').value=second;
 }
 function shareLink(){
- const state={asset:$('netAsset').value,capital:$('netCapital').value,monthly:$('netMonthly').value,years:$('netYears').value,scenario:selectedScenario,entry:$('netEntryFee').value,entryFixed:$('netEntryFixed').value,annual:$('netAnnualFee').value,annualFixed:$('netAnnualFixed').value,exit:$('netExitFee').value,exitFixed:$('netExitFixed').value,inflation:$('netInflation').value,vacancy:$('netVacancy').value,manual:$('netManualRate').value,taxSettings:Object.fromEntries(['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherEntryTax','netOtherAnnualTax'].map(id=>{const el=$(id);return [id,el.type==='checkbox'?el.checked:el.value]}))};
+ const state={asset:$('netAsset').value,capital:$('netCapital').value,monthly:$('netMonthly').value,years:$('netYears').value,scenario:selectedScenario,entry:$('netEntryFee').value,entryFixed:$('netEntryFixed').value,annual:$('netAnnualFee').value,annualFixed:$('netAnnualFixed').value,exit:$('netExitFee').value,exitFixed:$('netExitFixed').value,inflation:$('netInflation').value,vacancy:$('netVacancy').value,manual:$('netManualRate').value,taxSettings:Object.fromEntries(['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherTaxName','netOtherEntryTax','netOtherAnnualTax'].map(id=>{const el=$(id);return [id,el.type==='checkbox'?el.checked:el.value]}))};
  const url=location.href.split('#')[0]+'#net-sim='+encodeURIComponent(JSON.stringify(state));
  if(navigator.share){navigator.share({title:'Mi simulación en Inversora',url}).catch(()=>{});}
  else if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>toast('Enlace copiado. Reproduce los mismos supuestos.')).catch(()=>prompt('Copia este enlace',url));}
