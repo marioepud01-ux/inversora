@@ -1451,31 +1451,31 @@ td,th{border-color:#e7eef8!important}
     <select class="net-sim-select" id="netAsset" aria-label="Selecciona un activo"><option value="__manual__">Rentabilidad manual</option></select>
     <p class="net-sim-hint" id="netAssetHint">Elige un activo para empezar o introduce una rentabilidad manual.</p>
     <label class="net-sim-label" for="netCapital">Dinero inicial</label>
-    <input class="net-sim-input" id="netCapital" type="number" min="0" step="100" inputmode="decimal" value="10000">
+    <div class="net-sim-input-wrap"><input class="net-sim-input" id="netCapital" type="number" min="0" step="100" inputmode="decimal" value="10000"><span class="net-sim-input-unit" data-unit-for="netCapital">€</span></div>
     <label class="net-sim-label" for="netMonthly">Aportación mensual</label>
-    <input class="net-sim-input" id="netMonthly" type="number" min="0" step="25" inputmode="decimal" value="300">
+    <div class="net-sim-input-wrap"><input class="net-sim-input" id="netMonthly" type="number" min="0" step="25" inputmode="decimal" value="300"><span class="net-sim-input-unit" data-unit-for="netMonthly">€/mes</span></div>
     <label class="net-sim-label" for="netYears">Duración (años)</label>
-    <input class="net-sim-input" id="netYears" type="number" min="0" max="60" step="1" inputmode="numeric" value="15">
+    <div class="net-sim-input-wrap"><input class="net-sim-input" id="netYears" type="number" min="0" max="60" step="1" inputmode="numeric" value="15"><span class="net-sim-input-unit" data-unit-for="netYears">años</span></div>
     <span class="net-sim-label">Escenario de rentabilidad</span>
     <div class="net-sim-scenario" role="group" aria-label="Escenario de rentabilidad">
      <button type="button" data-net-scenario="prudente" aria-pressed="false">Prudente</button>
      <button type="button" data-net-scenario="base" aria-pressed="true">Base</button>
      <button type="button" data-net-scenario="optimista" aria-pressed="false">Optimista</button>
     </div>
-    <div id="netManualRateWrap"><label class="net-sim-label" for="netManualRate">Rentabilidad anual (%) · editable</label><input class="net-sim-input" id="netManualRate" type="number" min="-100" max="1000" step="0.1" value="5"></div>
+    <div id="netManualRateWrap"><label class="net-sim-label" for="netManualRate">Rentabilidad anual (%) · editable</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netManualRate" type="number" min="-100" max="1000" step="0.1" value="5"><span class="net-sim-input-unit" data-unit-for="netManualRate">% anual</span></div></div>
     <details class="net-sim-advanced" id="netAdvanced">
      <summary>Ajustar supuestos</summary>
      <div class="net-sim-advanced-grid">
       
-      <div><label class="net-sim-label" for="netInflation">Inflación anual (%)</label><input class="net-sim-input" id="netInflation" type="number" min="-20" max="100" step="0.1" value="2"></div>
-      <div><label class="net-sim-label" for="netEntryFee">Coste de entrada (%)</label><input class="net-sim-input" id="netEntryFee" type="number" min="0" max="100" step="0.01" value="0"></div>
-      <div><label class="net-sim-label" for="netEntryFixed">Coste fijo de entrada (€)</label><input class="net-sim-input" id="netEntryFixed" type="number" min="0" step="0.01" value="0"></div>
-      <div><label class="net-sim-label" for="netAnnualFee">Costes anuales (%)</label><input class="net-sim-input" id="netAnnualFee" type="number" min="0" max="100" step="0.01" value="0"></div>
-      <div><label class="net-sim-label" for="netAnnualFixed">Coste fijo anual (€)</label><input class="net-sim-input" id="netAnnualFixed" type="number" min="0" step="0.01" value="0"></div>
-      <div><label class="net-sim-label" for="netExitFee">Coste de salida (%)</label><input class="net-sim-input" id="netExitFee" type="number" min="0" max="100" step="0.01" value="0"></div>
-      <div><label class="net-sim-label" for="netExitFixed">Coste fijo de salida (€)</label><input class="net-sim-input" id="netExitFixed" type="number" min="0" step="0.01" value="0"></div>
-      <div><label class="net-sim-label" for="netTaxRate">Tipo impositivo medio (%)</label><input class="net-sim-input" id="netTaxRate" type="number" min="0" max="100" step="0.1" placeholder="Automático"></div>
-      <div id="netVacancyWrap" class="net-sim-hidden"><label class="net-sim-label" for="netVacancy">Vacancia (% de ingresos)</label><input class="net-sim-input" id="netVacancy" type="number" min="0" max="100" step="0.5" value="0"></div>
+      <div><label class="net-sim-label" for="netInflation">Inflación anual (%)</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netInflation" type="number" min="-20" max="100" step="0.1" value="2"><span class="net-sim-input-unit" data-unit-for="netInflation">% anual</span></div></div>
+      <div><label class="net-sim-label" for="netEntryFee">Coste de entrada (%)</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netEntryFee" type="number" min="0" max="100" step="0.01" value="0"><span class="net-sim-input-unit" data-unit-for="netEntryFee">%</span></div></div>
+      <div><label class="net-sim-label" for="netEntryFixed">Coste fijo de entrada (€)</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netEntryFixed" type="number" min="0" step="0.01" value="0"><span class="net-sim-input-unit" data-unit-for="netEntryFixed">€</span></div></div>
+      <div><label class="net-sim-label" for="netAnnualFee">Costes anuales (%)</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netAnnualFee" type="number" min="0" max="100" step="0.01" value="0"><span class="net-sim-input-unit" data-unit-for="netAnnualFee">% anual</span></div></div>
+      <div><label class="net-sim-label" for="netAnnualFixed">Coste fijo anual (€)</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netAnnualFixed" type="number" min="0" step="0.01" value="0"><span class="net-sim-input-unit" data-unit-for="netAnnualFixed">€/año</span></div></div>
+      <div><label class="net-sim-label" for="netExitFee">Coste de salida (%)</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netExitFee" type="number" min="0" max="100" step="0.01" value="0"><span class="net-sim-input-unit" data-unit-for="netExitFee">%</span></div></div>
+      <div><label class="net-sim-label" for="netExitFixed">Coste fijo de salida (€)</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netExitFixed" type="number" min="0" step="0.01" value="0"><span class="net-sim-input-unit" data-unit-for="netExitFixed">€</span></div></div>
+      <div><label class="net-sim-label" for="netTaxRate">Tipo impositivo medio (%)</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netTaxRate" type="number" min="0" max="100" step="0.1" placeholder="Automático"><span class="net-sim-input-unit" data-unit-for="netTaxRate">%</span></div></div>
+      <div id="netVacancyWrap" class="net-sim-hidden"><label class="net-sim-label" for="netVacancy">Vacancia (% de ingresos)</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netVacancy" type="number" min="0" max="100" step="0.5" value="0"><span class="net-sim-input-unit" data-unit-for="netVacancy">%</span></div></div>
      </div>
      <p class="net-sim-hint" id="netCostHint">Los costes numéricos de la ficha se proponen como punto de partida; puedes cambiarlos.</p>
      <p class="net-sim-hint">Si dejas vacío el tipo impositivo, se aplica la escala de la base del ahorro sobre la ganancia positiva al final. Es una aproximación, no el cálculo de tu IRPF.</p>
