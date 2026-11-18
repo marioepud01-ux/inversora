@@ -150,7 +150,7 @@ function loadAssetDefaults(asset){
   ?'Detección desde la ficha: '+[hasIrpf?'IRPF':null,hasIs?'Impuesto sobre Sociedades (alternativa según titular)':null,hasIbi?'IBI':null,hasIva?'IVA':null,hasItp?'ITP':null,hasAjd?'AJD':null,hasPlusvalia?'plusvalía municipal':null].filter(Boolean).join(' · ')||'La ficha no identifica impuestos concretos. Revisa los aplicables a tu caso.'
   :'Sin activo de catálogo: configura manualmente los impuestos que correspondan.';
  $('netIncomeTaxHint').textContent=savings?'Se propone la escala del ahorro, calculada progresivamente sobre la ganancia positiva al final.':'La ficha apunta a rentas de base general o actividad. Introduce tu tipo marginal aproximado; no se presupone un porcentaje personal.';
- $('netIncomeTaxRateWrap').classList.toggle('net-sim-hidden',$('netTaxSubject').value==='individual'&&$('netIncomeTaxBase').value==='savings');
+ // La visibilidad del tipo se gestiona de forma centralizada en updateTaxControls().
  $('netIncomeTaxTitle').textContent=$('netTaxSubject').value==='company'?'Impuesto sobre Sociedades':'IRPF';
  $('netCostHint').textContent=d.known?'Se han detectado porcentajes en los costes descritos en la ficha. Comprueba que corresponden a tu operación concreta.':'La ficha no contiene porcentajes de costes verificables. Se parte de 0 % y puedes introducirlos manualmente.';
  $('netManualRateWrap').classList.remove('net-sim-hidden');
@@ -160,14 +160,17 @@ function loadAssetDefaults(asset){
 function updateTaxControls(){
  const company=$('netTaxSubject').value==='company',savings=$('netIncomeTaxBase').value==='savings',enabled=$('netIncomeTaxEnabled').checked;
  $('netIncomeTaxTitle').textContent=company?'Impuesto sobre Sociedades':'IRPF';
- $('netIrpfFields').classList.toggle('net-sim-hidden',company);
- $('netIncomeTaxRateWrap').classList.toggle('net-sim-hidden',!company&&!savings);
- $('netIncomeTaxRate').disabled=!company&&!savings;
+ // El porcentaje del IS debe seguir visible y editable; solo ocultamos el selector de base del IRPF.
+ $('netIrpfFields').classList.remove('net-sim-hidden');
+ $('netIncomeTaxBaseWrap').classList.toggle('net-sim-hidden',company);
+ $('netIncomeTaxRateWrap').classList.toggle('net-sim-hidden',!company&&savings);
+ $('netIncomeTaxRate').disabled=!company&&savings;
+ $('netIncomeTaxRateLabel').textContent=company?'Tipo del Impuesto sobre Sociedades':'Tipo marginal estimado';
  if(company)$('netIncomeTaxHint').textContent='Se aplica el porcentaje introducido sobre la ganancia imponible estimada. Se propone el 25 % como tipo general, pero puedes cambiarlo (por ejemplo, al 15 % si cumples los requisitos u otro tipo aplicable).';
  else if(!enabled)$('netIncomeTaxHint').textContent='Activa la casilla IRPF para incluir este impuesto en el cálculo.';
  else $('netIncomeTaxHint').textContent=savings?'En la base del ahorro no se utiliza un porcentaje manual: el simulador aplica automáticamente los tramos progresivos configurados. Si quieres introducir tu propio tipo, selecciona «Base general».':'El porcentaje que introduzcas se aplica a la ganancia imponible estimada. Al modificarlo, se recalculan el impuesto y el capital neto final. Es una aproximación: tu tipo marginal real depende del conjunto de tus rentas.';
- // Los importes permanecen editables aunque el impuesto esté desactivado; la casilla controla si se incluye en el cálculo.
- $('netIncomeTaxRate').disabled=!company&&!savings;
+ // El tipo del IS y el tipo marginal de base general se pueden editar; la casilla solo activa o desactiva el impuesto.
+ $('netIncomeTaxRate').disabled=!company&&savings;
 }
 function buildWaterfall(result){
  const rows=[
