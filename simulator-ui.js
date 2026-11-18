@@ -20,7 +20,7 @@ function assetList(){
  return [...unique.values()];
 }
 function normalizeAssetSearch(value){
- return String(value||'').toLocaleLowerCase('es').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+ return String(value||'').toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
 }
 const assetSearchAliases={
  casa:'vivienda inmueble residencial', piso:'vivienda inmueble residencial', apartamento:'vivienda inmueble residencial',
