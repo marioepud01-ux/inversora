@@ -1454,7 +1454,7 @@ td,th{border-color:#e7eef8!important}
     </div>
     <p class="net-sim-hint" id="netAssetHint">Busca por nombre o explora por categoría. También puedes usar una rentabilidad manual.</p>
     <label class="net-sim-label" for="netCapital">Dinero inicial</label>
-    <div class="net-sim-input-wrap"><input class="net-sim-input" id="netCapital" type="number" min="0" step="100" inputmode="decimal" value="10000"><span class="net-sim-input-unit" data-unit-for="netCapital">€</span></div>
+    <div class="net-sim-input-wrap"><input class="net-sim-input" id="netCapital" type="number" min="0" step="any" inputmode="decimal" value="10000"><span class="net-sim-input-unit" data-unit-for="netCapital">€</span></div>
     <label class="net-sim-label" for="netMonthly">Aportación mensual</label>
     <div class="net-sim-input-wrap"><input class="net-sim-input" id="netMonthly" type="number" min="0" step="25" inputmode="decimal" value="300"><span class="net-sim-input-unit" data-unit-for="netMonthly">€/mes</span></div>
     <label class="net-sim-label" for="netYears">Duración</label>
@@ -1529,7 +1529,7 @@ td,th{border-color:#e7eef8!important}
       <p class="net-sim-hint">El cálculo distingue impuestos de adquisición, cuotas anuales y tributación del beneficio. Los tipos autonómicos/municipales y la situación personal deben verificarse; los impuestos sobre beneficio se aproximan al final del horizonte, no sustituyen una liquidación fiscal.</p>
      </section>
      </details>
-     <button class="net-sim-reset" id="netResetAdvanced" type="button">Restablecer supuestos</button>
+     <button class="net-sim-reset" id="netResetAdvanced" type="button">Restablecer inversión</button>
     </details>
    </aside>
    <div class="net-sim-output">
@@ -1570,7 +1570,8 @@ td,th{border-color:#e7eef8!important}
      <button type="button" id="netSave">Guardar en este dispositivo</button>
      <button type="button" id="netShare">Compartir enlace</button>
      <button type="button" id="netShareCommunity">Compartir en Comunidad</button>
-     <button type="button" class="primary" id="netPdf">Abrir informe / PDF</button>
+     <button type="button" id="netIncomeStatement">Ver cuenta de resultados</button>
+     <button type="button" class="primary" id="netPdf">Imprimir / Guardar PDF</button>
     </div>
     <p class="net-sim-note">Simulación educativa con supuestos editables. No es una previsión ni asesoramiento financiero o fiscal. El cálculo fiscal es simplificado y no sustituye la tributación específica de cada activo ni tu situación personal.</p>
    </div>
