@@ -57,12 +57,20 @@ function populateAssetOptions(query=''){
  else if(select.options.length>1)select.selectedIndex=1;
 }
 function readInputs(asset,rateOverride){
- const defaults=assetDefaults(asset);
  return {
   capital:num('netCapital'),monthly:num('netMonthly'),years:num('netYears'),
   rate:rateOverride??(asset?scenarioRate(asset):num('netManualRate')),
   entryFee:num('netEntryFee'),entryFixed:num('netEntryFixed'),annualFee:num('netAnnualFee'),annualFixed:num('netAnnualFixed'),exitFee:num('netExitFee'),exitFixed:num('netExitFixed'),
-  taxRate:$('netTaxRate').value.trim()===''?null:num('netTaxRate'),
+  incomeTaxEnabled:$('netIncomeTaxEnabled').checked,
+  incomeTaxType:$('netTaxSubject').value==='company'?'is':'irpf',
+  incomeTaxBase:$('netIncomeTaxBase').value,
+  incomeTaxRate:$('netIncomeTaxRate').value.trim()===''?null:num('netIncomeTaxRate'),
+  acquisitionTaxRate:$('netAcquisitionTaxEnabled').checked&&$('netAcquisitionTaxType').value!=='none'?num('netAcquisitionTaxRate')||0:0,
+  ajdRate:$('netAjdEnabled').checked?num('netAjdRate')||0:0,
+  ibiAnnual:$('netIbiEnabled').checked?num('netIbiAnnual')||0:0,
+  municipalExitTax:$('netMunicipalEnabled').checked?num('netMunicipalExitTax')||0:0,
+  otherAnnualTax:$('netOtherTaxEnabled').checked?num('netOtherAnnualTax')||0:0,
+  otherEntryTax:$('netOtherTaxEnabled').checked?num('netOtherEntryTax')||0:0,
   inflation:num('netInflation'),vacancy:isRentalAsset(asset)?num('netVacancy'):0
  };
 }
@@ -79,24 +87,41 @@ function setScenario(value){
 }
 function loadAssetDefaults(asset){
  currentAsset=asset;
- const d=assetDefaults(asset);
- $('netEntryFee').value=d.entryFee.toFixed(2);
- $('netEntryFixed').value='0';
- $('netAnnualFee').value=d.annualFee.toFixed(2);
- $('netAnnualFixed').value='0';
- $('netExitFee').value=d.exitFee.toFixed(2);
- $('netExitFixed').value='0';
+ const d=assetDefaults(asset),fiscalText=((asset?.tax||'')+' '+(asset?.taxdetail||'')).toLocaleLowerCase('es');
+ const hasIrpf=/\\birpf\\b/.test(fiscalText),hasIs=/\\b(?:is|sociedades)\\b/.test(fiscalText);
+ const savings=/base del ahorro|dividendos|intereses|ganancia patrimonial/.test(fiscalText);
+ const general=/base general|capital inmobiliario|actividades econ[oó]micas/.test(fiscalText);
+ const realEstate=asset?.cat==='Inmobiliario';
+ const hasIbi=realEstate||/\\bibi\\b/.test(fiscalText);
+ const hasIva=/\\biva\\b/.test(fiscalText),hasItp=/\\bitp\\b/.test(fiscalText),hasAjd=/\\bajd\\b/.test(fiscalText);
+ const hasPlusvalia=/plusval[ií]a municipal|iivtnu/.test(fiscalText);
+ $('netEntryFee').value=d.entryFee.toFixed(2);$('netEntryFixed').value='0';
+ $('netAnnualFee').value=d.annualFee.toFixed(2);$('netAnnualFixed').value='0';
+ $('netExitFee').value=d.exitFee.toFixed(2);$('netExitFixed').value='0';
  $('netManualRate').value=asset?scenarioRate(asset,'base').toFixed(2):'5';
  selectedScenario='base';
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.netScenario==='base')));
  $('netVacancyWrap').classList.toggle('net-sim-hidden',!isRentalAsset(asset));
  if(!isRentalAsset(asset))$('netVacancy').value='0';
- $('netAssetHint').textContent=asset
-  ?'Rango de rentabilidad de la ficha: '+(asset.ret||'no indicado')+'. Se usa el escenario seleccionado; puedes ajustar los supuestos.'
-  :'Introduce una rentabilidad manual. No se ha seleccionado un activo del catálogo.';
- $('netCostHint').textContent=d.known
-  ?'Se han detectado porcentajes en los costes descritos en la ficha. Comprueba que corresponden a tu producto concreto.'
-  :'La ficha no contiene porcentajes de costes verificables. Se parte de 0 % y puedes introducirlos manualmente.';
+ $('netTaxSubject').value=hasIrpf?'individual':(hasIs?'company':'individual');
+ $('netIncomeTaxEnabled').checked=hasIrpf||hasIs;
+ $('netIncomeTaxTitle').textContent=$('netTaxSubject').value==='company'?'Impuesto sobre Sociedades':'IRPF';
+ $('netIncomeTaxBase').value=savings?'savings':'general';
+ $('netIncomeTaxRate').value=$('netTaxSubject').value==='company'?'25':'';
+ $('netIbiEnabled').checked=hasIbi;$('netIbiAnnual').value='0';
+ $('netAcquisitionTaxEnabled').checked=hasIva||hasItp;
+ $('netAcquisitionTaxType').value=hasIva&&!hasItp?'iva':(hasItp&&!hasIva?'itp':'none');
+ $('netAcquisitionTaxRate').value='';
+ $('netAjdEnabled').checked=hasAjd;$('netAjdRate').value='';
+ $('netMunicipalEnabled').checked=hasPlusvalia;$('netMunicipalExitTax').value='0';
+ $('netOtherTaxEnabled').checked=false;$('netOtherEntryTax').value='0';$('netOtherAnnualTax').value='0';
+ $('netTaxProfileHint').textContent=asset
+  ?'Detección desde la ficha: '+[hasIrpf?'IRPF':null,hasIs?'Impuesto sobre Sociedades (alternativa según titular)':null,hasIbi?'IBI':null,hasIva?'IVA':null,hasItp?'ITP':null,hasAjd?'AJD':null,hasPlusvalia?'plusvalía municipal':null].filter(Boolean).join(' · ')||'La ficha no identifica impuestos concretos. Revisa los aplicables a tu caso.'
+  :'Sin activo de catálogo: configura manualmente los impuestos que correspondan.';
+ $('netIncomeTaxHint').textContent=savings?'Se propone la escala del ahorro, calculada progresivamente sobre la ganancia positiva al final.':'La ficha apunta a rentas de base general o actividad. Introduce tu tipo marginal aproximado; no se presupone un porcentaje personal.';
+ $('netIncomeTaxRateWrap').classList.toggle('net-sim-hidden',$('netTaxSubject').value==='individual'&&$('netIncomeTaxBase').value==='savings');
+ $('netIncomeTaxTitle').textContent=$('netTaxSubject').value==='company'?'Impuesto sobre Sociedades':'IRPF';
+ $('netCostHint').textContent=d.known?'Se han detectado porcentajes en los costes descritos en la ficha. Comprueba que corresponden a tu operación concreta.':'La ficha no contiene porcentajes de costes verificables. Se parte de 0 % y puedes introducirlos manualmente.';
  $('netManualRateWrap').classList.remove('net-sim-hidden');
  runNetSimulation();
 }
