@@ -85,7 +85,7 @@ function readInputs(asset,rateOverride){
  return {
   capital:num('netCapital'),monthly:num('netMonthly'),years:num('netYears'),
   rate:rateOverride??(asset?scenarioRate(asset):num('netManualRate')),
-  entryFee:0,entryFixed:num('netEntryFee'),annualFee:0,annualFixed:num('netAnnualFee'),exitFee:0,exitFixed:num('netExitFee'),
+  entryFee:0,entryFixed:$('netEntryCostEnabled').checked?num('netEntryFee'):0,annualFee:0,annualFixed:$('netAnnualCostEnabled').checked?num('netAnnualFee'):0,exitFee:0,exitFixed:$('netExitCostEnabled').checked?num('netExitFee'):0,
   incomeTaxEnabled:$('netIncomeTaxEnabled').checked,
   incomeTaxType:$('netTaxSubject').value==='company'?'is':'irpf',
   incomeTaxBase:$('netIncomeTaxBase').value,
@@ -110,6 +110,42 @@ function setScenario(value){
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.netScenario===value)));
  runNetSimulation();
 }
+
+function renderAssetTaxAdvice(asset){
+ const name=String(asset?.name||'').toLocaleLowerCase('es');
+ const cat=String(asset?.cat||'').toLocaleLowerCase('es');
+ const sub=String(asset?.catalogSubtype||asset?.subtype||'').toLocaleLowerCase('es');
+ const text=name+' '+cat+' '+sub+' '+String(asset?.tax||'')+' '+String(asset?.taxdetail||'');
+ const lines=[];
+ if(/inmobiliario/.test(cat)||/(vivienda|piso|local|garaje|trastero|plaza de aparcamiento|oficina|nave|terreno|suelo|edificio|inmueble)/.test(name)){
+  lines.push(['Costes de entrada','Notaría, registro, gestoría, tasación e intermediación, si los pagas.']);
+  lines.push(['Costes periódicos','IBI, comunidad, seguro, mantenimiento, reparaciones y periodos sin alquilar. En alquiler, añade gestión si la contratas.']);
+  lines.push(['Costes de salida','Agencia, cancelación de cargas/hipoteca y certificados, si proceden.']);
+  lines.push(['Impuestos al comprar','ITP en muchas compras de segunda mano, o IVA y normalmente AJD en determinadas operaciones sujetas a IVA. Depende del inmueble, vendedor y comunidad autónoma.']);
+  lines.push(['Impuestos durante la tenencia','IBI. Si alquilas como persona física, IRPF por el rendimiento del alquiler; el tratamiento depende del uso y gastos deducibles.']);
+  lines.push(['Impuestos al vender','IRPF por la ganancia patrimonial o IS si vende una sociedad. Puede existir plusvalía municipal (IIVTNU) en terrenos urbanos, según el caso.']);
+ }else if(/mercados financieros/.test(cat)||/(fondo|acciones|etf|bono|obligaci[oó]n|letra del tesoro|dep[oó]sito|cuenta remunerada|plan de pensiones|divisa|materia prima)/.test(name+' '+sub)){
+  lines.push(['Costes de entrada y salida','Comisión de compra/venta, cambio de divisa y diferencial entre precio comprador y vendedor, si tu intermediario los cobra.']);
+  lines.push(['Costes periódicos','Custodia, administración o asesoramiento, si existen. En fondos y ETF revisa los gastos corrientes/TER: suelen estar descontados del valor liquidativo o del fondo; evita duplicarlos.']);
+  lines.push(['Impuestos sobre rendimientos','Intereses y dividendos suelen tributar en la base del ahorro del IRPF para personas físicas residentes en España; el tratamiento concreto depende del producto y del titular.']);
+  lines.push(['Impuestos al reembolso o venta','La ganancia o pérdida puede tributar en IRPF (o IS si invierte una sociedad). En fondos, los traspasos que cumplan requisitos pueden diferir la tributación.']);
+ }else if(/empresas y negocios/.test(cat)||/(empresa|negocio|franquicia|startup|participaci[oó]n|pr[eé]stamo participativo)/.test(name+' '+sub)){
+  lines.push(['Costes de entrada','Due diligence, asesoría legal/contable, valoración, notaría y gastos de constitución o adquisición, si corresponden.']);
+  lines.push(['Costes periódicos','Personal, alquiler, suministros, seguros, mantenimiento, licencias, gestoría y financiación; introduce solo los costes atribuibles a tu inversión.']);
+  lines.push(['Costes de salida','Asesoría, intermediación, formalización y posibles costes de transmisión o cancelación.']);
+  lines.push(['Impuestos','IVA u otros tributos según la actividad y operación. Los beneficios tributan por IS en sociedades o por IRPF en actividades de persona física; una venta de participaciones/activos puede generar tributación adicional.']);
+ }else if(/alternativos/.test(cat)||/(cripto|bitcoin|ethereum|oro|plata|arte|vino|reloj|coleccion|crowdfunding|crowdlending|pr[eé]stamo|token)/.test(name+' '+sub)){
+  lines.push(['Costes de entrada y salida','Comisiones de plataforma/intercambio, diferencial de compra-venta, red o intermediación, según el activo.']);
+  lines.push(['Costes periódicos','Custodia, almacenamiento, seguro o gestión, especialmente en activos físicos.']);
+  lines.push(['Impuestos','Dependen mucho del activo y de cómo se obtenga el rendimiento. Criptoactivos y ventas de bienes pueden generar ganancias/pérdidas en IRPF; intereses o rendimientos de plataformas tienen su propia calificación. IVA y otros impuestos pueden variar (por ejemplo, oro de inversión tiene régimen específico).']);
+ }else{
+  lines.push(['Costes','Comprueba comisiones de entrada/salida, mantenimiento, custodia, gestión y cualquier coste de financiación.']);
+  lines.push(['Impuestos','La tributación depende de la naturaleza del rendimiento, del titular y de la operación. Para una persona física puede ser IRPF; para una sociedad, IS. Verifica si hay IVA/ITP u otros tributos específicos.']);
+ }
+ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const title=asset?.name||'Rentabilidad manual';
+ $('netAssetTaxAdvice').innerHTML='<div class="net-advice-head"><strong>Qué podrías incluir para '+esc(title)+'</strong><span>Orientación · España</span></div><p>No se activa ni se añade nada automáticamente. Revisa estos conceptos y marca únicamente los que realmente correspondan a tu operación.</p><div class="net-advice-list">'+lines.map(([h,d])=>'<div><b>'+esc(h)+'</b><span>'+esc(d)+'</span></div>').join('')+'</div><small>Orientación general, no una determinación fiscal. Puede variar por comunidad autónoma, municipio, residencia, titularidad, fecha y características concretas. No dupliques costes ya incluidos en la rentabilidad o en el producto.</small>';
+}
 function loadAssetDefaults(asset){
  currentAsset=asset;
  const d=assetDefaults(asset),fiscalText=((asset?.tax||'')+' '+(asset?.taxdetail||'')).toLocaleLowerCase('es');
@@ -123,19 +159,21 @@ function loadAssetDefaults(asset){
  $('netEntryFee').value='0';
  $('netAnnualFee').value='0';
  $('netExitFee').value='0';
+ ['netEntryCostEnabled','netAnnualCostEnabled','netExitCostEnabled'].forEach(id=>$(id).checked=false);
  $('netManualRate').value=asset?scenarioRate(asset,'base').toFixed(2):'5';
  selectedScenario='base';
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.netScenario==='base')));
  $('netVacancyWrap').classList.toggle('net-sim-hidden',!isRentalAsset(asset));
  if(!isRentalAsset(asset))$('netVacancy').value='0';
- $('netTaxSubject').value=hasIrpf?'individual':(hasIs?'company':'individual');
- $('netIncomeTaxEnabled').checked=hasIrpf||hasIs;
+ // Ningún impuesto se activa automáticamente: el usuario decide cuáles incluir.
+ $('netTaxSubject').value='individual';
+ $('netIncomeTaxEnabled').checked=false;
  $('netIncomeTaxTitle').textContent=$('netTaxSubject').value==='company'?'Impuesto sobre Sociedades':'IRPF';
  $('netIncomeTaxBase').value=general?'general':(savings?'savings':'general');
  $('netIncomeTaxRate').value=$('netTaxSubject').value==='company'?'25':'';
- $('netIbiEnabled').checked=hasIbi;$('netIbiAnnual').value='0';
- $('netAcquisitionTaxEnabled').checked=hasIva||hasItp;
- $('netAcquisitionTaxType').value=hasIva&&!hasItp?'iva':(hasItp&&!hasIva?'itp':'none');
+ $('netIbiEnabled').checked=false;$('netIbiAnnual').value='0';
+ $('netAcquisitionTaxEnabled').checked=false;
+ $('netAcquisitionTaxType').value='none';
  const ivaMatch=fiscalText.match(/iva[^.\n]{0,55}?(\d+(?:[.,]\d+)?)\s*%/i);
  const itpHasRange=/itp[^.\n]{0,55}\d+\s*%?\s*(?:-|–|a)\s*\d+/i.test(fiscalText);
  const itpMatch=itpHasRange?null:fiscalText.match(/itp[^.\n]{0,55}?(\d+(?:[.,]\d+)?)\s*%/i);
@@ -143,16 +181,15 @@ function loadAssetDefaults(asset){
  $('netAcquisitionTaxType').dataset.ivaRate=ivaMatch?ivaMatch[1].replace(',','.'):'';
  $('netAcquisitionTaxType').dataset.itpRate=itpMatch?itpMatch[1].replace(',','.'):'';
  $('netAcquisitionTaxRate').value=$('netAcquisitionTaxType').value==='iva'&&ivaMatch?ivaMatch[1].replace(',','.'):($('netAcquisitionTaxType').value==='itp'&&itpMatch?itpMatch[1].replace(',','.'):'');
- $('netAjdEnabled').checked=hasAjd;$('netAjdRate').value=ajdMatch?ajdMatch[1].replace(',','.'):'';
- $('netMunicipalEnabled').checked=hasPlusvalia;$('netMunicipalExitTax').value='0';
+ $('netAjdEnabled').checked=false;$('netAjdRate').value='';
+ $('netMunicipalEnabled').checked=false;$('netMunicipalExitTax').value='0';
  $('netOtherTaxEnabled').checked=false;$('netOtherTaxName').value='';$('netOtherEntryTax').value='0';$('netOtherAnnualTax').value='0';
- $('netTaxProfileHint').textContent=asset
-  ?'Detección desde la ficha: '+[hasIrpf?'IRPF':null,hasIs?'Impuesto sobre Sociedades (alternativa según titular)':null,hasIbi?'IBI':null,hasIva?'IVA':null,hasItp?'ITP':null,hasAjd?'AJD':null,hasPlusvalia?'plusvalía municipal':null].filter(Boolean).join(' · ')||'La ficha no identifica impuestos concretos. Revisa los aplicables a tu caso.'
-  :'Sin activo de catálogo: configura manualmente los impuestos que correspondan.';
+ $('netTaxProfileHint').textContent='Los impuestos aparecen desactivados inicialmente. Consulta el aviso del activo y marca solo los que correspondan a tu operación.'; 
+ renderAssetTaxAdvice(asset);
  $('netIncomeTaxHint').textContent=savings?'Se propone la escala del ahorro, calculada progresivamente sobre la ganancia positiva al final.':'La ficha apunta a rentas de base general o actividad. Introduce tu tipo marginal aproximado; no se presupone un porcentaje personal.';
  // La visibilidad del tipo se gestiona de forma centralizada en updateTaxControls().
  $('netIncomeTaxTitle').textContent=$('netTaxSubject').value==='company'?'Impuesto sobre Sociedades':'IRPF';
- $('netCostHint').textContent=d.known?'Se han detectado porcentajes en los costes descritos en la ficha. Comprueba que corresponden a tu operación concreta.':'La ficha no contiene porcentajes de costes verificables. Se parte de 0 % y puedes introducirlos manualmente.';
+ $('netCostHint').textContent='Todos los costes empiezan desactivados y a cero. Marca cada concepto que quieras incluir y añade su importe real o estimado.';
  $('netManualRateWrap').classList.remove('net-sim-hidden');
  updateTaxControls();
  runNetSimulation();
@@ -350,7 +387,7 @@ function init(){
  $('netAssetSearchClear').addEventListener('click',()=>{$('netAssetSearch').value='';populateAssetOptions('',true);$('netAssetSearch').focus();});
  document.addEventListener('click',e=>{if(!$('netAssetPicker')?.contains(e.target))renderAssetPicker($('netAssetSearch')?.value||'',false);});
  $('netAsset').addEventListener('change',()=>{loadAssetDefaults(findAsset($('netAsset').value));$('netAssetSearch').value=$('netAsset').value==='__manual__'?'Rentabilidad manual':$('netAsset').value;renderAssetPicker('',false);});
- ['netCapital','netMonthly','netYears','netEntryFee','netAnnualFee','netExitFee','netInflation','netVacancy'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
+ ['netCapital','netMonthly','netYears','netEntryFee','netAnnualFee','netExitFee','netEntryCostEnabled','netAnnualCostEnabled','netExitCostEnabled','netInflation','netVacancy'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
  $('netManualRate').addEventListener('input',()=>{selectedScenario='custom';document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed','false'));runNetSimulation();});
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.netScenario)));
  document.querySelectorAll('[data-net-mode]').forEach(b=>b.addEventListener('click',()=>renderMode(b.dataset.netMode)));
