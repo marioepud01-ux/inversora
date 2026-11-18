@@ -1397,7 +1397,7 @@ td,th{border-color:#e7eef8!important}
 <button class="header-icon-btn" id="invGlobalSearchToggle" type="button" onclick="invToggleGlobalSearch()" aria-label="Buscar en toda la web" title="Buscar"><span class="reference-search-icon" aria-hidden="true"></span></button>
 <button class="menu-toggle" type="button" onclick="invToggleMenu()" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="invSidebar"><span></span><span></span><span></span></button>
 <div class="profile-menu-wrap">
-<button class="profile-nav-btn" type="button" id="accountNav" onclick="invToggleProfileMenu()" aria-label="Abrir menú de perfil" title="Mi perfil" aria-expanded="false" aria-controls="invProfileMenu"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span><span class="profile-dropdown-cue" aria-hidden="true"><svg class="reference-profile-chevron" viewBox="0 0 12 12"><path d="m2 4 4 4 4-4"/></svg></span></button>
+<button class="profile-nav-btn" type="button" id="accountNav" onclick="invToggleProfileMenu()" aria-label="Abrir menú de perfil" title="Mi perfil" aria-expanded="false" aria-controls="invProfileMenu"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span></button>
 <div class="profile-dropdown" id="invProfileMenu" hidden>
 <div class="profile-dropdown-heading" id="invProfileHeading">Tu espacio en Inversora</div>
 <button type="button" onclick="invProfileNavigate('account')">Mi perfil <span>›</span></button>
@@ -2099,7 +2099,7 @@ function openDetail(name){
 <h3 class="entry-subtitle">Qué puede suponer una barrera</h3><div class="entry-factors">${barrier.factors.map((x,j)=>'<article class="entry-factor"><span class="entry-factor-number">'+['01','02','03'][j]+'</span><div><b>'+['Dinero necesario','Conocimientos','Acceso y condiciones'][j]+'</b><p>'+x+'</p></div></article>').join('')}</div>
 <div class="entry-takeaway"><span>✓</span><p><b>Qué conviene comprobar:</b> el importe mínimo real, los requisitos del proveedor y todos los costes antes de comprometer tu dinero.</p></div><p class="entry-note">Estimación cualitativa para orientar la comparación. Puede variar según el producto, proveedor, país y operación concreta; no equivale a un mínimo legal ni garantiza el acceso.</p></section>
 <section class="asset-section asset-outlook-section" id="asset-outlook"><div class="asset-section-head"><span class="asset-section-icon">⌁</span><div><h2>07 · Horizonte y liquidez</h2><p>Plazo, facilidad de salida y dedicación que conviene considerar antes de invertir.</p></div></div><div class="asset-outlook-grid"><article><span>Liquidez orientativa</span><strong>${(Number(i.liq)/2).toLocaleString('es-ES',{maximumFractionDigits:1})}<small>/5 ★</small></strong><p>Facilidad para recuperar el capital, según las condiciones del activo.</p></article><article><span>Horizonte y perfil</span><strong>${i.profile||'Por determinar'}</strong><p>El plazo adecuado depende del objetivo, el riesgo y las condiciones de salida.</p></article></div></section>
-<nav class="asset-bottom-actions"><button class="detail-sim-btn" onclick="simulateInvestment(${safeName})">↗ Simular esta inversión</button><button class="detail-favorite ${isFavorite(i.name)?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${isFavorite(i.name)?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button><button type="button" class="asset-print-btn" onclick="printAssetSheet()">⎙ Imprimir ficha</button><button class="asset-rate-btn" onclick="invOpenCommunityModal(${safeName})">★ Valorar este activo</button></nav>
+<nav class="asset-bottom-actions"><button class="detail-sim-btn" onclick="simulateAssetFromDetail(${safeName})">↗ Simular esta inversión</button><button class="detail-favorite ${isFavorite(i.name)?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${isFavorite(i.name)?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button><button type="button" class="asset-print-btn" onclick="printAssetSheet()">⎙ Imprimir ficha</button><button class="asset-rate-btn" onclick="invOpenCommunityModal(${safeName})">★ Valorar este activo</button></nav>
 <nav class="asset-next-nav" aria-label="Otras inversiones"><button onclick="openDetail(${JSON.stringify(previous.name).replace(/"/g,'&quot;')})"><span>← Anterior</span><b>${previous.name}</b></button><button onclick="openDetail(${JSON.stringify(next.name).replace(/"/g,'&quot;')})"><span>Siguiente →</span><b>${next.name}</b></button></nav>
   <footer class="asset-disclaimer"><span>ⓘ</span><p><b>Antes de decidir:</b> los datos y puntuaciones son orientativos y proceden del catálogo; no han sido verificados de forma independiente. Las rentabilidades potenciales no son promesas ni previsiones. Esta ficha es educativa y no constituye asesoramiento financiero o fiscal personalizado.</p></footer>
  </article></section>`;showView('detail')
@@ -3347,72 +3347,27 @@ document.addEventListener('keydown',function(event){if(event.key==='Escape'){inv
 }
 </style>
 
-<style id="inversora-profile-dropdown-cue-v1">
-.inv-header .profile-nav-btn{gap:9px!important}
-.inv-header .profile-nav-label{display:inline!important;font-size:13px!important;font-weight:650!important;color:#344054!important;letter-spacing:-.01em}
-.inv-header .profile-dropdown-cue{
-  width:23px;height:23px;flex:0 0 23px;display:inline-grid;place-items:center;
-  border:1px solid rgba(91,119,157,.20);border-radius:50%;
-  background:rgba(255,255,255,.62);transition:background .18s,border-color .18s,transform .18s;
-}
-.inv-header .profile-dropdown-cue .reference-profile-chevron{
-  display:block;width:11px;height:11px;fill:none;stroke:#526783;stroke-width:1.8;
-  stroke-linecap:round;stroke-linejoin:round;transition:transform .2s;
-}
-.inv-header .profile-nav-btn:hover .profile-dropdown-cue{background:#fff;border-color:rgba(21,94,239,.30)}
-.inv-header .profile-nav-btn[aria-expanded="true"] .profile-dropdown-cue{background:#fff;border-color:#b2ccff}
-@media(max-width:800px){
-  .inv-header .profile-nav-label{display:none!important}
-  .inv-header .profile-dropdown-cue{width:22px;height:22px;flex-basis:22px}
-}
-</style>
 
-<style id="inversora-profile-dropdown-cue-v2">
-@media(min-width:801px){
-  .inv-header .profile-nav-btn{display:inline-flex!important;align-items:center!important;gap:9px!important}
-  .inv-header .profile-nav-label{
-    display:inline!important;visibility:visible!important;opacity:1!important;
-    font-family:'DM Sans',sans-serif!important;font-size:15px!important;
-    font-weight:600!important;line-height:1.2!important;color:#344054!important;
-    letter-spacing:0!important;white-space:nowrap!important
-  }
-  .inv-header .profile-dropdown-cue{
-    display:inline-flex!important;visibility:visible!important;opacity:1!important;
-    width:24px!important;height:24px!important;flex:0 0 24px!important;
-    align-items:center!important;justify-content:center!important;
-    border:1px solid #cbd8e8!important;border-radius:50%!important;
-    background:rgba(255,255,255,.82)!important
-  }
-  .inv-header .profile-dropdown-cue .reference-profile-chevron{
-    width:12px!important;height:12px!important;stroke:#344054!important;stroke-width:2!important
-  }
-}
-</style>
 
-<style id="inversora-profile-dropdown-cue-v4">
-@media(min-width:801px){
-  .inv-header #accountNav{gap:8px!important}
-  .inv-header #accountNav::after{
-    content:""!important;
-    display:inline-block!important;
-    width:8px!important;height:8px!important;flex:0 0 8px!important;
-    border-right:1.7px solid currentColor!important;
-    border-bottom:1.7px solid currentColor!important;
-    border-radius:0!important;border-top:0!important;border-left:0!important;
-    background:transparent!important;
-    color:#667085!important;
-    transform:translateY(-2px) rotate(45deg)!important;
-    transition:transform .22s cubic-bezier(.2,.75,.25,1),color .18s!important;
-  }
-  .inv-header #accountNav:hover::after{color:#155eef!important}
-  .inv-header #accountNav[aria-expanded="true"]::after{
-    transform:translateY(2px) rotate(225deg)!important;
-    color:#155eef!important;
-  }
+
+
+<style id="inversora-profile-dropdown-cue-v5">
+/* Un único indicador de desplegable: flecha simple, sin círculo decorativo duplicado. */
+.inv-header #accountNav{display:inline-flex!important;align-items:center!important;gap:9px!important}
+.inv-header #accountNav::after{
+ content:""!important;display:inline-block!important;
+ width:8px!important;height:8px!important;flex:0 0 8px!important;
+ border-right:1.8px solid #667085!important;border-bottom:1.8px solid #667085!important;
+ border-radius:0!important;border-top:0!important;border-left:0!important;
+ background:transparent!important;transform:translateY(-2px) rotate(45deg)!important;
+ transition:transform .22s cubic-bezier(.2,.75,.25,1),border-color .18s!important;
 }
-@media(prefers-reduced-motion:reduce){
- .inv-header #accountNav::after{transition:none!important}
+.inv-header #accountNav:hover::after{border-color:#155eef!important}
+.inv-header #accountNav[aria-expanded="true"]::after{
+ transform:translateY(2px) rotate(225deg)!important;border-color:#155eef!important;
 }
+@media(max-width:800px){.inv-header .profile-nav-label{display:none!important}}
+@media(prefers-reduced-motion:reduce){.inv-header #accountNav::after{transition:none!important}}
 </style>
 
 <style id="inversora-default-profile-avatar-v1">

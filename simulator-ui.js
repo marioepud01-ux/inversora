@@ -495,10 +495,25 @@ function renderMode(mode){
 }
 function renderComparison(){compareAssets();}
 function compareAssets(){
+ // La comparación parte de los supuestos reales de la simulación individual activa.
+ // Así todas las alternativas reciben exactamente el mismo capital, aportación, plazo,
+ // inflación, costes e impuestos introducidos por el usuario; no se añaden costes de ficha.
+ if(!currentResult)runNetSimulation();
+ const commonInputs=currentResult?.assumptions?{...currentResult.assumptions}:readInputs(null);
  const selected=[1,2,3,4].map(n=>$('netCompare'+n).value).filter(Boolean);
  const unique=[...new Set(selected)].slice(0,4);
- compareResults=unique.map(name=>{const asset=findAsset(name),d=assetDefaults(asset),rate=scenarioRate(asset);const res=engine.calculate({...readInputs(asset,rate),entryFee:d.entryFee,annualFee:d.annualFee,exitFee:d.exitFee},fiscalConfig);return {asset,result:res};}).filter(x=>!x.result.error);
+ compareResults=unique.map(name=>{
+  const asset=findAsset(name);
+  if(!asset)return null;
+  const rate=selectedScenario==='custom'?num('netManualRate'):scenarioRate(asset,selectedScenario);
+  const vacancy=isRentalAsset(asset)?(num('netVacancy')/12*100):0;
+  const result=engine.calculate({...commonInputs,rate,vacancy},fiscalConfig);
+  return {asset,result};
+ }).filter(x=>x&&!x.result.error);
  if(!compareResults.length){$('netCompareOutput').innerHTML='<p class="net-sim-note">Elige al menos un activo para comparar.</p>';return;}
+ const months=Math.round(Number(commonInputs.years||0)*12);
+ const totalContributed=Number(commonInputs.capital||0)+Number(commonInputs.monthly||0)*months;
+ const assumptionsLine='Misma simulación para todas las alternativas: '+euro(commonInputs.capital)+' iniciales · '+euro(commonInputs.monthly)+'/mes · '+fmt(commonInputs.years)+' años · '+euro(totalContributed)+' aportados en total. Se respetan los costes e impuestos que has activado y rellenado; no se incorporan importes automáticos de las fichas.';
  const rows=[
   ['Capital final real',x=>x.result.realFinal,'high',euro],
   ['Ganancia real',x=>x.result.realGain,'high',euro],
@@ -507,12 +522,12 @@ function compareAssets(){
   ['Liquidez (ficha)',x=>Number(x.asset.liq),'high',v=>Number.isFinite(v)?fmt(v)+'/10':'—'],
   ['Gestión (h/mes)',x=>Number(x.asset.management),'low',v=>Number.isFinite(v)?fmt(v)+' h':'No indicada'],
   ['Riesgo (ficha)',x=>Number(x.asset.risk),'low',v=>Number.isFinite(v)?fmt(v)+'/10':'—'],
-  ['Ganancia real por hora',x=>{const h=Number(x.asset.management);return Number.isFinite(h)&&h>0?x.result.realGain/(h*12*num('netYears')):NaN;},'high',v=>Number.isFinite(v)?euro(v)+'/h':'No disponible']
+  ['Ganancia real por hora',x=>{const h=Number(x.asset.management);return Number.isFinite(h)&&h>0?x.result.realGain/(h*12*Number(commonInputs.years||0)):NaN;},'high',v=>Number.isFinite(v)?euro(v)+'/h':'No disponible']
  ];
- const best=(row)=>{const vals=compareResults.map(row[1]).filter(Number.isFinite);if(!vals.length)return null;return row[2]==='high'?Math.max(...vals):Math.min(...vals)};
+ const best=row=>{const vals=compareResults.map(row[1]).filter(Number.isFinite);if(!vals.length)return null;return row[2]==='high'?Math.max(...vals):Math.min(...vals)};
  const head='<thead><tr><th>Indicador</th>'+compareResults.map(x=>'<th>'+esc(x.asset.name)+'</th>').join('')+'</tr></thead>';
  const body='<tbody>'+rows.map(row=>{const win=best(row);return '<tr><th>'+row[0]+'</th>'+compareResults.map(x=>{const raw=row[1](x),isBest=Number.isFinite(raw)&&win!==null&&raw===win;return '<td class="'+(isBest?'best':'')+'">'+(Number.isFinite(raw)?row[3](raw):'—')+'</td>';}).join('')+'</tr>';}).join('')+'</tbody>';
- $('netCompareOutput').innerHTML='<div class="net-sim-table-wrap"><table class="net-sim-compare-table">'+head+body+'</table></div><p class="net-sim-compare-summary">'+comparisonSentence(compareResults)+'</p><p class="net-sim-note">La ganancia por hora es orientativa: utiliza las horas mensuales indicadas en la ficha y no valora el tiempo de trabajo de forma económica. Liquidez y riesgo son puntuaciones del catálogo, no plazos ni garantías.</p>';
+ $('netCompareOutput').innerHTML='<p class="net-sim-compare-summary">'+esc(assumptionsLine)+'</p><div class="net-sim-table-wrap"><table class="net-sim-compare-table">'+head+body+'</table></div><p class="net-sim-compare-summary">'+comparisonSentence(compareResults)+'</p><p class="net-sim-note">La ganancia por hora es orientativa: utiliza las horas mensuales indicadas en la ficha y no valora el tiempo de trabajo de forma económica. Liquidez y riesgo son puntuaciones del catálogo, no plazos ni garantías.</p>';
 }
 function comparisonSentence(items){
  if(items.length<2)return 'Añade al menos dos activos para describir sus diferencias.';
@@ -698,7 +713,18 @@ function init(){
 window.simulate=runNetSimulation;
  window.populateSimulatorInvestments=()=>populateAssetOptions();
  window.applyInvestmentAssumption=()=>loadAssetDefaults(findAsset($('netAsset').value));
- window.simulateInvestment=function(name){$('netAsset').value=name||'__manual__';$('netAssetSearch').value=name||'Rentabilidad manual';loadAssetDefaults(findAsset(name));renderAssetPicker('',false);showView('sim');};
+ function openSingleAssetSimulator(name){
+  const assetName=name||'__manual__';
+  $('netAsset').value=assetName;
+  $('netAssetSearch').value=assetName==='__manual__'?'Rentabilidad manual':assetName;
+  loadAssetDefaults(findAsset(assetName));
+  renderAssetPicker('',false);
+  renderMode('one');
+  showView('sim');
+  runNetSimulation();
+ }
+ window.simulateInvestment=openSingleAssetSimulator;
+ window.simulateAssetFromDetail=openSingleAssetSimulator;
  window.openInvestmentReport=openNetSummary;
  window.simulateComparedAssets=simulateComparedAssets;
  }
