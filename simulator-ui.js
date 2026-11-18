@@ -11,12 +11,12 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=id=>engine.number($(id)?.value??'');
 function toast(message){const old=$('netSimToast');if(old)old.remove();const el=document.createElement('div');el.id='netSimToast';el.className='net-sim-toast';el.textContent=message;document.body.appendChild(el);setTimeout(()=>el.remove(),2600)}
 function assetList(){
+ if(typeof catalogTypeNames!=='undefined'&&Array.isArray(catalogTypeNames)&&catalogTypeNames.length){
+  return catalogTypeNames.map(item=>({name:item.name,cat:item.cat,catalogSubtype:item.sub,ret:typeof catalogReturnRange==='function'?catalogReturnRange(item.name,item.cat,item.sub):'2% – 7%'}));
+ }
  const source=Array.isArray(window.investments)?window.investments:(typeof investments!=='undefined'?investments:[]);
- // El simulador debe mostrar exactamente los tipos del catálogo oficial, no fichas heredadas.
- const catalogNames=typeof catalogTypeNames!=='undefined'?new Set(catalogTypeNames.map(x=>String(x.name).toLocaleLowerCase('es'))):null;
- const filtered=catalogNames?source.filter(a=>catalogNames.has(String(a.name||'').toLocaleLowerCase('es'))):source;
  const unique=new Map();
- filtered.forEach(a=>{const key=String(a.name||'').trim().toLocaleLowerCase('es');if(key&&!unique.has(key))unique.set(key,a);});
+ source.forEach(a=>{const key=String(a.name||'').trim().toLocaleLowerCase('es');if(key&&!unique.has(key))unique.set(key,a);});
  return [...unique.values()];
 }
 function normalizeAssetSearch(value){
