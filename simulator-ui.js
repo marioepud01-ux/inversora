@@ -222,6 +222,10 @@ function runNetSimulation(){
  $('netSimError').classList.add('net-sim-hidden');currentResult=active;
  const lo=Math.min(results.prudente.realFinal,results.base.realFinal,results.optimista.realFinal),hi=Math.max(results.prudente.realFinal,results.base.realFinal,results.optimista.realFinal);
  $('netRealFinal').textContent=euro(active.realFinal);
+ const ibiAnnual=Number(active.assumptions.ibiAnnual||0),projectedIbi=ibiAnnual*Number(active.assumptions.years||0);
+ $('netIbiHint').textContent=ibiAnnual>0
+  ?'Cuota anual: '+euro(ibiAnnual)+'. En '+fmt(active.assumptions.years)+' años se imputan '+fmt(active.assumptions.years)+' cuotas anuales: '+euro(projectedIbi)+' en total (prorrateadas mes a mes).'
+  :'Introduce el recibo anual. Se reparte en 12 partes durante cada año; al terminar cada año se habrá contabilizado exactamente una cuota anual.';
  $('netCostsTotal').textContent=euro(active.costs.total);
  $('netTaxesTotal').textContent=euro(active.taxes);
  const scenarioNames={prudente:'Prudente',base:'Base',optimista:'Optimista'};
