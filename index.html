@@ -1446,10 +1446,14 @@ td,th{border-color:#e7eef8!important}
   <div class="net-sim-shell">
    <aside class="net-sim-panel" aria-label="Datos de la inversión">
     <h2>Configura tu inversión</h2>
-    <label class="net-sim-label" for="netAssetSearch">Busca un activo</label>
-    <input class="net-sim-input" id="netAssetSearch" type="search" placeholder="Buscar entre los 137 activos…" autocomplete="off">
-    <select class="net-sim-select" id="netAsset" aria-label="Selecciona un activo"><option value="__manual__">Rentabilidad manual</option></select>
-    <p class="net-sim-hint" id="netAssetHint">Elige un activo para empezar o introduce una rentabilidad manual.</p>
+    <label class="net-sim-label" for="netAssetSearch">¿Qué inversión quieres simular?</label>
+    <div class="net-asset-picker" id="netAssetPicker">
+     <div class="net-asset-search-wrap"><span aria-hidden="true">⌕</span><input class="net-sim-input" id="netAssetSearch" type="search" placeholder="Ej. fondos indexados, vivienda, oro…" autocomplete="off" aria-label="Buscar un activo" aria-controls="netAssetResults" aria-expanded="false" role="combobox" aria-autocomplete="list"><button type="button" id="netAssetSearchClear" aria-label="Limpiar búsqueda" hidden>×</button></div>
+     <div class="net-asset-selected" id="netAssetSelected" aria-live="polite"></div>
+     <div class="net-asset-results" id="netAssetResults" role="listbox" aria-label="Activos disponibles" hidden></div>
+     <select class="net-sim-select net-sim-hidden" id="netAsset" aria-label="Activo seleccionado" tabindex="-1"><option value="__manual__">Rentabilidad manual</option></select>
+    </div>
+    <p class="net-sim-hint" id="netAssetHint">Busca por nombre o explora por categoría. También puedes usar una rentabilidad manual.</p>
     <label class="net-sim-label" for="netCapital">Dinero inicial</label>
     <div class="net-sim-input-wrap"><input class="net-sim-input" id="netCapital" type="number" min="0" step="100" inputmode="decimal" value="10000"><span class="net-sim-input-unit" data-unit-for="netCapital">€</span></div>
     <label class="net-sim-label" for="netMonthly">Aportación mensual</label>
