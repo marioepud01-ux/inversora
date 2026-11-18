@@ -23,13 +23,13 @@ function normalizeAssetSearch(value){
  return String(value||'').toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
 }
 const assetSearchAliases={
- casa:'vivienda inmueble residencial', piso:'vivienda inmueble residencial', apartamento:'vivienda inmueble residencial',
+ casa:'vivienda pisos residenciales', piso:'vivienda casa residencial', apartamento:'vivienda casa residencial',
  parking:'plaza garaje aparcamiento', aparcamiento:'plaza garaje parking', garaje:'plaza aparcamiento parking',
  trastero:'almacenamiento guardamuebles', local:'locales comerciales negocio',
  bolsa:'acciones renta variable mercados financieros', acciones:'accion renta variable bolsa',
  fondos:'fondo inversion indexados gestion activa', fondo:'fondos inversion indexados',
  bono:'bonos renta fija deuda', letras:'letras tesoro renta fija', deposito:'depositos ahorro bancario',
- criptomoneda:'cripto criptoactivos bitcoin ethereum', crypto:'cripto criptoactivos',
+ cripto:'criptoactivos criptomoneda bitcoin ethereum', criptomoneda:'cripto criptoactivos bitcoin ethereum', crypto:'cripto criptoactivos bitcoin ethereum',
  oro:'materias primas metales preciosos lingotes', web:'pagina web negocio digital',
  empresa:'empresas negocio participaciones empresariales', startup:'startups venture capital'
 };
