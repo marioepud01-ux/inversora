@@ -105,3 +105,30 @@
  color:#98a2b3;font-size:12px;font-weight:700;pointer-events:none;
  white-space:nowrap;
 }
+
+/* Tax assumptions: clearly separated from operating costs */
+.net-sim-tax-section{margin-top:24px;padding-top:21px;border-top:2px solid #e7edf5}
+.net-sim-tax-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.net-sim-tax-heading h3{margin:0;color:#101828;font-size:16px;letter-spacing:-.3px}
+.net-sim-tax-heading p{margin:5px 0 0;color:#667085;font-size:11px;line-height:1.45}
+.net-sim-tax-tag{flex:0 0 auto;padding:6px 9px;border-radius:999px;background:#eef4ff;color:#1849a9;font-size:10px;font-weight:800}
+.net-sim-tax-profile{margin:0 0 13px;padding:10px 12px;border-left:3px solid #155eef;border-radius:8px;background:#f7f9ff;color:#475467;font-size:11px;line-height:1.5}
+.net-sim-tax-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.net-sim-tax-card{min-width:0;padding:13px;border:1px solid #e5eaf2;border-left:3px solid #b7d0ff;border-radius:13px;background:#fff;transition:border-color .18s ease,box-shadow .18s ease}
+.net-sim-tax-card:hover,.net-sim-tax-card:focus-within{border-left-color:#155eef;box-shadow:0 5px 16px #155eef12}
+.net-sim-tax-card-wide{grid-column:1/-1}
+.net-sim-tax-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.net-sim-tax-card-head>label{font-size:12px;font-weight:750;color:#344054}
+.net-sim-tax-card-head .net-sim-select{width:auto;min-width:145px;min-height:38px;padding:7px 9px;font-size:12px}
+.net-sim-tax-check{display:flex;align-items:flex-start;gap:9px;cursor:pointer}
+.net-sim-tax-check input{width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:#155eef}
+.net-sim-tax-check span{min-width:0}
+.net-sim-tax-check b{display:block;color:#101828;font-size:13px;line-height:1.25}
+.net-sim-tax-check small{display:block;margin-top:3px;color:#667085;font-size:10px;line-height:1.4}
+.net-sim-tax-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.net-sim-tax-card .net-sim-label{margin:12px 0 6px}
+.net-sim-tax-card .net-sim-input,.net-sim-tax-card .net-sim-select{min-height:40px;padding:8px 10px;font-size:13px}
+.net-sim-tax-card .net-sim-input-wrap .net-sim-input{padding-right:72px}
+.net-sim-tax-card .net-sim-hint{font-size:10px;line-height:1.45;margin-top:8px}
+.net-sim-tax-card input:disabled,.net-sim-tax-card select:disabled{background:#f2f4f7;color:#98a2b3;cursor:not-allowed}
+@media(max-width:560px){.net-sim-tax-grid{grid-template-columns:1fr}.net-sim-tax-card-wide{grid-column:auto}.net-sim-tax-fields{grid-template-columns:1fr}.net-sim-tax-heading{flex-direction:column}.net-sim-tax-card-head{align-items:flex-start;flex-direction:column}.net-sim-tax-card-head .net-sim-select{width:100%}}
