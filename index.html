@@ -1474,11 +1474,53 @@ td,th{border-color:#e7eef8!important}
       <div><label class="net-sim-label" for="netAnnualFixed">Coste fijo anual (€)</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netAnnualFixed" type="number" min="0" step="0.01" value="0"><span class="net-sim-input-unit" data-unit-for="netAnnualFixed">€/año</span></div></div>
       <div><label class="net-sim-label" for="netExitFee">Coste de salida</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netExitFee" type="number" min="0" max="100" step="0.01" value="0"><span class="net-sim-input-unit" data-unit-for="netExitFee">%</span></div></div>
       <div><label class="net-sim-label" for="netExitFixed">Coste fijo de salida (€)</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netExitFixed" type="number" min="0" step="0.01" value="0"><span class="net-sim-input-unit" data-unit-for="netExitFixed">€</span></div></div>
-      <div><label class="net-sim-label" for="netTaxRate">Tipo impositivo medio</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netTaxRate" type="number" min="0" max="100" step="0.1" placeholder="Automático"><span class="net-sim-input-unit" data-unit-for="netTaxRate">%</span></div></div>
-      <div id="netVacancyWrap" class="net-sim-hidden"><label class="net-sim-label" for="netVacancy">Vacancia de ingresos</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netVacancy" type="number" min="0" max="100" step="0.5" value="0"><span class="net-sim-input-unit" data-unit-for="netVacancy">%</span></div></div>
+      <div id="netVacancyWrap" class="net-sim-tax-card"><label class="net-sim-label" for="netVacancy">Vacancia de ingresos</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netVacancy" type="number" min="0" max="100" step="0.5" value="0"><span class="net-sim-input-unit">%</span></div></div>
      </div>
      <p class="net-sim-hint" id="netCostHint">Los costes numéricos de la ficha se proponen como punto de partida; puedes cambiarlos.</p>
-     <p class="net-sim-hint">Si dejas vacío el tipo impositivo, se aplica la escala de la base del ahorro sobre la ganancia positiva al final. Es una aproximación, no el cálculo de tu IRPF.</p>
+     <section class="net-sim-tax-section" aria-labelledby="netTaxHeading">
+      <div class="net-sim-tax-heading"><div><h3 id="netTaxHeading">Impuestos</h3><p>Se adaptan al activo seleccionado. Revisa los datos según tu residencia, titularidad y operación.</p></div><span class="net-sim-tax-tag">Configuración fiscal</span></div>
+      <p class="net-sim-tax-profile" id="netTaxProfileHint">Selecciona un activo para detectar sus impuestos habituales.</p>
+      <div class="net-sim-tax-grid">
+       <article class="net-sim-tax-card net-sim-tax-card-wide">
+        <div class="net-sim-tax-card-head"><label for="netTaxSubject">Titular de la inversión</label><select class="net-sim-select" id="netTaxSubject"><option value="individual">Persona física</option><option value="company">Sociedad</option></select></div>
+        <label class="net-sim-tax-check"><input type="checkbox" id="netIncomeTaxEnabled" checked><span><b id="netIncomeTaxTitle">IRPF</b><small>Impuesto sobre el beneficio o rendimiento</small></span></label>
+        <div class="net-sim-tax-fields" id="netIrpfFields">
+         <div><label class="net-sim-label" for="netIncomeTaxBase">Tipo de renta</label><select class="net-sim-select" id="netIncomeTaxBase"><option value="savings">Base del ahorro (escala automática)</option><option value="general">Base general (tipo marginal)</option></select></div>
+         <div id="netIncomeTaxRateWrap"><label class="net-sim-label" for="netIncomeTaxRate">Tipo marginal estimado</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netIncomeTaxRate" type="number" min="0" max="100" step="0.1" placeholder="Introduce tu tipo"><span class="net-sim-input-unit">%</span></div></div>
+        </div>
+        <p class="net-sim-hint" id="netIncomeTaxHint">La base del ahorro usa la escala progresiva estatal configurada. La base general requiere tu tipo marginal aproximado.</p>
+       </article>
+       <article class="net-sim-tax-card">
+        <label class="net-sim-tax-check"><input type="checkbox" id="netIbiEnabled"><span><b>IBI</b><small>Impuesto municipal recurrente</small></span></label>
+        <label class="net-sim-label" for="netIbiAnnual">Cuota anual real</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netIbiAnnual" type="number" min="0" step="0.01" value="0"><span class="net-sim-input-unit">€/año</span></div>
+        <p class="net-sim-hint">Introduce el recibo anual. No existe un porcentaje estatal único: depende del valor catastral y del municipio.</p>
+       </article>
+       <article class="net-sim-tax-card">
+        <label class="net-sim-tax-check"><input type="checkbox" id="netAcquisitionTaxEnabled"><span><b>Impuesto de adquisición</b><small>IVA o ITP, según la operación</small></span></label>
+        <label class="net-sim-label" for="netAcquisitionTaxType">Tipo de impuesto</label><select class="net-sim-select" id="netAcquisitionTaxType"><option value="none">No especificado</option><option value="iva">IVA</option><option value="itp">ITP</option></select>
+        <label class="net-sim-label" for="netAcquisitionTaxRate">Tipo aplicable</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netAcquisitionTaxRate" type="number" min="0" max="100" step="0.1" placeholder="Introduce el tipo"><span class="net-sim-input-unit">%</span></div>
+        <p class="net-sim-hint">Se aplica una sola vez sobre el capital inicial. IVA deducible no se considera coste definitivo: introduce solo la parte no recuperable.</p>
+       </article>
+       <article class="net-sim-tax-card">
+        <label class="net-sim-tax-check"><input type="checkbox" id="netAjdEnabled"><span><b>AJD</b><small>Actos jurídicos documentados</small></span></label>
+        <label class="net-sim-label" for="netAjdRate">Tipo aplicable</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netAjdRate" type="number" min="0" max="100" step="0.01" placeholder="Introduce el tipo"><span class="net-sim-input-unit">%</span></div>
+        <p class="net-sim-hint">Depende de la comunidad autónoma y del documento. No se presupone un tipo universal.</p>
+       </article>
+       <article class="net-sim-tax-card">
+        <label class="net-sim-tax-check"><input type="checkbox" id="netMunicipalEnabled"><span><b>Plusvalía municipal</b><small>IIVTNU, si procede al transmitir</small></span></label>
+        <label class="net-sim-label" for="netMunicipalExitTax">Cuota estimada al vender</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netMunicipalExitTax" type="number" min="0" step="0.01" value="0"><span class="net-sim-input-unit">€</span></div>
+        <p class="net-sim-hint">Introduce una cuota calculada para tu inmueble y municipio; depende del valor catastral del suelo, periodo y normativa local.</p>
+       </article>
+       <article class="net-sim-tax-card">
+        <label class="net-sim-tax-check"><input type="checkbox" id="netOtherTaxEnabled"><span><b>Otros impuestos</b><small>Tributos adicionales de tu caso</small></span></label>
+        <div class="net-sim-tax-fields">
+         <div><label class="net-sim-label" for="netOtherEntryTax">Pago único de entrada</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netOtherEntryTax" type="number" min="0" step="0.01" value="0"><span class="net-sim-input-unit">€</span></div></div>
+         <div><label class="net-sim-label" for="netOtherAnnualTax">Pago anual</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netOtherAnnualTax" type="number" min="0" step="0.01" value="0"><span class="net-sim-input-unit">€/año</span></div></div>
+        </div>
+       </article>
+      </div>
+      <p class="net-sim-hint">El cálculo distingue impuestos de adquisición, cuotas anuales y tributación del beneficio. Los tipos autonómicos/municipales y la situación personal deben verificarse; los impuestos sobre beneficio se aproximan al final del horizonte, no sustituyen una liquidación fiscal.</p>
+     </section>
      <button class="net-sim-reset" id="netResetAdvanced" type="button">Restablecer supuestos</button>
     </details>
    </aside>
