@@ -166,3 +166,41 @@
 .net-sim-scenario-heading .net-sim-label{margin:15px 0 0}
 .net-sim-scenario-help{margin:12px 0 0}
 .net-sim-scenario-help>div{left:0;right:auto;max-width:min(330px,calc(100vw - 48px))}
+
+
+/* Selector visual de activos del simulador */
+.net-asset-picker{position:relative}
+.net-asset-search-wrap{position:relative}
+.net-asset-search-wrap>span{position:absolute;left:13px;top:50%;transform:translateY(-50%);z-index:1;color:#667085;font-size:23px;line-height:1;pointer-events:none}
+.net-asset-search-wrap #netAssetSearch{padding-left:42px;padding-right:42px}
+.net-asset-search-wrap>button{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:0;border-radius:50%;background:#f2f4f7;color:#475467;font-size:19px;cursor:pointer}
+.net-asset-selected{display:flex;align-items:center;gap:11px;margin-top:9px;padding:11px 12px;border:1px solid #dce8f8;border-radius:12px;background:#f7faff;min-width:0}
+.net-asset-selected-icon{display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:10px;background:#e8f1ff;color:#155eef;font-weight:800}
+.net-asset-selected-copy{display:grid;gap:2px;min-width:0;flex:1}
+.net-asset-selected-copy small{font-size:9px;letter-spacing:.07em;font-weight:800;color:#667085}
+.net-asset-selected-copy b{font-size:13px;color:#101828;overflow-wrap:anywhere}
+.net-asset-selected-copy>span{font-size:10px;color:#667085}
+.net-asset-selected>button{border:0;background:transparent;color:#155eef;font-size:11px;font-weight:800;cursor:pointer}
+.net-asset-results{position:absolute;z-index:50;top:calc(100% + 7px);left:0;right:0;max-height:370px;overflow:auto;padding:9px;border:1px solid #dce5f2;border-radius:14px;background:#fff;box-shadow:0 16px 38px #10182820}
+.net-asset-explore{padding:5px 4px 10px;border-bottom:1px solid #edf0f5}
+.net-asset-explore>small,.net-asset-results-label{display:flex;justify-content:space-between;align-items:center;font-size:9px;font-weight:800;letter-spacing:.06em;color:#667085}
+.net-asset-explore>div{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.net-asset-explore button{border:1px solid #dce8f8;border-radius:999px;padding:6px 9px;background:#f7faff;color:#1849a9;font-size:10px;font-weight:700;cursor:pointer}
+.net-asset-results-label{padding:10px 4px 6px}
+.net-asset-results-label span{font-variant-numeric:tabular-nums;color:#98a2b3}
+.net-asset-group-label{padding:9px 5px 4px;color:#155eef;font-size:10px;font-weight:800}
+.net-asset-option{display:flex;align-items:center;gap:9px;width:100%;padding:9px 8px;border:0;border-radius:9px;background:#fff;text-align:left;cursor:pointer}
+.net-asset-option:hover,.net-asset-option.is-selected{background:#f2f6ff}
+.net-asset-option-mark{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:8px;background:#f1f5f9;color:#64748b;font-size:13px}
+.net-asset-option-copy{display:grid;gap:2px;min-width:0;flex:1}
+.net-asset-option-copy b{font-size:12px;color:#101828;font-weight:700}
+.net-asset-option-copy small{font-size:10px;color:#667085}
+.net-asset-option-check{color:#155eef;font-weight:800}
+.net-asset-option-arrow{color:#98a2b3;font-size:18px}
+.net-asset-empty{display:grid;gap:4px;padding:20px 8px;text-align:center}
+.net-asset-empty b{font-size:12px;color:#344054}
+.net-asset-empty span,.net-asset-more{font-size:10px;color:#667085;line-height:1.5}
+.net-asset-more{text-align:center;padding:7px}
+.net-asset-manual-option{display:grid;gap:3px;width:100%;margin-top:7px;padding:10px 8px;border:0;border-top:1px solid #edf0f5;background:#fff;color:#155eef;text-align:left;font-size:11px;font-weight:800;cursor:pointer}
+.net-asset-manual-option span{font-size:10px;color:#667085;font-weight:400}
+@media(max-width:560px){.net-asset-results{max-height:55vh}.net-asset-selected{padding:10px}}
