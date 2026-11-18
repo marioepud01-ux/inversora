@@ -615,48 +615,25 @@ function openNetSummary(){
 }
 function openSimulationPrint(){
  if(!currentResult||currentResult.error){toast('Primero completa una simulación válida.');return;}
- let style=document.getElementById('netSimulationPrintStyles');
- if(!style){
-  style=document.createElement('style');style.id='netSimulationPrintStyles';
-  style.textContent=`@page{size:A4 portrait;margin:9mm}
-@media print{
- html,body{background:#fff!important;background-color:#fff!important}
- body.net-print-simulation,body.net-print-simulation *{visibility:visible!important}
- body.net-print-simulation{margin:0!important;padding:0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
- body.net-print-simulation>.app{display:block!important;visibility:visible!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
- body.net-print-simulation>.app>*:not(.inv-header):not(#sim){display:none!important}
- body.net-print-simulation>.app>.inv-header,body.net-print-simulation>.app>#sim{display:block!important;visibility:visible!important}
- body.net-print-simulation .inv-header{position:relative!important;top:auto!important;left:auto!important;width:100%!important;max-width:none!important;margin:0 0 5mm!important;padding:0 0 4mm!important;min-height:0!important;display:flex!important;justify-content:flex-end!important;border:0!important;border-bottom:1px solid #d8e4f4!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;backdrop-filter:none!important;transform:none!important}
- body.net-print-simulation .inv-header .header-brand-group{display:flex!important;justify-content:flex-end!important}
- body.net-print-simulation .inv-header .logo{display:inline-flex!important;align-items:center!important;gap:10px!important;padding:0!important;margin:0!important;border:0!important;background:transparent!important;color:#101828!important;font-size:25px!important;font-weight:850!important;letter-spacing:-1px!important}
- body.net-print-simulation .inv-header .logo:before{content:""!important;background-image:url("/icon-192.svg")!important;background-size:cover!important;background-position:center!important;box-shadow:0 4px 12px #155eef25!important;width:36px!important;height:36px!important;flex:0 0 36px!important;border-radius:11px!important}
- body.net-print-simulation .inv-header .desktop-main-nav,body.net-print-simulation .inv-header .header-actions,body.net-print-simulation .inv-sidebar,body.net-print-simulation .inv-sidebar-backdrop,body.net-print-simulation .net-sim-modebar,body.net-print-simulation .net-sim-actions,body.net-print-simulation .net-asset-results,body.net-print-simulation #netChartTooltip{display:none!important}
- body.net-print-simulation #sim{display:block!important;position:static!important;visibility:visible!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;overflow:visible!important;background:#fff!important}
- body.net-print-simulation #sim>.tool-page{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
- body.net-print-simulation #sim .tool-hero{margin:0 0 5mm!important;padding:0 0 4mm!important;box-shadow:none!important}
- body.net-print-simulation #netModeOne{display:block!important;visibility:visible!important}
- body.net-print-simulation #netModeTwo{display:none!important}
- body.net-print-simulation .net-sim-shell{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:5mm!important;align-items:start!important}
- body.net-print-simulation .net-sim-panel,body.net-print-simulation .net-sim-output{box-shadow:none!important}
- body.net-print-simulation .net-sim-card,body.net-print-simulation .net-sim-result,body.net-print-simulation .net-sim-panel,body.net-print-simulation .net-sim-output{break-inside:auto!important;page-break-inside:auto!important;box-shadow:none!important}body.net-print-simulation .net-sim-stat,body.net-print-simulation .net-sim-whatif-item{break-inside:avoid!important;page-break-inside:avoid!important;box-shadow:none!important}
- body.net-print-simulation .net-sim-panel,body.net-print-simulation .net-sim-card,body.net-print-simulation .net-sim-result{padding:12px!important;border-radius:10px!important}
- body.net-print-simulation .net-sim-output{display:block!important;min-width:0!important;margin-top:5mm!important}
- body.net-print-simulation .net-sim-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
- body.net-print-simulation .net-sim-whatif{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
- body.net-print-simulation #netGraph svg{max-width:100%!important;height:auto!important}
- body.net-print-simulation input,body.net-print-simulation select{color:#101828!important;background:#fff!important;box-shadow:none!important;opacity:1!important}
- body.net-print-simulation .net-sim-result{background:#142b50!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
- body.net-print-simulation .net-sim-note,body.net-print-simulation .net-sim-hint,body.net-print-simulation .net-sim-result-sub{font-size:9px!important;line-height:1.35!important}
- body.net-print-simulation .net-sim-advanced:not([open])>*:not(summary){display:none!important}
- body.net-print-simulation .net-sim-advanced[open] .net-sim-sub-advanced:not([open])>*:not(summary){display:none!important}
-}`;
-  document.head.appendChild(style);
- }
- const finish=()=>document.body.classList.remove('net-print-simulation');
- window.addEventListener('afterprint',finish,{once:true});
- document.body.classList.add('net-print-simulation');
- // Forzar el recálculo del layout antes de abrir el diálogo de impresión.
- requestAnimationFrame(()=>requestAnimationFrame(()=>{try{window.focus();window.print();}catch(err){finish();console.error('Print simulation:',err);}}));
+ const popup=window.open('','_blank');
+ if(!popup){alert('Permite las ventanas emergentes para abrir la vista de impresión.');return;}
+ const sourceHeader=document.querySelector('.inv-header'),sourceSim=document.getElementById('sim');
+ if(!sourceHeader||!sourceSim){popup.close();toast('No se ha podido preparar la simulación para imprimir.');return;}
+ const header=sourceHeader.cloneNode(true),sim=sourceSim.cloneNode(true);
+ sim.classList.remove('hidden');
+ const sourceFields=sourceSim.querySelectorAll('input,select,textarea'),targetFields=sim.querySelectorAll('input,select,textarea');
+ sourceFields.forEach((field,index)=>{const target=targetFields[index];if(!target)return;if(field.type==='checkbox'||field.type==='radio')target.checked=field.checked;else target.value=field.value;});
+ const sourceDetails=sourceSim.querySelectorAll('details'),targetDetails=sim.querySelectorAll('details');
+ sourceDetails.forEach((details,index)=>{if(targetDetails[index])targetDetails[index].open=details.open;});
+ header.querySelectorAll('.desktop-main-nav,.header-actions,.global-search-panel').forEach(el=>el.remove());
+ const brand=header.querySelector('.header-brand-group');if(brand){brand.style.display='flex';brand.style.justifyContent='flex-end';brand.style.width='100%';}
+ sim.querySelectorAll('.net-sim-actions,.net-sim-modebar,.net-asset-results,#netChartTooltip').forEach(el=>el.remove());
+ const styles=[...document.querySelectorAll('style')].filter(el=>el.id!=='netSimulationPrintStyles').map(el=>'<style>'+el.textContent+'</style>').join('');
+ const links=[...document.querySelectorAll('link[rel="stylesheet"]')].map(el=>'<link rel="stylesheet" href="'+el.href+'">').join('');
+ const printCss='@page{size:A4 portrait;margin:10mm}html,body{margin:0!important;padding:0!important;width:100%!important;background:#fff!important;color:#101828!important}body{font-family:Inter,Arial,sans-serif!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.app{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}.inv-header{position:static!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;width:100%!important;max-width:none!important;margin:0 0 7mm!important;padding:0 0 4mm!important;border:0!important;border-bottom:1px solid #d8e4f4!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;transform:none!important}.inv-header .header-brand-group{display:flex!important;justify-content:flex-end!important;width:100%!important}.inv-header .logo{display:inline-flex!important;align-items:center!important;padding:0!important;margin:0!important;border:0!important;background:transparent!important;box-shadow:none!important}#sim{display:block!important;position:static!important;visibility:visible!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;overflow:visible!important;background:#fff!important}#sim>.tool-page{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}#sim .tool-hero{margin:0 0 6mm!important;padding:0 0 4mm!important;box-shadow:none!important}#netModeOne{display:block!important;visibility:visible!important}#netModeTwo{display:none!important}.net-sim-shell{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:6mm!important;align-items:start!important}.net-sim-panel,.net-sim-output{display:block!important;min-width:0!important;margin:0!important;box-shadow:none!important}.net-sim-output{margin-top:5mm!important}.net-sim-panel,.net-sim-card,.net-sim-result{padding:12px!important;border-radius:10px!important;break-inside:auto!important;page-break-inside:auto!important;box-shadow:none!important}.net-sim-stat,.net-sim-whatif-item{break-inside:avoid!important;page-break-inside:avoid!important}.net-sim-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}.net-sim-whatif{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}#netGraph svg{display:block!important;max-width:100%!important;height:auto!important}input,select,textarea{color:#101828!important;background:#fff!important;box-shadow:none!important;opacity:1!important}.net-sim-result{background:#142b50!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.net-sim-actions,.net-sim-modebar,.net-asset-results,.net-sim-reset{display:none!important}.net-sim-advanced:not([open])>*:not(summary){display:none!important}.net-sim-advanced[open] .net-sim-sub-advanced:not([open])>*:not(summary){display:none!important}@media screen{body{background:#eef2f7!important;padding:20px!important}.app{max-width:900px!important;margin:0 auto!important;padding:20px!important;background:#fff!important;border-radius:14px!important;box-shadow:0 10px 40px #10182818!important}.print-screen-actions{display:flex!important;gap:10px!important;margin:0 0 16px!important}.print-screen-actions button{border:0;border-radius:9px;padding:10px 16px;background:#155eef;color:#fff;font-weight:700;cursor:pointer}.print-screen-actions .secondary{background:#eaf1ff;color:#1749a9}}@media print{.print-screen-actions{display:none!important}}';
+ const doc='<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="'+location.origin+'/"><title>Simulación · Inversora</title>'+links+styles+'<style>'+printCss+'</style></head><body><div class="app">'+header.outerHTML+'<div class="print-screen-actions"><button type="button" id="printNow">Imprimir</button><button type="button" class="secondary" id="closePrint">Cerrar</button></div>'+sim.outerHTML+'</div><script>document.getElementById("printNow").addEventListener("click",()=>window.print());document.getElementById("closePrint").addEventListener("click",()=>window.close());</script></body></html>';
+ popup.addEventListener('load',()=>{const fonts=popup.document.fonts&&popup.document.fonts.ready?popup.document.fonts.ready:Promise.resolve();fonts.then(()=>popup.requestAnimationFrame(()=>popup.requestAnimationFrame(()=>{try{popup.focus();popup.print();}catch(err){console.error('Print simulation:',err);}})));},{once:true});
+ popup.document.open();popup.document.write(doc);popup.document.close();
 }
 function init(){
  $('netTaxProfileHint')?.remove();$('netAssetTaxAdvice')?.remove();
