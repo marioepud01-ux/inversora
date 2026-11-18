@@ -296,7 +296,7 @@ body.net-asset-advice-open{overflow:hidden}
 .net-asset-advice-dialog .net-advice-list span{font-size:11px;line-height:1.58}
 @media(max-width:640px){.net-asset-category-filters{gap:5px}.net-asset-category-chip{font-size:9px;padding:7px 8px}}
 
-.net-sim-reset{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:10px 15px;border:1px solid #d0d5dd;border-radius:11px;background:#fff;color:#344054;font-size:12px;font-weight:800;cursor:pointer;transition:background .16s,border-color .16s,box-shadow .16s}
-.net-sim-reset:hover{background:#f2f6ff;border-color:#84adff;box-shadow:0 4px 14px #155eef12}
+.net-sim-reset{display:inline-flex;align-items:center;justify-content:flex-start;min-height:0;padding:8px 0;border:0;border-radius:0;background:transparent;color:#155eef;font-size:12px;font-weight:700;cursor:pointer;box-shadow:none;transition:color .16s,text-decoration-color .16s}
+.net-sim-reset:hover{background:transparent;border:0;color:#0b4bc4;box-shadow:none;text-decoration:underline}
 #netIncomeStatement{border:1px solid #155eef;color:#155eef;background:#eef4ff}
 #netIncomeStatement:hover{background:#dce9ff}
