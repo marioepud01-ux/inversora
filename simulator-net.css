@@ -258,3 +258,17 @@
 @media(prefers-reduced-motion:reduce){
  .net-sim-panel,.net-sim-result,.net-sim-card,.net-sim-stat,.net-sim-tax-card,.net-sim-advanced-grid>div,#netManualRateWrap{transition:none}
 }
+
+/* Aviso contextual de costes e impuestos por tipo de activo */
+.net-asset-advice{margin:14px 0 18px;padding:16px 18px;border:1px solid #cbdaf8;border-left:4px solid #155eef;border-radius:12px;background:#f7f9ff;color:#26344a}
+.net-advice-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.net-advice-head strong{font-size:14px;color:#142b55}
+.net-advice-head>span{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#5572a5}
+.net-asset-advice>p{margin:7px 0 12px;font-size:13px;line-height:1.5;color:#52627b}
+.net-advice-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.net-advice-list>div{display:flex;flex-direction:column;gap:3px;padding:10px 12px;background:#fff;border:1px solid #e3eaf7;border-radius:9px}
+.net-advice-list b{font-size:12px;color:#20365c}
+.net-advice-list span{font-size:12px;line-height:1.45;color:#52627b}
+.net-asset-advice>small{display:block;margin-top:11px;font-size:11px;line-height:1.5;color:#69778d}
+.net-cost-group>.net-sim-tax-check{margin-bottom:10px}
+@media(max-width:640px){.net-advice-list{grid-template-columns:1fr}.net-asset-advice{padding:13px}}
