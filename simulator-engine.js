@@ -66,11 +66,14 @@
       gross=gross*(1+monthlyRate)+monthly;
       const beforeFee=net*(1+monthlyRate);
       const afterPercentFee=beforeFee*monthlyFeeFactor;
-      const fixedMonthly=Math.min(afterPercentFee,annualFixed/12);
+      // Los importes introducidos como €/año se prorratean en 12 cuotas mensuales.
+      // El total acumulado en 12 meses equivale exactamente a una cuota anual, no a 12 cuotas anuales.
+      const fixedMonthly=annualFixed/12;
       const monthlyTax=(ibiAnnual+otherAnnualTax)/12;
       net=Math.max(0,afterPercentFee-fixedMonthly-monthlyTax);
+      // Se registra el gasto/impuesto íntegro aunque el valor del activo no alcance para cubrirlo.
       recurringCosts+=beforeFee-afterPercentFee+fixedMonthly;
-      recurringTaxes+=Math.min(afterPercentFee-fixedMonthly,monthlyTax);
+      recurringTaxes+=monthlyTax;
       const deposit=monthly*(1-entryFee/100);
       net+=deposit;
       entryCosts+=monthly*entryFee/100;
