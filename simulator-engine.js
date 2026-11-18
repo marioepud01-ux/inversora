@@ -95,7 +95,7 @@
       else if(incomeTaxBase==='savings')incomeTax=progressiveTax(taxableGain,brackets);
       else if(incomeTaxRate!==null)incomeTax=taxableGain*incomeTaxRate/100;
     }
-    const taxes={acquisition:acquisitionTax,recurring:recurringTaxes,income:incomeTax,municipal:municipalExitTax,otherEntry:otherEntryTax,otherRecurring:otherAnnualTax,total:acquisitionTax+recurringTaxes+incomeTax+municipalExitTax};
+    const taxes={acquisition:capital*(acquisitionTaxRate+ajdRate)/100,otherEntry:otherEntryTax,recurring:recurringTaxes,income:incomeTax,municipal:municipalExitTax,otherRecurring:otherAnnualTax,total:acquisitionTax+recurringTaxes+incomeTax+municipalExitTax};
     const tax=incomeTax+municipalExitTax;
     const netNominal=Math.max(0,afterExit-tax);
     const realFinal=netNominal/Math.pow(1+inflation/100,years);
