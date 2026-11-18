@@ -85,7 +85,7 @@ function readInputs(asset,rateOverride){
  return {
   capital:num('netCapital'),monthly:num('netMonthly'),years:num('netYears'),
   rate:rateOverride??(asset?scenarioRate(asset):num('netManualRate')),
-  entryFee:num('netEntryFee'),entryFixed:num('netEntryFixed'),annualFee:num('netAnnualFee'),annualFixed:num('netAnnualFixed'),exitFee:num('netExitFee'),exitFixed:num('netExitFixed'),
+  entryFee:0,entryFixed:num('netEntryFee'),annualFee:0,annualFixed:num('netAnnualFee'),exitFee:0,exitFixed:num('netExitFee'),
   incomeTaxEnabled:$('netIncomeTaxEnabled').checked,
   incomeTaxType:$('netTaxSubject').value==='company'?'is':'irpf',
   incomeTaxBase:$('netIncomeTaxBase').value,
@@ -96,7 +96,7 @@ function readInputs(asset,rateOverride){
   municipalExitTax:$('netMunicipalEnabled').checked?num('netMunicipalExitTax')||0:0,
   otherAnnualTax:$('netOtherTaxEnabled').checked?num('netOtherAnnualTax')||0:0,
   otherEntryTax:$('netOtherTaxEnabled').checked?num('netOtherEntryTax')||0:0,
-  inflation:num('netInflation'),vacancy:isRentalAsset(asset)?num('netVacancy'):0
+  inflation:num('netInflation'),vacancy:isRentalAsset(asset)?(num('netVacancy')/12*100):0
  };
 }
 function calculate(asset,scenario=selectedScenario,overrides={}){
@@ -120,9 +120,9 @@ function loadAssetDefaults(asset){
  const hasIbi=realEstate||/\bibi\b/.test(fiscalText);
  const hasIva=/\biva\b/.test(fiscalText),hasItp=/\bitp\b/.test(fiscalText),hasAjd=/\bajd\b/.test(fiscalText);
  const hasPlusvalia=/plusval[ií]a municipal|iivtnu/.test(fiscalText);
- $('netEntryFee').value=d.entryFee.toFixed(2);$('netEntryFixed').value='0';
- $('netAnnualFee').value=d.annualFee.toFixed(2);$('netAnnualFixed').value='0';
- $('netExitFee').value=d.exitFee.toFixed(2);$('netExitFixed').value='0';
+ $('netEntryFee').value='0';$('netEntryFixed').value='0';
+ $('netAnnualFee').value='0';$('netAnnualFixed').value='0';
+ $('netExitFee').value='0';$('netExitFixed').value='0';
  $('netManualRate').value=asset?scenarioRate(asset,'base').toFixed(2):'5';
  selectedScenario='base';
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.netScenario==='base')));
@@ -296,7 +296,7 @@ function setCompareOptions(){
  $('netCompare1').value=first;$('netCompare2').value=second;
 }
 function shareLink(){
- const state={asset:$('netAsset').value,capital:$('netCapital').value,monthly:$('netMonthly').value,years:$('netYears').value,scenario:selectedScenario,entry:$('netEntryFee').value,entryFixed:$('netEntryFixed').value,annual:$('netAnnualFee').value,annualFixed:$('netAnnualFixed').value,exit:$('netExitFee').value,exitFixed:$('netExitFixed').value,inflation:$('netInflation').value,vacancy:$('netVacancy').value,manual:$('netManualRate').value,taxSettings:Object.fromEntries(['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherTaxName','netOtherEntryTax','netOtherAnnualTax'].map(id=>{const el=$(id);return [id,el.type==='checkbox'?el.checked:el.value]}))};
+ const state={asset:$('netAsset').value,capital:$('netCapital').value,monthly:$('netMonthly').value,years:$('netYears').value,scenario:selectedScenario,entryFixed:$('netEntryFee').value,annualFixed:$('netAnnualFee').value,exitFixed:$('netExitFee').value,inflation:$('netInflation').value,vacancy:$('netVacancy').value,manual:$('netManualRate').value,taxSettings:Object.fromEntries(['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherTaxName','netOtherEntryTax','netOtherAnnualTax'].map(id=>{const el=$(id);return [id,el.type==='checkbox'?el.checked:el.value]}))};
  const url=location.href.split('#')[0]+'#net-sim='+encodeURIComponent(JSON.stringify(state));
  if(navigator.share){navigator.share({title:'Mi simulación en Inversora',url}).catch(()=>{});}
  else if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>toast('Enlace copiado. Reproduce los mismos supuestos.')).catch(()=>prompt('Copia este enlace',url));}
@@ -308,7 +308,7 @@ function loadShared(){
   const s=JSON.parse(decodeURIComponent(raw[1]));
   $('netAsset').value=s.asset||'__manual__';
   ['capital','monthly','years'].forEach(k=>{if(s[k]!==undefined)$('net'+k[0].toUpperCase()+k.slice(1)).value=s[k];});
-  $('netEntryFee').value=s.entry??0;$('netEntryFixed').value=s.entryFixed??0;$('netAnnualFee').value=s.annual??0;$('netAnnualFixed').value=s.annualFixed??0;$('netExitFee').value=s.exit??0;$('netExitFixed').value=s.exitFixed??0;
+  $('netEntryFee').value=s.entryFixed??s.entry??0;$('netEntryFixed').value=0;$('netAnnualFee').value=s.annualFixed??s.annual??0;$('netAnnualFixed').value=0;$('netExitFee').value=s.exitFixed??s.exit??0;$('netExitFixed').value=0;
   $('netInflation').value=s.inflation??2;$('netVacancy').value=s.vacancy??0;$('netManualRate').value=s.manual??5;
   selectedScenario=s.scenario||'base';
   document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.netScenario===selectedScenario)));
@@ -341,11 +341,11 @@ function init(){
  $('netAssetSearchClear').addEventListener('click',()=>{$('netAssetSearch').value='';populateAssetOptions('',true);$('netAssetSearch').focus();});
  document.addEventListener('click',e=>{if(!$('netAssetPicker')?.contains(e.target))renderAssetPicker($('netAssetSearch')?.value||'',false);});
  $('netAsset').addEventListener('change',()=>{loadAssetDefaults(findAsset($('netAsset').value));$('netAssetSearch').value=$('netAsset').value==='__manual__'?'Rentabilidad manual':$('netAsset').value;renderAssetPicker('',false);});
- ['netCapital','netMonthly','netYears','netEntryFee','netEntryFixed','netAnnualFee','netAnnualFixed','netExitFee','netExitFixed','netInflation','netVacancy'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
+ ['netCapital','netMonthly','netYears','netEntryFee','netAnnualFee','netExitFee','netInflation','netVacancy'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
  $('netManualRate').addEventListener('input',()=>{selectedScenario='custom';document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed','false'));runNetSimulation();});
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.netScenario)));
  document.querySelectorAll('[data-net-mode]').forEach(b=>b.addEventListener('click',()=>renderMode(b.dataset.netMode)));
- $('netResetAdvanced').addEventListener('click',()=>{loadAssetDefaults(currentAsset);$('netEntryFixed').value='0';$('netAnnualFixed').value='0';$('netExitFixed').value='0';$('netInflation').value='2';$('netVacancy').value='0';runNetSimulation();});
+ $('netResetAdvanced').addEventListener('click',()=>{loadAssetDefaults(currentAsset);$('netEntryFee').value='0';$('netEntryFixed').value='0';$('netAnnualFee').value='0';$('netAnnualFixed').value='0';$('netExitFee').value='0';$('netExitFixed').value='0';$('netInflation').value='2';$('netVacancy').value='0';runNetSimulation();});
  ['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherEntryTax','netOtherAnnualTax'].forEach(id=>$(id).addEventListener('input',()=>{updateTaxControls();runNetSimulation();}));
  $('netIncomeTaxRate').addEventListener('change',()=>{updateTaxControls();runNetSimulation();});
  $('netIncomeTaxRate').addEventListener('blur',()=>{updateTaxControls();runNetSimulation();});
