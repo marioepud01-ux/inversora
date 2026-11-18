@@ -1,0 +1,50 @@
+{
+  "version": "2026-11-17",
+  "lastReviewed": "2026-11-17",
+  "jurisdiction": "IRPF estatal + autonómico, territorio común; base liquidable del ahorro",
+  "defaultInflation": 2,
+  "inflationRationale": "Hipótesis estructural editable alineada con el objetivo simétrico del 2 % a medio plazo del BCE; no es una previsión del IPC español.",
+  "inflationSource": {
+    "name": "BCE — revisión de estrategia monetaria, 30-06-2025",
+    "url": "https://www.ecb.europa.eu/press/pr/date/2025/html/ecb.pr250630~aabf988af8.en.html"
+  },
+  "savingsTaxBrackets": [
+    {
+      "upTo": 6000,
+      "rate": 19
+    },
+    {
+      "upTo": 50000,
+      "rate": 21
+    },
+    {
+      "upTo": 200000,
+      "rate": 23
+    },
+    {
+      "upTo": 300000,
+      "rate": 27
+    },
+    {
+      "upTo": null,
+      "rate": 30
+    }
+  ],
+  "taxSource": {
+    "name": "BOE — Ley 35/2006 del IRPF, texto consolidado consultado a 07-10-2026, art. 66",
+    "url": "https://boe.es/buscar/act.php?id=BOE-A-2006-20764&p=20261007&tn=1"
+  },
+  "taxScopeNote": "Escala general de la base del ahorro. No sustituye el cálculo de cuota personal, mínimo personal/familiar, normativa foral, deducciones ni tratamientos específicos de cada activo.",
+  "ipcLatest": {
+    "period": "octubre 2026",
+    "annualRate": 4.9,
+    "published": "2026-11-13",
+    "source": "https://www.ine.es/dyngs/Prensa/IPC1026.htm"
+  },
+  "notes": [
+    "El simulador usa la escala del ahorro únicamente como aproximación sobre una ganancia positiva al final del horizonte.",
+    "No calcula retenciones ni tributación anual de intereses, cupones o dividendos.",
+    "No calcula el régimen de alquiler, actividad económica, sociedades, planes de pensiones, seguros, derivados o criptoactivos de forma específica.",
+    "Las pérdidas no generan impuesto negativo ni se compensan con otras rentas del usuario."
+  ]
+}

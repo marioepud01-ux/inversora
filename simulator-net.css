@@ -1,0 +1,306 @@
+
+/* Inversora · simulador de dinero neto real */
+.net-sim-shell{display:grid;grid-template-columns:minmax(285px,.78fr) minmax(0,1.22fr);gap:18px;align-items:start}
+.net-sim-panel,.net-sim-card{background:#fff;border:1px solid #e2e8f0;border-radius:20px;box-shadow:0 8px 28px #10182808}
+.net-sim-panel{padding:22px}
+.net-sim-panel h2,.net-sim-card h2{font-size:17px;letter-spacing:-.35px;margin:0 0 15px;color:#0f172a}
+.net-sim-label{display:block;font-size:12px;font-weight:700;color:#344054;margin:15px 0 7px}
+.net-sim-input,.net-sim-select{width:100%;min-height:46px;border:1px solid #d0d5dd;border-radius:11px;padding:11px 12px;background:#fff;color:#0f172a;font:inherit;font-size:14px;outline:none}
+.net-sim-input:focus,.net-sim-select:focus{border-color:#84adff;box-shadow:0 0 0 3px #155eef15}
+.net-sim-hint{font-size:11px;color:#667085;line-height:1.5;margin:6px 0 0}
+.net-sim-scenario{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#f1f5f9;padding:5px;border-radius:12px;margin-top:8px}
+.net-sim-scenario button{border:0;background:transparent;border-radius:9px;padding:10px 5px;min-height:42px;color:#475467;font-size:12px;font-weight:700;cursor:pointer}
+.net-sim-scenario button[aria-pressed=true]{background:#fff;color:#155eef;box-shadow:0 1px 4px #10182818}
+.net-sim-advanced{margin-top:18px;border-top:1px solid #edf0f5;padding-top:14px}
+.net-sim-advanced summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:750;color:#0f172a;min-height:42px}
+.net-sim-advanced summary::-webkit-details-marker{display:none}
+.net-sim-advanced summary:after{content:"+";font-size:19px;color:#155eef}
+.net-sim-advanced[open] summary:after{content:"−"}
+.net-sim-advanced-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.net-sim-reset{border:0;background:transparent;color:#155eef;font-weight:700;font-size:12px;padding:8px 0;cursor:pointer}
+.net-sim-result{padding:24px;background:linear-gradient(140deg,#fff 0%,#f8faff 100%);border:1px solid #dce6f5;border-radius:20px}
+.net-sim-eyebrow{font-size:12px;color:#475467;font-weight:700}
+.net-sim-main-number{font-size:clamp(34px,4.2vw,52px);letter-spacing:-2px;font-weight:800;color:#155eef;line-height:1.08;margin:10px 0 5px;overflow-wrap:anywhere}
+.net-sim-result-sub{font-size:13px;color:#667085;margin:0;line-height:1.5}
+.net-sim-range{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #e5eaf2;margin-top:17px;padding-top:14px;font-size:12px;color:#475467}
+.net-sim-range strong{display:block;color:#0f172a;font-size:14px;margin-top:4px}
+.net-sim-card{padding:19px;margin-top:14px}
+.net-sim-card h2{margin-bottom:13px}
+.net-sim-waterfall{display:grid;gap:12px}
+.net-sim-water-row{display:grid;grid-template-columns:minmax(110px,1fr) minmax(90px,1.3fr) auto;align-items:center;gap:10px}
+.net-sim-water-row span{font-size:12px;color:#475467}
+.net-sim-water-row b{font-size:12px;color:#0f172a;text-align:right;white-space:nowrap}
+.net-sim-track{height:9px;border-radius:99px;background:#eef2f7;overflow:hidden}
+.net-sim-track i{display:block;height:100%;border-radius:99px;background:#155eef;transition:width .25s ease}
+.net-sim-water-row.is-deduction .net-sim-track i{background:#94a3b8}
+.net-sim-water-row.is-final .net-sim-track i{background:#155eef}
+.net-sim-water-note{font-size:11px;color:#667085;margin:4px 0 0}
+.net-sim-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:14px}
+.net-sim-stat{border:1px solid #e2e8f0;border-radius:14px;padding:13px;background:#fff;min-width:0}
+.net-sim-stat span{display:block;font-size:11px;color:#667085;line-height:1.35}
+.net-sim-stat b{display:block;font-size:16px;letter-spacing:-.3px;margin-top:7px;color:#0f172a;overflow-wrap:anywhere}
+.net-sim-chart{width:100%;height:auto;display:block;overflow:visible}
+.net-sim-chart-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:#667085;margin-bottom:8px}
+.net-sim-legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:#155eef}
+.net-sim-legend-dot.gray{background:#98a2b3}
+.net-sim-chart-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.net-sim-chart-table th,.net-sim-chart-table td{padding:8px;text-align:right;border-bottom:1px solid #edf0f5}
+.net-sim-chart-table th:first-child,.net-sim-chart-table td:first-child{text-align:left}
+.net-sim-whatif{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.net-sim-whatif-item{border:1px solid #e2e8f0;border-radius:14px;padding:13px;min-width:0}
+.net-sim-whatif-item label{font-size:12px;font-weight:700;display:block;min-height:34px;color:#344054}
+.net-sim-whatif-item input{width:100%;accent-color:#155eef;margin:12px 0 7px}
+.net-sim-whatif-item p{font-size:11px;color:#667085;margin:0;line-height:1.4}
+.net-sim-whatif-item strong{display:block;font-size:13px;margin-top:6px;color:#0f172a}
+.net-sim-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.net-sim-actions button,.net-sim-primary{border:1px solid #d0d5dd;background:#fff;color:#344054;border-radius:11px;min-height:44px;padding:10px 13px;font-size:12px;font-weight:750;cursor:pointer}
+.net-sim-actions .primary,.net-sim-primary{background:#155eef;color:#fff;border-color:#155eef}
+.net-sim-note{font-size:11px;color:#667085;line-height:1.5;margin:12px 0 0}
+.net-sim-error{padding:12px 14px;background:#fff4f2;border:1px solid #fecdca;color:#b42318;border-radius:12px;font-size:12px;margin-top:12px}
+.net-sim-modebar{display:flex;gap:8px;margin:16px 0 18px;flex-wrap:wrap}
+.net-sim-modebar button{border:1px solid #d0d5dd;background:#fff;border-radius:999px;padding:10px 15px;min-height:42px;color:#475467;font-weight:750;font-size:12px;cursor:pointer}
+.net-sim-modebar button[aria-pressed=true]{background:#155eef;color:#fff;border-color:#155eef}
+.net-sim-compare-selects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.net-sim-table-wrap{overflow-x:auto}
+.net-sim-compare-table{width:100%;border-collapse:collapse;font-size:12px;min-width:650px}
+.net-sim-compare-table th,.net-sim-compare-table td{padding:12px 10px;text-align:right;border-bottom:1px solid #edf0f5;white-space:nowrap}
+.net-sim-compare-table th:first-child,.net-sim-compare-table td:first-child{text-align:left}
+.net-sim-compare-table th{color:#667085;font-weight:700}
+.net-sim-compare-table .best{background:#eff6ff;color:#155eef;font-weight:800}
+.net-sim-compare-summary{font-size:13px;color:#344054;line-height:1.55;margin:12px 0 0}
+.net-sim-hidden{display:none!important}
+.net-sim-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#101828;color:#fff;padding:11px 16px;border-radius:999px;font-size:12px;z-index:3000;box-shadow:0 8px 30px #10182830}
+@media(max-width:850px){.net-sim-shell{grid-template-columns:1fr}.net-sim-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.net-sim-panel,.net-sim-result,.net-sim-card{padding:16px;border-radius:17px}.net-sim-whatif{grid-template-columns:1fr}.net-sim-whatif-item label{min-height:0}.net-sim-compare-selects{grid-template-columns:1fr}.net-sim-water-row{grid-template-columns:105px minmax(55px,1fr) auto;gap:7px}.net-sim-water-row span,.net-sim-water-row b{font-size:11px}.net-sim-main-number{font-size:38px}.net-sim-actions{display:grid;grid-template-columns:1fr 1fr}.net-sim-actions button{width:100%}}
+@media(prefers-reduced-motion:reduce){.net-sim-track i{transition:none}}
+
+
+/* Editable simulator fields: blue active edge and integrated units */
+.net-sim-advanced-grid>div,
+#netManualRateWrap{
+ position:relative;
+ min-width:0;
+ margin:10px 0 2px;
+ padding:10px 11px 12px 13px;
+ border:1px solid #e7edf5;
+ border-left:3px solid #b7d0ff;
+ border-radius:12px;
+ background:#fff;
+ box-shadow:0 2px 8px #10182805;
+ transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+.net-sim-advanced-grid>div:hover,
+#netManualRateWrap:hover{
+ border-left-color:#155eef;
+ box-shadow:0 5px 16px #155eef12;
+}
+.net-sim-advanced-grid .net-sim-label,
+#netManualRateWrap .net-sim-label{margin:0 0 8px}
+.net-sim-input-wrap{position:relative;width:100%}
+.net-sim-input-wrap .net-sim-input{padding-right:82px;font-variant-numeric:tabular-nums}
+.net-sim-input-unit{
+ position:absolute;right:12px;top:50%;transform:translateY(-50%);
+ color:#98a2b3;font-size:12px;font-weight:700;pointer-events:none;
+ white-space:nowrap;
+}
+
+/* Tax assumptions: clearly separated from operating costs */
+.net-sim-tax-section{margin-top:24px;padding-top:21px;border-top:2px solid #e7edf5}
+.net-sim-tax-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.net-sim-tax-heading h3{margin:0;color:#101828;font-size:16px;letter-spacing:-.3px}
+.net-sim-tax-heading p{margin:5px 0 0;color:#667085;font-size:11px;line-height:1.45}
+.net-sim-tax-tag{flex:0 0 auto;padding:6px 9px;border-radius:999px;background:#eef4ff;color:#1849a9;font-size:10px;font-weight:800}
+.net-sim-tax-profile{margin:0 0 13px;padding:10px 12px;border-left:3px solid #155eef;border-radius:8px;background:#f7f9ff;color:#475467;font-size:11px;line-height:1.5}
+.net-sim-tax-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.net-sim-tax-card{min-width:0;padding:13px;border:1px solid #e5eaf2;border-left:3px solid #b7d0ff;border-radius:13px;background:#fff;transition:border-color .18s ease,box-shadow .18s ease}
+.net-sim-tax-card:hover{border-left-color:#155eef;box-shadow:0 5px 16px #155eef12}
+.net-sim-tax-card-wide{grid-column:1/-1}
+.net-sim-tax-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.net-sim-tax-card-head>label{font-size:12px;font-weight:750;color:#344054}
+.net-sim-tax-card-head .net-sim-select{width:auto;min-width:145px;min-height:38px;padding:7px 9px;font-size:12px}
+.net-sim-tax-check{display:flex;align-items:flex-start;gap:9px;cursor:pointer}
+.net-sim-tax-check input{width:16px;height:16px;flex:0 0 16px;margin:2px 0 0;accent-color:#155eef}
+.net-sim-tax-check span{min-width:0}
+.net-sim-tax-check b{display:block;color:#101828;font-size:13px;line-height:1.25}
+.net-sim-tax-check small{display:block;margin-top:3px;color:#667085;font-size:10px;line-height:1.4}
+.net-sim-tax-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.net-sim-tax-card .net-sim-label{margin:12px 0 6px}
+.net-sim-tax-card .net-sim-input,.net-sim-tax-card .net-sim-select{min-height:40px;padding:8px 10px;font-size:13px}
+.net-sim-tax-card .net-sim-input-wrap .net-sim-input{padding-right:72px}
+.net-sim-tax-card .net-sim-hint{font-size:10px;line-height:1.45;margin-top:8px}
+.net-sim-tax-card input:disabled,.net-sim-tax-card select:disabled{background:#f2f4f7;color:#98a2b3;cursor:not-allowed}
+@media(max-width:560px){.net-sim-tax-grid{grid-template-columns:1fr}.net-sim-tax-card-wide{grid-column:auto}.net-sim-tax-fields{grid-template-columns:1fr}.net-sim-tax-heading{flex-direction:column}.net-sim-tax-card-head{align-items:flex-start;flex-direction:column}.net-sim-tax-card-head .net-sim-select{width:100%}}
+
+.net-sim-subheading{margin:14px 0 4px;color:#101828;font-size:14px;letter-spacing:-.2px}
+
+
+/* Ajustes independientes desplegables y ayuda contextual del bloque ¿Y si...? */
+.net-sim-sub-advanced{margin-top:10px;padding:0 12px 12px;border:1px solid #e5eaf2;border-radius:13px;background:#fff}
+.net-sim-sub-advanced>summary{min-height:46px}
+.net-sim-sub-advanced[open]>summary{border-bottom:1px solid #edf0f5;margin-bottom:12px}
+.net-sim-sub-advanced .net-sim-tax-section{margin-top:0;padding-top:8px;border-top:0}
+.net-sim-whatif-heading{display:flex;align-items:center;gap:9px;margin-bottom:13px}
+.net-sim-whatif-heading h2{margin:0}
+.net-sim-whatif-help{position:relative;flex:0 0 auto}
+.net-sim-whatif-help>summary{list-style:none;display:grid;place-items:center;width:22px;height:22px;border:1px solid #84adff;border-radius:50%;color:#155eef;background:#eef4ff;font-size:13px;font-weight:800;cursor:pointer}
+.net-sim-whatif-help>summary::-webkit-details-marker{display:none}
+.net-sim-whatif-help>div{position:absolute;z-index:30;top:30px;left:0;width:min(330px,78vw);padding:13px 14px;border:1px solid #d7e3f7;border-radius:12px;background:#fff;box-shadow:0 12px 32px #10182820;color:#475467;font-size:12px;line-height:1.55}
+.net-sim-whatif-help>div strong{color:#101828}
+/* Bordes de resultados: discretos en reposo y con brillo al pasar el cursor, como los campos de la izquierda */
+.net-sim-result,.net-sim-card,.net-sim-stat{
+ border-left:3px solid #b7d0ff;
+ transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+.net-sim-result:hover,.net-sim-card:hover,.net-sim-stat:hover,
+.net-sim-result:focus-within,.net-sim-card:focus-within,.net-sim-stat:focus-within{
+ border-left-color:#155eef;
+ box-shadow:0 7px 22px #155eef18;
+}
+.net-sim-summary-total{margin-left:auto;margin-right:8px;color:#155eef;font-size:12px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.net-sim-sub-advanced>summary{gap:12px}
+@media(prefers-reduced-motion:reduce){.net-sim-result,.net-sim-card,.net-sim-stat{transition:none}}
+
+.net-sim-scenario-heading{display:flex;align-items:center;gap:8px;margin-top:4px}
+.net-sim-scenario-heading .net-sim-label{margin:15px 0 0}
+.net-sim-scenario-help{margin:12px 0 0}
+.net-sim-scenario-help>div{left:0;right:auto;max-width:min(330px,calc(100vw - 48px))}
+
+
+/* Selector visual de activos del simulador */
+.net-asset-picker{position:relative}
+.net-asset-search-wrap{position:relative}
+.net-asset-search-wrap>span{position:absolute;left:13px;top:50%;transform:translateY(-50%);z-index:1;color:#667085;font-size:23px;line-height:1;pointer-events:none}
+.net-asset-search-wrap #netAssetSearch{padding-left:42px;padding-right:42px}
+.net-asset-search-wrap>button{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:0;border-radius:50%;background:#f2f4f7;color:#475467;font-size:19px;cursor:pointer}
+.net-asset-selected{display:flex;align-items:center;gap:11px;margin-top:9px;padding:11px 12px;border:1px solid #dce8f8;border-radius:12px;background:#f7faff;min-width:0}
+.net-asset-selected-icon{display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:10px;background:#e8f1ff;color:#155eef;font-weight:800}
+.net-asset-selected-copy{display:grid;gap:2px;min-width:0;flex:1}
+.net-asset-selected-copy small{font-size:9px;letter-spacing:.07em;font-weight:800;color:#667085}
+.net-asset-selected-copy b{font-size:13px;color:#101828;overflow-wrap:anywhere}
+.net-asset-selected-copy>span{font-size:10px;color:#667085}
+.net-asset-selected>button{border:0;background:transparent;color:#155eef;font-size:11px;font-weight:800;cursor:pointer}
+.net-asset-results{position:absolute;z-index:50;top:calc(100% + 7px);left:0;right:0;max-height:370px;overflow:auto;padding:9px;border:1px solid #dce5f2;border-radius:14px;background:#fff;box-shadow:0 16px 38px #10182820}
+.net-asset-explore{padding:5px 4px 10px;border-bottom:1px solid #edf0f5}
+.net-asset-explore>small,.net-asset-results-label{display:flex;justify-content:space-between;align-items:center;font-size:9px;font-weight:800;letter-spacing:.06em;color:#667085}
+.net-asset-explore>div{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.net-asset-explore button{border:1px solid #dce8f8;border-radius:999px;padding:6px 9px;background:#f7faff;color:#1849a9;font-size:10px;font-weight:700;cursor:pointer}
+.net-asset-results-label{padding:10px 4px 6px}
+.net-asset-results-label span{font-variant-numeric:tabular-nums;color:#98a2b3}
+.net-asset-group-label{padding:9px 5px 4px;color:#155eef;font-size:10px;font-weight:800}
+.net-asset-option{display:flex;align-items:center;gap:9px;width:100%;padding:9px 8px;border:0;border-radius:9px;background:#fff;text-align:left;cursor:pointer}
+.net-asset-option:hover,.net-asset-option.is-selected{background:#f2f6ff}
+.net-asset-option-mark{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:8px;background:#f1f5f9;color:#64748b;font-size:13px}
+.net-asset-option-copy{display:grid;gap:2px;min-width:0;flex:1}
+.net-asset-option-copy b{font-size:12px;color:#101828;font-weight:700}
+.net-asset-option-copy small{font-size:10px;color:#667085}
+.net-asset-option-check{color:#155eef;font-weight:800}
+.net-asset-option-arrow{color:#98a2b3;font-size:18px}
+.net-asset-empty{display:grid;gap:4px;padding:20px 8px;text-align:center}
+.net-asset-empty b{font-size:12px;color:#344054}
+.net-asset-empty span,.net-asset-more{font-size:10px;color:#667085;line-height:1.5}
+.net-asset-more{text-align:center;padding:7px}
+.net-asset-manual-option{display:grid;gap:3px;width:100%;margin-top:7px;padding:10px 8px;border:0;border-top:1px solid #edf0f5;background:#fff;color:#155eef;text-align:left;font-size:11px;font-weight:800;cursor:pointer}
+.net-asset-manual-option span{font-size:10px;color:#667085;font-weight:400}
+@media(max-width:560px){.net-asset-results{max-height:55vh}.net-asset-selected{padding:10px}}
+
+/* Costes: separación por momento en el que se producen */
+.net-cost-group{grid-column:1/-1;padding:14px;border:1px solid #e5eaf2;border-radius:13px;background:#fbfcff}
+.net-cost-group h4{margin:0;color:#1849a9;font-size:13px}
+.net-cost-group>p{margin:5px 0 12px;color:#667085;font-size:11px;line-height:1.45}
+.net-cost-group .net-sim-label{margin:0 0 7px}
+.net-cost-group small,#netVacancyWrap>small{display:block;margin-top:7px;color:#667085;font-size:10px;line-height:1.5}
+.net-sim-explained-heading{display:flex;align-items:center;gap:9px;margin-bottom:13px}
+.net-sim-explained-heading h2{margin:0}
+.net-sim-explain-help{margin:0}
+.net-sim-explain-help>div{width:min(390px,82vw)}
+.net-sim-explain-help p{margin:7px 0 0}
+
+/* Panel izquierdo: borde azul permanente y realce al pasar el cursor o entrar en sus campos */
+.net-sim-panel{
+ border-left:3px solid #b7d0ff;
+ transition:border-color .2s ease,box-shadow .2s ease;
+}
+.net-sim-panel:hover{
+ border-left-color:#155eef;
+ box-shadow:0 8px 28px #155eef18;
+}
+@media(prefers-reduced-motion:reduce){.net-sim-panel{transition:none}}
+
+
+/* Todos los cuadros del simulador mantienen el borde azul y se refuerzan al pasar el cursor. */
+.net-sim-panel,.net-sim-result,.net-sim-card,.net-sim-stat,.net-sim-tax-card,
+.net-sim-advanced-grid>div,#netManualRateWrap,.net-cost-group,.net-sim-sub-advanced{
+ border-left:3px solid #9bbcff;
+ transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+.net-sim-panel:hover,.net-sim-result:hover,.net-sim-card:hover,.net-sim-stat:hover,
+.net-sim-tax-card:hover,.net-sim-advanced-grid>div:hover,#netManualRateWrap:hover,
+.net-cost-group:hover,.net-sim-sub-advanced:hover{
+ border-left-color:#155eef;
+ box-shadow:0 8px 25px #155eef22;
+}
+.net-sim-sub-advanced{border-top:1px solid #dce7f7;border-right:1px solid #dce7f7;border-bottom:1px solid #dce7f7}
+.net-cost-group{border-top:1px solid #dce7f7;border-right:1px solid #dce7f7;border-bottom:1px solid #dce7f7}
+@media(prefers-reduced-motion:reduce){
+ .net-sim-panel,.net-sim-result,.net-sim-card,.net-sim-stat,.net-sim-tax-card,.net-sim-advanced-grid>div,#netManualRateWrap,.net-cost-group,.net-sim-sub-advanced{transition:none}
+}
+
+/* Ventana contextual de costes e impuestos: aparece al seleccionar un activo. */
+.net-asset-advice-overlay{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;padding:22px;background:rgba(10,24,48,.48);backdrop-filter:blur(7px);opacity:1;transition:opacity .22s ease}
+.net-asset-advice-overlay[hidden]{display:none}
+.net-asset-advice-dialog{position:relative;width:min(760px,100%);max-height:min(86vh,820px);overflow:auto;padding:30px;border:1px solid #cbdaf8;border-left:5px solid #155eef;border-radius:22px;background:linear-gradient(145deg,#fff 0%,#f7faff 100%);box-shadow:0 28px 90px rgba(8,32,78,.3);animation:netAdviceEnter .32s cubic-bezier(.2,.8,.2,1) both}
+.net-asset-advice-kicker{font-size:10px;font-weight:850;letter-spacing:.13em;color:#155eef}
+.net-asset-advice-dialog h2{margin:8px 42px 8px 0;color:#102a56;font-size:clamp(20px,3vw,27px);letter-spacing:-.6px}
+.net-asset-advice-intro{margin:0 0 17px;color:#52627b;font-size:13px;line-height:1.6}
+.net-asset-advice-close{position:absolute;right:17px;top:15px;width:36px;height:36px;border:1px solid #dce7f7;border-radius:11px;background:#fff;color:#344054;font-size:25px;line-height:1}
+.net-asset-advice-close:hover{background:#eef4ff;color:#155eef;border-color:#9bbcff}
+.net-asset-advice-dialog .net-advice-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.net-asset-advice-dialog .net-advice-list>div{padding:12px;border-color:#dce7f7;border-left:3px solid #b7d0ff}
+.net-asset-advice-dialog .net-advice-list b{color:#183b78;font-size:12px}
+.net-asset-advice-dialog .net-advice-list span{font-size:12px;line-height:1.5}
+.net-asset-advice-footnote{margin:15px 0;color:#667085;font-size:10px;line-height:1.55}
+.net-asset-advice-done{display:block;margin-left:auto;padding:11px 20px;border-radius:11px;background:#155eef;color:#fff;font-size:13px;font-weight:800}
+.net-asset-advice-done:hover{background:#104dcc}
+body.net-asset-advice-open{overflow:hidden}
+@keyframes netAdviceEnter{from{opacity:0;transform:translateY(18px) scale(.975)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:640px){.net-asset-advice-overlay{padding:12px}.net-asset-advice-dialog{padding:23px 17px;border-radius:17px;max-height:90vh}.net-asset-advice-dialog .net-advice-list{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.net-asset-advice-dialog{animation:none}.net-asset-advice-overlay{transition:none}}
+
+/* Aviso contextual de costes e impuestos por tipo de activo */
+.net-asset-advice{margin:14px 0 18px;padding:16px 18px;border:1px solid #cbdaf8;border-left:4px solid #155eef;border-radius:12px;background:#f7f9ff;color:#26344a}
+.net-advice-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.net-advice-head strong{font-size:14px;color:#142b55}
+.net-advice-head>span{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#5572a5}
+.net-asset-advice>p{margin:7px 0 12px;font-size:13px;line-height:1.5;color:#52627b}
+.net-advice-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.net-advice-list>div{display:flex;flex-direction:column;gap:3px;padding:10px 12px;background:#fff;border:1px solid #e3eaf7;border-radius:9px}
+.net-advice-list b{font-size:12px;color:#20365c}
+.net-advice-list span{font-size:12px;line-height:1.45;color:#52627b}
+.net-asset-advice>small{display:block;margin-top:11px;font-size:11px;line-height:1.5;color:#69778d}
+.net-cost-group>.net-sim-tax-check{margin-bottom:10px}
+@media(max-width:640px){.net-advice-list{grid-template-columns:1fr}.net-asset-advice{padding:13px}}
+
+
+/* Selector de activos: jerarquía clara categoría > subcategoría > activo */
+.net-asset-explore-heading{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.net-asset-explore-heading>span{font-size:10px;color:#667085;font-weight:700}
+.net-asset-category-filters{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.net-asset-category-chip{border:1px solid #dce8f8;border-radius:999px;padding:7px 10px;background:#f7faff;color:#344054;font-size:10px;font-weight:750;cursor:pointer}
+.net-asset-category-chip:hover,.net-asset-category-chip.is-active{border-color:#155eef;background:#eaf2ff;color:#155eef}
+.net-asset-subgroup-label{padding:6px 7px 3px 12px;color:#667085;font-size:10px;font-weight:750;border-left:2px solid #dce8f8;margin:2px 0 1px 4px}
+.net-asset-group-label{position:sticky;top:0;z-index:1;padding:9px 6px 5px;background:#f7faff;border-bottom:1px solid #e7edf5}
+.net-asset-option{padding-left:14px}
+.net-asset-option:focus-visible,.net-asset-category-chip:focus-visible{outline:2px solid #155eef;outline-offset:2px}
+.net-asset-advice-dialog .net-advice-list>div{gap:6px}
+.net-asset-advice-dialog .net-advice-list b{font-size:12px;line-height:1.35}
+.net-asset-advice-dialog .net-advice-list span{font-size:11px;line-height:1.58}
+@media(max-width:640px){.net-asset-category-filters{gap:5px}.net-asset-category-chip{font-size:9px;padding:7px 8px}}
+
+.net-sim-reset{display:inline-flex;align-items:center;justify-content:flex-start;min-height:0;padding:8px 0;border:0;border-radius:0;background:transparent;color:#155eef;font-size:12px;font-weight:700;cursor:pointer;box-shadow:none;transition:color .16s,text-decoration-color .16s}
+.net-sim-reset:hover{background:transparent;border:0;color:#0b4bc4;box-shadow:none;text-decoration:underline}
+#netIncomeStatement{border:1px solid #155eef;color:#155eef;background:#eef4ff}
+#netIncomeStatement:hover{background:#dce9ff}
+
+
+/* Ajustes de interacción del gráfico del simulador */
+#netInteractiveChart{display:block;width:100%;height:auto;overflow:visible;cursor:crosshair;touch-action:pan-y}#netChartTooltip{font-variant-numeric:tabular-nums}.net-sim-chart-table th,.net-sim-chart-table td{white-space:nowrap}
