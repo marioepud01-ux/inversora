@@ -567,7 +567,7 @@ function printShell(title,content,extraCss='',autoPrint=false){
  win.document.open();
  win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="'+location.origin+'/"><title>'+String(title).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))+'</title>'+styleNodes+'<style>'+printCss+'</style></head><body><div class="print-page"><div class="print-brand-header">'+logoHtml+'</div>'+content+'</div></body></html>');
  win.document.close();
- if(autoPrint){win.addEventListener('load',()=>setTimeout(()=>{win.focus();win.print();},650));setTimeout(()=>{try{win.focus();win.print();}catch(e){}},1100);}
+ if(autoPrint){let printed=false;const triggerPrint=()=>{if(printed)return;printed=true;win.focus();win.print();};win.addEventListener('load',()=>setTimeout(triggerPrint,500),{once:true});setTimeout(triggerPrint,2500);}
  return win;
 }
 function openNetSummary(){
@@ -578,9 +578,11 @@ function openNetSummary(){
  const prudent=calculate(currentAsset,'prudente'),base=calculate(currentAsset,'base'),optimistic=calculate(currentAsset,'optimista');
  const fact=(label,value)=>'<div class="print-fact"><small>'+label+'</small><b>'+value+'</b></div>';
  const row=(label,value,cls='')=>'<tr class="'+cls+'"><td>'+label+'</td><td>'+value+'</td></tr>';
- const scenarioRows=[['Prudente',prudent],['Base',base],['Optimista',optimistic]].map(([label,res])=>row(label,res.error?'—':money(res.realFinal),label.toLowerCase()===scenarioName.toLowerCase()?'total-row':'')).join('');
+ const scenarioRows=(selectedScenario==='custom'?[['Prudente',prudent],['Manual',r],['Optimista',optimistic]]:[['Prudente',prudent],['Base',base],['Optimista',optimistic]]).map(([label,res])=>row(label,res.error?'—':money(res.realFinal),label.toLowerCase()===scenarioName.toLowerCase()?'total-row':'')).join('');
  const outputRows=[
+  row('Total de capital aportado',money(r.contributedNominal)),
   row('Capital final bruto proyectado',money(r.grossFinal)),
+  row('Rendimiento bruto generado',money(Number(r.grossFinal||0)-Number(r.contributedNominal||0))),
   row('Costes de entrada',money(r.costs?.entry)),
   row('Costes periódicos',money(r.costs?.recurring)),
   row('Costes de salida',money(r.costs?.exit)),
@@ -605,13 +607,16 @@ function openNetSummary(){
  printShell('Resumen de la simulación · Inversora',html);
 }
 function openSimulationPrint(){
- const sim=document.getElementById('netModeOne');
+ const sim=document.getElementById('sim');
  if(!sim||!currentResult||currentResult.error){toast('Primero completa una simulación válida.');return;}
  const clone=sim.cloneNode(true);
+ clone.style.display='block';clone.classList.remove('hidden','view');
+ clone.querySelector('#netModeTwo')?.remove();
+ clone.querySelector('#netModeOne')?.classList.remove('net-sim-hidden');
  clone.querySelectorAll('.net-sim-actions,#netSimError').forEach(el=>el.remove());
- clone.querySelectorAll('input,select,button').forEach(el=>{
-  if(el.tagName==='INPUT'||el.tagName==='SELECT')el.setAttribute('disabled','disabled');
- });
+ const sourceFields=sim.querySelectorAll('input,select'),copyFields=clone.querySelectorAll('input,select');
+ sourceFields.forEach((field,i)=>{const copy=copyFields[i];if(!copy)return;if(field.type==='checkbox'){copy.checked=field.checked;if(field.checked)copy.setAttribute('checked','');else copy.removeAttribute('checked');}else if(field.tagName==='SELECT'){[...copy.options].forEach((option,j)=>{option.selected=field.options[j]?.selected||false;if(option.selected)option.setAttribute('selected','');else option.removeAttribute('selected');});}else{copy.value=field.value;copy.setAttribute('value',field.value);}});
+ clone.querySelector('#netChartTooltip')?.style.setProperty('display','none');
  const css='@page{size:A4 portrait;margin:8mm}.print-page{max-width:none;width:100%}.net-sim-shell{display:grid!important;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr)!important;gap:10px!important;align-items:start!important}.net-sim-panel,.net-sim-output,.net-sim-card,.net-sim-result,.net-sim-stat,.net-sim-whatif-item{break-inside:avoid;box-shadow:none!important}.net-sim-panel,.net-sim-card,.net-sim-result{padding:12px!important;border-radius:10px!important}.net-sim-panel h2,.net-sim-card h2{font-size:14px!important}.net-sim-result .net-sim-main-number{font-size:27px!important}.net-sim-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}.net-sim-stat{padding:8px!important}.net-sim-stat b{font-size:14px!important}.net-sim-whatif{grid-template-columns:1fr!important;gap:6px!important}.net-sim-whatif-item{padding:9px!important}.net-sim-modebar,.net-sim-actions{display:none!important}#netModeOne{display:block!important}.net-sim-shell{margin-top:0!important}.net-sim-output{min-width:0!important}#netGraph svg{max-width:100%!important;height:auto!important}#netGraph .net-sim-chart-legend{font-size:8px!important;gap:5px!important}.net-sim-water-row{grid-template-columns:1fr auto!important;gap:4px 8px!important}.net-sim-water-row .net-sim-track{grid-column:1/-1!important;grid-row:2!important}.net-sim-water-row b{font-size:10px!important}.net-sim-note,.net-sim-hint,.net-sim-result-sub{font-size:9px!important;line-height:1.35!important}.net-sim-label,.net-sim-panel label{font-size:9px!important}.net-sim-input,.net-sim-select{min-height:28px!important;padding:5px 7px!important;font-size:10px!important}.net-sim-scenario button{padding:5px 7px!important;font-size:9px!important}.net-sim-output>.net-sim-card,.net-sim-output>.net-sim-stats{margin-top:8px!important}.net-sim-advanced[open] .net-sim-sub-advanced:not([open])>*:not(summary){display:none!important}.net-sim-advanced:not([open])>*:not(summary){display:none!important}.net-sim-output,.net-sim-panel{color:#101828!important}.net-sim-result{background:#142b50!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}@media print{.print-brand-header{margin-bottom:4mm}.net-sim-shell{gap:7px!important}.net-sim-panel,.net-sim-card,.net-sim-result,.net-sim-stats{break-inside:avoid}}';
  printShell('Simulación · Inversora',clone.outerHTML,css,true);
 }
