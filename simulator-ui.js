@@ -398,7 +398,7 @@ function updateTaxControls(){
 function buildWaterfall(result){
  const rows=[
   {label:'Capital final bruto',value:result.grossFinal,desc:'Antes de descontar costes.'},
-  {label:'Costes totales',value:-result.costs.total,desc:'Entrada, gastos recurrentes y salida.',deduction:true},
+  {label:'Costes totales',value:-result.costs.total,desc:'Costes directos y efecto acumulado sobre el capital final.',deduction:true},
   {label:'Impuestos estimados',value:-result.taxes,desc:'Sobre la ganancia positiva al final.',deduction:true},
   {label:'Capital final neto',value:result.netNominal,desc:'Después de costes e impuestos.'},
   {label:'Efecto de la inflación',value:-(result.netNominal-result.realFinal),desc:'Lo que pierde poder de compra.',deduction:true},
