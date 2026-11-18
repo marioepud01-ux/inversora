@@ -137,17 +137,12 @@ function updateTaxControls(){
  $('netIncomeTaxTitle').textContent=company?'Impuesto sobre Sociedades':'IRPF';
  $('netIrpfFields').classList.toggle('net-sim-hidden',company);
  $('netIncomeTaxRateWrap').classList.toggle('net-sim-hidden',!company&&!savings);
- $('netIncomeTaxRate').disabled=!enabled||(!company&&savings);
+ $('netIncomeTaxRate').disabled=!company&&!savings;
  if(company)$('netIncomeTaxHint').textContent='Se aplica el porcentaje introducido sobre la ganancia imponible estimada. Se propone el 25 % como tipo general, pero puedes cambiarlo (por ejemplo, al 15 % si cumples los requisitos u otro tipo aplicable).';
  else if(!enabled)$('netIncomeTaxHint').textContent='Activa la casilla IRPF para incluir este impuesto en el cálculo.';
  else $('netIncomeTaxHint').textContent=savings?'En la base del ahorro no se utiliza un porcentaje manual: el simulador aplica automáticamente los tramos progresivos configurados. Si quieres introducir tu propio tipo, selecciona «Base general».':'El porcentaje que introduzcas se aplica a la ganancia imponible estimada. Al modificarlo, se recalculan el impuesto y el capital neto final. Es una aproximación: tu tipo marginal real depende del conjunto de tus rentas.';
- $('netAcquisitionTaxRate').disabled=!$('netAcquisitionTaxEnabled').checked||$('netAcquisitionTaxType').value==='none';
- $('netAjdRate').disabled=!$('netAjdEnabled').checked;
- $('netIbiAnnual').disabled=!$('netIbiEnabled').checked;
- $('netMunicipalExitTax').disabled=!$('netMunicipalEnabled').checked;
- $('netOtherTaxName').disabled=!$('netOtherTaxEnabled').checked;
- $('netOtherEntryTax').disabled=!$('netOtherTaxEnabled').checked;
- $('netOtherAnnualTax').disabled=!$('netOtherTaxEnabled').checked;
+ // Los importes permanecen editables aunque el impuesto esté desactivado; la casilla controla si se incluye en el cálculo.
+ $('netIncomeTaxRate').disabled=!company&&!savings;
 }
 function buildWaterfall(result){
  const rows=[
@@ -199,6 +194,8 @@ function runNetSimulation(){
  $('netSimError').classList.add('net-sim-hidden');currentResult=active;
  const lo=Math.min(results.prudente.realFinal,results.base.realFinal,results.optimista.realFinal),hi=Math.max(results.prudente.realFinal,results.base.realFinal,results.optimista.realFinal);
  $('netRealFinal').textContent=euro(active.realFinal);
+ $('netCostsTotal').textContent=euro(active.costs.total);
+ $('netTaxesTotal').textContent=euro(active.taxes);
  $('netRealRange').innerHTML='<span>Escenario prudente<strong>'+euro(results.prudente.realFinal)+'</strong></span><span>Escenario optimista<strong>'+euro(results.optimista.realFinal)+'</strong></span>';
  $('netResultContext').textContent='En euros de hoy · '+(asset?asset.name:'rentabilidad manual')+' · escenario '+({prudente:'prudente',base:'base',optimista:'optimista'}[selectedScenario]);
  $('netContributed').textContent=euro(active.contributedNominal);
