@@ -134,3 +134,22 @@
 @media(max-width:560px){.net-sim-tax-grid{grid-template-columns:1fr}.net-sim-tax-card-wide{grid-column:auto}.net-sim-tax-fields{grid-template-columns:1fr}.net-sim-tax-heading{flex-direction:column}.net-sim-tax-card-head{align-items:flex-start;flex-direction:column}.net-sim-tax-card-head .net-sim-select{width:100%}}
 
 .net-sim-subheading{margin:14px 0 4px;color:#101828;font-size:14px;letter-spacing:-.2px}
+
+
+/* Ajustes independientes desplegables y ayuda contextual del bloque ¿Y si...? */
+.net-sim-sub-advanced{margin-top:10px;padding:0 12px 12px;border:1px solid #e5eaf2;border-radius:13px;background:#fff}
+.net-sim-sub-advanced>summary{min-height:46px}
+.net-sim-sub-advanced[open]>summary{border-bottom:1px solid #edf0f5;margin-bottom:12px}
+.net-sim-sub-advanced .net-sim-tax-section{margin-top:0;padding-top:8px;border-top:0}
+.net-sim-whatif-heading{display:flex;align-items:center;gap:9px;margin-bottom:13px}
+.net-sim-whatif-heading h2{margin:0}
+.net-sim-whatif-help{position:relative;flex:0 0 auto}
+.net-sim-whatif-help>summary{list-style:none;display:grid;place-items:center;width:22px;height:22px;border:1px solid #84adff;border-radius:50%;color:#155eef;background:#eef4ff;font-size:13px;font-weight:800;cursor:pointer}
+.net-sim-whatif-help>summary::-webkit-details-marker{display:none}
+.net-sim-whatif-help>div{position:absolute;z-index:30;top:30px;left:0;width:min(330px,78vw);padding:13px 14px;border:1px solid #d7e3f7;border-radius:12px;background:#fff;box-shadow:0 12px 32px #10182820;color:#475467;font-size:12px;line-height:1.55}
+.net-sim-whatif-help>div strong{color:#101828}
+/* Borde azul común para todos los paneles de resultados de la columna derecha */
+.net-sim-result,.net-sim-card,.net-sim-stat{border-left:3px solid #155eef}
+.net-sim-result{border-left-color:#155eef}
+.net-sim-card{border-left-color:#155eef}
+.net-sim-stat{border-left-color:#155eef}
