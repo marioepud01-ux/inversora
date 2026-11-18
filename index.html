@@ -3588,5 +3588,30 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
 }
 </style>
 
+<style id="inversora-profile-header-chevron-v1">
+/* Indicador discreto de desplegable junto a «Mi perfil», sin alterar el marcado ni el avatar. */
+.inv-header .profile-nav-label{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:9px!important;
+}
+.inv-header .profile-nav-label::after{
+  content:"";
+  display:inline-block;
+  width:6px;
+  height:6px;
+  flex:0 0 6px;
+  border-right:1.5px solid currentColor;
+  border-bottom:1.5px solid currentColor;
+  transform:rotate(45deg) translateY(-2px);
+  transform-origin:center;
+  transition:transform .2s ease;
+  opacity:.78;
+}
+.inv-header .profile-nav-btn[aria-expanded="true"] .profile-nav-label::after{
+  transform:rotate(225deg) translateY(-2px);
+}
+</style>
+
 </body>
 </html>
