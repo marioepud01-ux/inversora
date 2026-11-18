@@ -221,7 +221,9 @@ function runNetSimulation(){
  $('netRealFinal').textContent=euro(active.realFinal);
  $('netCostsTotal').textContent=euro(active.costs.total);
  $('netTaxesTotal').textContent=euro(active.taxes);
- $('netRealRange').innerHTML='<span>Escenario prudente<strong>'+euro(results.prudente.realFinal)+'</strong></span><span>Escenario optimista<strong>'+euro(results.optimista.realFinal)+'</strong></span>';
+ const scenarioNames={prudente:'Prudente',base:'Base',optimista:'Optimista'};
+ const comparisonScenarios=selectedScenario==='prudente'?['base','optimista']:selectedScenario==='optimista'?['prudente','base']:['prudente','optimista'];
+ $('netRealRange').innerHTML=comparisonScenarios.map(key=>'<span>Escenario '+scenarioNames[key]+'<strong>'+euro(results[key].realFinal)+'</strong></span>').join('');
  $('netResultContext').textContent='En euros de hoy · '+(asset?asset.name:'rentabilidad manual')+' · escenario '+({prudente:'prudente',base:'base',optimista:'optimista'}[selectedScenario]);
  $('netContributed').textContent=euro(active.contributedNominal);
  $('netGain').textContent=euro(active.realGain);
@@ -333,6 +335,8 @@ function openNetReport(){
  win.document.close();
 }
 function init(){
+ // Los desplegables avanzados siempre comienzan cerrados, incluso si el navegador restaura su estado anterior.
+ document.querySelectorAll('#netAdvanced, #netAdvanced > details').forEach(section=>{section.open=false;});
  fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();if(location.hash.includes('net-sim=')){loadShared();}else{$('netAsset').value=findAsset('Fondos indexados')?'Fondos indexados':(assetList()[0]?.name||'__manual__');loadAssetDefaults(findAsset($('netAsset').value));}$('netAssetSearch').value=$('netAsset').value==='__manual__'?'Rentabilidad manual':$('netAsset').value;renderAssetPicker('',false);setCompareOptions();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
  $('netAssetSearch').addEventListener('input',e=>populateAssetOptions(e.target.value,true));
  $('netAssetSearch').addEventListener('focus',()=>{if($('netAssetSearch').value===$('netAsset').value||$('netAssetSearch').value==='Rentabilidad manual')$('netAssetSearch').value='';renderAssetPicker($('netAssetSearch').value,true);});
