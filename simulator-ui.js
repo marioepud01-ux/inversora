@@ -129,6 +129,7 @@ function loadAssetDefaults(asset){
  $('netIncomeTaxTitle').textContent=$('netTaxSubject').value==='company'?'Impuesto sobre Sociedades':'IRPF';
  $('netCostHint').textContent=d.known?'Se han detectado porcentajes en los costes descritos en la ficha. Comprueba que corresponden a tu operación concreta.':'La ficha no contiene porcentajes de costes verificables. Se parte de 0 % y puedes introducirlos manualmente.';
  $('netManualRateWrap').classList.remove('net-sim-hidden');
+ updateTaxControls();
  runNetSimulation();
 }
 function updateTaxControls(){
