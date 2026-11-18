@@ -111,6 +111,20 @@ function setScenario(value){
  runNetSimulation();
 }
 
+function updateCostControls(){
+ [['netEntryCostEnabled','netEntryFee'],['netAnnualCostEnabled','netAnnualFee'],['netExitCostEnabled','netExitFee']].forEach(([check,field])=>{$(field).disabled=!$(check).checked;});
+}
+function updateTaxFieldControls(){
+ const pairs=[
+  ['netIncomeTaxEnabled',['netTaxSubject','netIncomeTaxBase','netIncomeTaxRate']],
+  ['netIbiEnabled',['netIbiAnnual']],
+  ['netAcquisitionTaxEnabled',['netAcquisitionTaxType','netAcquisitionTaxRate']],
+  ['netAjdEnabled',['netAjdRate']],
+  ['netMunicipalEnabled',['netMunicipalExitTax']],
+  ['netOtherTaxEnabled',['netOtherTaxName','netOtherEntryTax','netOtherAnnualTax']]
+ ];
+ pairs.forEach(([check,fields])=>fields.forEach(id=>$(id).disabled=!$(check).checked));
+}
 function renderAssetTaxAdvice(asset){
  const name=String(asset?.name||'').toLocaleLowerCase('es');
  const cat=String(asset?.cat||'').toLocaleLowerCase('es');
@@ -191,6 +205,8 @@ function loadAssetDefaults(asset){
  $('netIncomeTaxTitle').textContent=$('netTaxSubject').value==='company'?'Impuesto sobre Sociedades':'IRPF';
  $('netCostHint').textContent='Todos los costes empiezan desactivados y a cero. Marca cada concepto que quieras incluir y añade su importe real o estimado.';
  $('netManualRateWrap').classList.remove('net-sim-hidden');
+ updateCostControls();
+ updateTaxFieldControls();
  updateTaxControls();
  runNetSimulation();
 }
@@ -387,12 +403,12 @@ function init(){
  $('netAssetSearchClear').addEventListener('click',()=>{$('netAssetSearch').value='';populateAssetOptions('',true);$('netAssetSearch').focus();});
  document.addEventListener('click',e=>{if(!$('netAssetPicker')?.contains(e.target))renderAssetPicker($('netAssetSearch')?.value||'',false);});
  $('netAsset').addEventListener('change',()=>{loadAssetDefaults(findAsset($('netAsset').value));$('netAssetSearch').value=$('netAsset').value==='__manual__'?'Rentabilidad manual':$('netAsset').value;renderAssetPicker('',false);});
- ['netCapital','netMonthly','netYears','netEntryFee','netAnnualFee','netExitFee','netEntryCostEnabled','netAnnualCostEnabled','netExitCostEnabled','netInflation','netVacancy'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
+ ['netCapital','netMonthly','netYears','netEntryFee','netAnnualFee','netExitFee','netEntryCostEnabled','netAnnualCostEnabled','netExitCostEnabled','netInflation','netVacancy'].forEach(id=>$(id).addEventListener('input',()=>{updateCostControls();runNetSimulation();}));
  $('netManualRate').addEventListener('input',()=>{selectedScenario='custom';document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed','false'));runNetSimulation();});
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.netScenario)));
  document.querySelectorAll('[data-net-mode]').forEach(b=>b.addEventListener('click',()=>renderMode(b.dataset.netMode)));
  $('netResetAdvanced').addEventListener('click',()=>{loadAssetDefaults(currentAsset);$('netEntryFee').value='0';$('netAnnualFee').value='0';$('netExitFee').value='0';$('netInflation').value='2';$('netVacancy').value='0';runNetSimulation();});
- ['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherEntryTax','netOtherAnnualTax'].forEach(id=>$(id).addEventListener('input',()=>{updateTaxControls();runNetSimulation();}));
+ ['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherEntryTax','netOtherAnnualTax'].forEach(id=>$(id).addEventListener('input',()=>{updateTaxFieldControls();updateTaxControls();runNetSimulation();}));
  $('netIncomeTaxRate').addEventListener('change',()=>{updateTaxControls();runNetSimulation();});
  $('netIncomeTaxRate').addEventListener('blur',()=>{updateTaxControls();runNetSimulation();});
  $('netTaxSubject').addEventListener('change',()=>{if($('netTaxSubject').value==='company')$('netIncomeTaxRate').value='25';else $('netIncomeTaxRate').value='';$('netIncomeTaxTitle').textContent=$('netTaxSubject').value==='company'?'Impuesto sobre Sociedades':'IRPF';updateTaxControls();runNetSimulation();});
