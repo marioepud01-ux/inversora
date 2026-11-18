@@ -227,37 +227,44 @@
 @media(prefers-reduced-motion:reduce){.net-sim-panel{transition:none}}
 
 
-/* Todos los cuadros mantienen un borde neutro; el azul solo aparece con hover real del ratón. */
-.net-sim-panel,
-.net-sim-result,
-.net-sim-card,
-.net-sim-stat,
-.net-sim-tax-card,
-.net-sim-advanced-grid>div,
-#netManualRateWrap{
- border-left:3px solid #e2e8f0;
- transition:border-color .2s ease,box-shadow .2s ease;
+/* Todos los cuadros del simulador mantienen el borde azul y se refuerzan al pasar el cursor. */
+.net-sim-panel,.net-sim-result,.net-sim-card,.net-sim-stat,.net-sim-tax-card,
+.net-sim-advanced-grid>div,#netManualRateWrap,.net-cost-group,.net-sim-sub-advanced{
+ border-left:3px solid #9bbcff;
+ transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
 }
-.net-sim-panel:hover,
-.net-sim-result:hover,
-.net-sim-card:hover,
-.net-sim-stat:hover,
-.net-sim-tax-card:hover,
-.net-sim-advanced-grid>div:hover,
-#netManualRateWrap:hover{
- border-left-color:#155eef;
- box-shadow:0 6px 20px #155eef18;
-}
-/* Los cuadros de costes y desplegables también reaccionan solo al hover. */
-.net-cost-group,.net-sim-sub-advanced{transition:border-color .2s ease,box-shadow .2s ease}
+.net-sim-panel:hover,.net-sim-result:hover,.net-sim-card:hover,.net-sim-stat:hover,
+.net-sim-tax-card:hover,.net-sim-advanced-grid>div:hover,#netManualRateWrap:hover,
 .net-cost-group:hover,.net-sim-sub-advanced:hover{
- border-color:#b7ccf8;
  border-left-color:#155eef;
- box-shadow:0 6px 20px #155eef12;
+ box-shadow:0 8px 25px #155eef22;
 }
+.net-sim-sub-advanced{border-top:1px solid #dce7f7;border-right:1px solid #dce7f7;border-bottom:1px solid #dce7f7}
+.net-cost-group{border-top:1px solid #dce7f7;border-right:1px solid #dce7f7;border-bottom:1px solid #dce7f7}
 @media(prefers-reduced-motion:reduce){
- .net-sim-panel,.net-sim-result,.net-sim-card,.net-sim-stat,.net-sim-tax-card,.net-sim-advanced-grid>div,#netManualRateWrap{transition:none}
+ .net-sim-panel,.net-sim-result,.net-sim-card,.net-sim-stat,.net-sim-tax-card,.net-sim-advanced-grid>div,#netManualRateWrap,.net-cost-group,.net-sim-sub-advanced{transition:none}
 }
+
+/* Ventana contextual de costes e impuestos: aparece al seleccionar un activo. */
+.net-asset-advice-overlay{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;padding:22px;background:rgba(10,24,48,.48);backdrop-filter:blur(7px);opacity:1;transition:opacity .22s ease}
+.net-asset-advice-overlay[hidden]{display:none}
+.net-asset-advice-dialog{position:relative;width:min(760px,100%);max-height:min(86vh,820px);overflow:auto;padding:30px;border:1px solid #cbdaf8;border-left:5px solid #155eef;border-radius:22px;background:linear-gradient(145deg,#fff 0%,#f7faff 100%);box-shadow:0 28px 90px rgba(8,32,78,.3);animation:netAdviceEnter .32s cubic-bezier(.2,.8,.2,1) both}
+.net-asset-advice-kicker{font-size:10px;font-weight:850;letter-spacing:.13em;color:#155eef}
+.net-asset-advice-dialog h2{margin:8px 42px 8px 0;color:#102a56;font-size:clamp(20px,3vw,27px);letter-spacing:-.6px}
+.net-asset-advice-intro{margin:0 0 17px;color:#52627b;font-size:13px;line-height:1.6}
+.net-asset-advice-close{position:absolute;right:17px;top:15px;width:36px;height:36px;border:1px solid #dce7f7;border-radius:11px;background:#fff;color:#344054;font-size:25px;line-height:1}
+.net-asset-advice-close:hover{background:#eef4ff;color:#155eef;border-color:#9bbcff}
+.net-asset-advice-dialog .net-advice-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.net-asset-advice-dialog .net-advice-list>div{padding:12px;border-color:#dce7f7;border-left:3px solid #b7d0ff}
+.net-asset-advice-dialog .net-advice-list b{color:#183b78;font-size:12px}
+.net-asset-advice-dialog .net-advice-list span{font-size:12px;line-height:1.5}
+.net-asset-advice-footnote{margin:15px 0;color:#667085;font-size:10px;line-height:1.55}
+.net-asset-advice-done{display:block;margin-left:auto;padding:11px 20px;border-radius:11px;background:#155eef;color:#fff;font-size:13px;font-weight:800}
+.net-asset-advice-done:hover{background:#104dcc}
+body.net-asset-advice-open{overflow:hidden}
+@keyframes netAdviceEnter{from{opacity:0;transform:translateY(18px) scale(.975)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:640px){.net-asset-advice-overlay{padding:12px}.net-asset-advice-dialog{padding:23px 17px;border-radius:17px;max-height:90vh}.net-asset-advice-dialog .net-advice-list{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.net-asset-advice-dialog{animation:none}.net-asset-advice-overlay{transition:none}}
 
 /* Aviso contextual de costes e impuestos por tipo de activo */
 .net-asset-advice{margin:14px 0 18px;padding:16px 18px;border:1px solid #cbdaf8;border-left:4px solid #155eef;border-radius:12px;background:#f7f9ff;color:#26344a}
