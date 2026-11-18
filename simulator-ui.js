@@ -622,7 +622,7 @@ function init(){
   $('netCapital').value='10000';$('netMonthly').value='300';$('netYears').value='15';$('netInflation').value='2';$('netVacancy').value='0';
   loadAssetDefaults(currentAsset);
   $('netWhatInflation').value='2';$('netWhatRate').value='1';$('netWhatMonthly').value='100';
-  updateCostControls();updateTaxFieldControls();updateTaxControls();updateScenarioControls();runNetSimulation();
+  updateCostControls();updateTaxFieldControls();updateTaxControls();runNetSimulation();
  });
  ['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherEntryTax','netOtherAnnualTax'].forEach(id=>$(id).addEventListener('input',()=>{updateTaxFieldControls();updateTaxControls();runNetSimulation();}));
  $('netIncomeTaxRate').addEventListener('change',()=>{updateTaxControls();runNetSimulation();});
@@ -632,7 +632,7 @@ function init(){
  $('netIncomeTaxBase').addEventListener('change',()=>{updateTaxControls();runNetSimulation();});
  ['netWhatInflation','netWhatRate','netWhatMonthly'].forEach(id=>$(id).addEventListener('input',()=>runWhatIf(currentResult)));
  [1,2,3,4].forEach(n=>$('netCompare'+n).addEventListener('change',renderComparison));
- $('netSave').addEventListener('click',saveLocal);$('netShare').addEventListener('click',shareLink);$('netPdf').addEventListener('click',openNetReport);$('netIncomeStatement').addEventListener('click',openNetReport);
+ $('netSave').addEventListener('click',saveLocal);$('netShare').addEventListener('click',shareLink);$('netIncomeStatement').addEventListener('click',openNetReport);
  $('netShareCommunity').addEventListener('click',()=>{if(typeof shareSimulationToCommunity==='function')shareSimulationToCommunity();});
  $('netCompareLaunch').addEventListener('click',simulateComparedAssets);
  const originalShow=window.showView;
