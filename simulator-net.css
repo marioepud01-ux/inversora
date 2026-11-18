@@ -216,3 +216,14 @@
 .net-sim-explain-help{margin:0}
 .net-sim-explain-help>div{width:min(390px,82vw)}
 .net-sim-explain-help p{margin:7px 0 0}
+
+/* Panel izquierdo: borde azul permanente y realce al pasar el cursor o entrar en sus campos */
+.net-sim-panel{
+ border-left:3px solid #b7d0ff;
+ transition:border-color .2s ease,box-shadow .2s ease;
+}
+.net-sim-panel:hover,.net-sim-panel:focus-within{
+ border-left-color:#155eef;
+ box-shadow:0 8px 28px #155eef18;
+}
+@media(prefers-reduced-motion:reduce){.net-sim-panel{transition:none}}
