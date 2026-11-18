@@ -148,8 +148,16 @@
 .net-sim-whatif-help>summary::-webkit-details-marker{display:none}
 .net-sim-whatif-help>div{position:absolute;z-index:30;top:30px;left:0;width:min(330px,78vw);padding:13px 14px;border:1px solid #d7e3f7;border-radius:12px;background:#fff;box-shadow:0 12px 32px #10182820;color:#475467;font-size:12px;line-height:1.55}
 .net-sim-whatif-help>div strong{color:#101828}
-/* Borde azul común para todos los paneles de resultados de la columna derecha */
-.net-sim-result,.net-sim-card,.net-sim-stat{border-left:3px solid #155eef}
-.net-sim-result{border-left-color:#155eef}
-.net-sim-card{border-left-color:#155eef}
-.net-sim-stat{border-left-color:#155eef}
+/* Bordes de resultados: discretos en reposo y con brillo al pasar el cursor, como los campos de la izquierda */
+.net-sim-result,.net-sim-card,.net-sim-stat{
+ border-left:3px solid #b7d0ff;
+ transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+.net-sim-result:hover,.net-sim-card:hover,.net-sim-stat:hover,
+.net-sim-result:focus-within,.net-sim-card:focus-within,.net-sim-stat:focus-within{
+ border-left-color:#155eef;
+ box-shadow:0 7px 22px #155eef18;
+}
+.net-sim-summary-total{margin-left:auto;margin-right:8px;color:#155eef;font-size:12px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.net-sim-sub-advanced>summary{gap:12px}
+@media(prefers-reduced-motion:reduce){.net-sim-result,.net-sim-card,.net-sim-stat{transition:none}}
