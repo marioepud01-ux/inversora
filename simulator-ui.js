@@ -203,7 +203,11 @@ function showAssetTaxAdvice(asset){
   modal=document.createElement('div');modal.id='netAssetAdviceModal';modal.className='net-asset-advice-overlay';modal.hidden=true;
   modal.innerHTML='<section class="net-asset-advice-dialog" role="dialog" aria-modal="true" aria-labelledby="netAssetAdviceTitle"><button type="button" class="net-asset-advice-close" aria-label="Cerrar aviso">×</button><div class="net-asset-advice-kicker">ANTES DE SIMULAR</div><h2 id="netAssetAdviceTitle"></h2><p class="net-asset-advice-intro">Estos son los conceptos que podrías valorar para este tipo de inversión. No se añade ni se activa ningún coste o impuesto: tú decides cuáles incluir en el simulador.</p><div class="net-advice-list"></div><p class="net-asset-advice-footnote">Orientación general para España, no asesoramiento fiscal. La aplicación concreta depende de la comunidad autónoma, municipio, residencia, titularidad, fecha y características de la operación. No dupliques costes ya descontados en la rentabilidad o en el producto.</p><button type="button" class="net-asset-advice-done">Entendido</button></section>';
   document.body.appendChild(modal);
-  const close=()=>{modal.hidden=true;document.body.classList.remove('net-asset-advice-open');$('netAssetSearch')?.focus({preventScroll:true});};
+  const close=()=>{
+  modal.hidden=true;document.body.classList.remove('net-asset-advice-open');
+  const search=$('netAssetSearch'),selected=$('netAsset')?.value;
+  if(search&&selected){search.value=selected==='__manual__'?'Rentabilidad manual':selected;renderAssetPicker('',false);search.focus({preventScroll:true});search.select();}
+ };
   modal.addEventListener('click',e=>{if(e.target===modal||e.target.closest('.net-asset-advice-close,.net-asset-advice-done'))close();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden)close();});
  }
@@ -450,7 +454,13 @@ function init(){
  document.querySelectorAll('#netAdvanced, #netAdvanced > details').forEach(section=>{section.open=false;});
  fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();if(location.hash.includes('net-sim=')){loadShared();}else{$('netAsset').value=findAsset('Fondos indexados')?'Fondos indexados':(assetList()[0]?.name||'__manual__');loadAssetDefaults(findAsset($('netAsset').value));}$('netAssetSearch').value=$('netAsset').value==='__manual__'?'Rentabilidad manual':$('netAsset').value;renderAssetPicker('',false);setCompareOptions();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
  $('netAssetSearch').addEventListener('input',e=>populateAssetOptions(e.target.value,true));
- $('netAssetSearch').addEventListener('focus',()=>{if($('netAssetSearch').value===$('netAsset').value||$('netAssetSearch').value==='Rentabilidad manual')$('netAssetSearch').value='';renderAssetPicker($('netAssetSearch').value,true);});
+ $('netAssetSearch').addEventListener('focus',()=>{
+  const input=$('netAssetSearch'),selected=$('netAsset').value;
+  if(input.value===selected||(selected==='__manual__'&&input.value==='Rentabilidad manual')){
+   renderAssetPicker('',false);input.select();return;
+  }
+  renderAssetPicker(input.value,true);
+ });
  $('netAssetSearch').addEventListener('keydown',e=>{if(e.key==='Escape'){renderAssetPicker($('netAssetSearch').value,false);$('netAssetSearch').blur();}else if(e.key==='Enter'){const first=$('netAssetResults')?.querySelector('[data-net-asset-option]');if(first){e.preventDefault();chooseNetAsset(first.dataset.netAssetOption);}}});
  $('netAssetResults').addEventListener('click',e=>{const option=e.target.closest('[data-net-asset-option]'),category=e.target.closest('[data-net-asset-category]'),manual=e.target.closest('[data-net-asset-manual]');if(option)chooseNetAsset(option.dataset.netAssetOption);else if(category){$('netAssetSearch').value=category.dataset.netAssetCategory;populateAssetOptions(category.dataset.netAssetCategory,true);}else if(manual)chooseNetAsset('__manual__');});
  $('netAssetSearchClear').addEventListener('click',()=>{$('netAssetSearch').value='';populateAssetOptions('',true);$('netAssetSearch').focus();});
