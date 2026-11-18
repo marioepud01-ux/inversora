@@ -295,3 +295,8 @@ body.net-asset-advice-open{overflow:hidden}
 .net-asset-advice-dialog .net-advice-list b{font-size:12px;line-height:1.35}
 .net-asset-advice-dialog .net-advice-list span{font-size:11px;line-height:1.58}
 @media(max-width:640px){.net-asset-category-filters{gap:5px}.net-asset-category-chip{font-size:9px;padding:7px 8px}}
+
+.net-sim-reset{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:10px 15px;border:1px solid #d0d5dd;border-radius:11px;background:#fff;color:#344054;font-size:12px;font-weight:800;cursor:pointer;transition:background .16s,border-color .16s,box-shadow .16s}
+.net-sim-reset:hover{background:#f2f6ff;border-color:#84adff;box-shadow:0 4px 14px #155eef12}
+#netIncomeStatement{border:1px solid #155eef;color:#155eef;background:#eef4ff}
+#netIncomeStatement:hover{background:#dce9ff}
