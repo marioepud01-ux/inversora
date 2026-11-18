@@ -46,7 +46,8 @@ function assetSearchScore(asset,query){
  if(name.startsWith(q))return 800;
  if(name.includes(q))return 650;
  const tokens=q.split(' ').filter(Boolean);
- if(tokens.every(token=>hay.includes(token)))return 400+tokens.length;
+ const tokenMatches=token=>hay.includes(token)||(assetSearchAliases[token]||'').split(' ').some(alias=>alias&&hay.includes(alias));
+ if(tokens.every(tokenMatches))return 400+tokens.length;
  return -1;
 }
 function findAsset(name){return assetList().find(a=>a.name===name)||null}
