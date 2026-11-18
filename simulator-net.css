@@ -227,3 +227,40 @@
  box-shadow:0 8px 28px #155eef18;
 }
 @media(prefers-reduced-motion:reduce){.net-sim-panel{transition:none}}
+
+
+/* Todos los cuadros mantienen un borde neutro; el azul solo aparece con hover real del ratón. */
+.net-sim-panel,
+.net-sim-result,
+.net-sim-card,
+.net-sim-stat,
+.net-sim-tax-card,
+.net-sim-advanced-grid>div,
+#netManualRateWrap{
+ border-left:3px solid #e2e8f0;
+ transition:border-color .2s ease,box-shadow .2s ease;
+}
+.net-sim-panel:hover,
+.net-sim-result:hover,
+.net-sim-card:hover,
+.net-sim-stat:hover,
+.net-sim-tax-card:hover,
+.net-sim-advanced-grid>div:hover,
+#netManualRateWrap:hover{
+ border-left-color:#155eef;
+ box-shadow:0 6px 20px #155eef18;
+}
+/* No iluminar por foco de teclado/campo: únicamente al situar el puntero sobre el cuadro. */
+.net-sim-panel:focus-within,
+.net-sim-result:focus-within,
+.net-sim-card:focus-within,
+.net-sim-stat:focus-within,
+.net-sim-tax-card:focus-within,
+.net-sim-advanced-grid>div:focus-within,
+#netManualRateWrap:focus-within{
+ border-left-color:#e2e8f0;
+ box-shadow:0 8px 28px #10182808;
+}
+@media(prefers-reduced-motion:reduce){
+ .net-sim-panel,.net-sim-result,.net-sim-card,.net-sim-stat,.net-sim-tax-card,.net-sim-advanced-grid>div,#netManualRateWrap{transition:none}
+}
