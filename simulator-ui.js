@@ -12,7 +12,14 @@ const num=id=>engine.number($(id)?.value??'');
 function toast(message){const old=$('netSimToast');if(old)old.remove();const el=document.createElement('div');el.id='netSimToast';el.className='net-sim-toast';el.textContent=message;document.body.appendChild(el);setTimeout(()=>el.remove(),2600)}
 function assetList(){
  if(typeof catalogTypeNames!=='undefined'&&Array.isArray(catalogTypeNames)&&catalogTypeNames.length){
-  return catalogTypeNames.map(item=>({name:item.name,cat:item.cat,catalogSubtype:item.sub,ret:typeof catalogReturnRange==='function'?catalogReturnRange(item.name,item.cat,item.sub):'2% – 7%'}));
+  return catalogTypeNames.map(item=>{
+   const generalDefault=(item.cat==='Inmobiliario'&&(item.sub==='Inmueble directo'||item.sub==='Terrenos'))||
+    (item.cat==='Empresas y negocios'&&(item.sub==='Negocio propio'||item.sub==='Negocios digitales'||item.sub==='Intangibles y capital humano'))||
+    (item.cat==='Mercados financieros'&&item.sub==='Previsión y seguros de ahorro');
+   const fiscalText=generalDefault?'IRPF: base general; rendimientos del capital inmobiliario o actividad económica, según el caso.':'IRPF: intereses, dividendos o ganancias patrimoniales en base del ahorro, según el instrumento.';
+   const fiscalDetail=generalDefault?'Tributación orientativa: base general del IRPF; el tratamiento concreto depende de si existe alquiler, actividad económica, prestación o transmisión.':'Tributación orientativa: base del ahorro del IRPF para intereses, dividendos o ganancias patrimoniales; comprobar la naturaleza exacta del producto y del cobro.';
+   return {name:item.name,cat:item.cat,catalogSubtype:item.sub,ret:typeof catalogReturnRange==='function'?catalogReturnRange(item.name,item.cat,item.sub):'2% – 7%',tax:fiscalText,taxdetail:fiscalDetail};
+  });
  }
  const source=Array.isArray(window.investments)?window.investments:(typeof investments!=='undefined'?investments:[]);
  const unique=new Map();
