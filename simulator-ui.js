@@ -91,7 +91,7 @@ function loadAssetDefaults(asset){
  const hasIrpf=/\birpf\b/.test(fiscalText),hasIs=/\b(?:is|sociedades)\b/.test(fiscalText);
  const savings=/base del ahorro|dividendos|intereses|ganancia patrimonial/.test(fiscalText);
  const general=/base general|capital inmobiliario|actividades econ[oó]micas/.test(fiscalText);
- const realEstate=asset?.cat==='Inmobiliario';
+ const realEstate=asset?.cat==='Inmobiliario'&&/(vivienda|habitaci[oó]n|local|oficina|nave|plaza de garaje|trastero|suelo|terreno|edificio|inmueble)/i.test(asset?.name||'');
  const hasIbi=realEstate||/\bibi\b/.test(fiscalText);
  const hasIva=/\biva\b/.test(fiscalText),hasItp=/\bitp\b/.test(fiscalText),hasAjd=/\bajd\b/.test(fiscalText);
  const hasPlusvalia=/plusval[ií]a municipal|iivtnu/.test(fiscalText);
