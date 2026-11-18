@@ -568,7 +568,13 @@ function printShell(title,content,extraCss=''){
  win.document.open();
  win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+safeTitle+'</title><style>'+css+'</style></head><body><div class="print-page"><div class="print-brand-header">'+logoHtml+'</div>'+content+'</div></body></html>');
  win.document.close();
- win.addEventListener('load',()=>{try{win.focus();}catch(e){}},{once:true});
+ // No dependemos de load/fonts: el informe es autosuficiente y sus estilos son inline.
+ // Los botones se habilitan inmediatamente (el listener load podía dispararse antes de registrarse).
+ const printButton=win.document.querySelector('.print-actions button:not(.secondary)');
+ const closeButton=win.document.querySelector('.print-actions button.secondary');
+ if(printButton){printButton.disabled=false;printButton.removeAttribute('disabled');printButton.addEventListener('click',()=>{try{win.focus();win.print();}catch(err){console.error('Print summary:',err);}});}
+ if(closeButton){closeButton.disabled=false;closeButton.addEventListener('click',()=>win.close());}
+ try{win.focus();}catch(e){}
  return win;
 }
 function openNetSummary(){
@@ -649,7 +655,8 @@ function openSimulationPrint(){
  const finish=()=>document.body.classList.remove('net-print-simulation');
  window.addEventListener('afterprint',finish,{once:true});
  document.body.classList.add('net-print-simulation');
- window.print();
+ // Forzar el recálculo del layout antes de abrir el diálogo de impresión.
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{try{window.focus();window.print();}catch(err){finish();console.error('Print simulation:',err);}}));
 }
 function init(){
  $('netTaxProfileHint')?.remove();$('netAssetTaxAdvice')?.remove();
