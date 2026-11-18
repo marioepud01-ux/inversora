@@ -336,7 +336,7 @@ function openNetReport(){
  win.document.close();
 }
 function init(){
- fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();if(location.hash.includes('net-sim=')){loadShared();}else{$('netAsset').value=findAsset('Fondos indexados')?'Fondos indexados':(assetList()[0]?.name||'__manual__');loadAssetDefaults(findAsset($('netAsset').value));}setCompareOptions();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
+ fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();if(location.hash.includes('net-sim=')){loadShared();}else{$('netAsset').value=findAsset('Fondos indexados')?'Fondos indexados':(assetList()[0]?.name||'__manual__');loadAssetDefaults(findAsset($('netAsset').value));}renderAssetPicker('',false);setCompareOptions();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
  $('netAssetSearch').addEventListener('input',e=>populateAssetOptions(e.target.value,true));
  $('netAssetSearch').addEventListener('focus',()=>renderAssetPicker($('netAssetSearch').value,true));
  $('netAssetSearch').addEventListener('keydown',e=>{if(e.key==='Escape'){renderAssetPicker($('netAssetSearch').value,false);$('netAssetSearch').blur();}else if(e.key==='Enter'){const first=$('netAssetResults')?.querySelector('[data-net-asset-option]');if(first){e.preventDefault();chooseNetAsset(first.dataset.netAssetOption);}}});
@@ -375,7 +375,7 @@ function init(){
 window.simulate=runNetSimulation;
  window.populateSimulatorInvestments=()=>populateAssetOptions();
  window.applyInvestmentAssumption=()=>loadAssetDefaults(findAsset($('netAsset').value));
- window.simulateInvestment=function(name){$('netAsset').value=name||'__manual__';loadAssetDefaults(findAsset(name));showView('sim');};
+ window.simulateInvestment=function(name){$('netAsset').value=name||'__manual__';loadAssetDefaults(findAsset(name));renderAssetPicker('',false);showView('sim');};
  window.openInvestmentReport=openNetReport;
  window.simulateComparedAssets=simulateComparedAssets;
  }
