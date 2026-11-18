@@ -636,9 +636,9 @@ function openSimulationPrint(){
  body.net-print-simulation #sim .tool-hero{margin:0 0 5mm!important;padding:0 0 4mm!important;box-shadow:none!important}
  body.net-print-simulation #netModeOne{display:block!important;visibility:visible!important}
  body.net-print-simulation #netModeTwo{display:none!important}
- body.net-print-simulation .net-sim-shell{display:block!important;grid-template-columns:1fr!important;gap:5mm!important}
+ body.net-print-simulation .net-sim-shell{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:5mm!important;align-items:start!important}
  body.net-print-simulation .net-sim-panel,body.net-print-simulation .net-sim-output{box-shadow:none!important}
- body.net-print-simulation .net-sim-card,body.net-print-simulation .net-sim-result,body.net-print-simulation .net-sim-stat,body.net-print-simulation .net-sim-whatif-item{break-inside:avoid!important;box-shadow:none!important}
+ body.net-print-simulation .net-sim-card,body.net-print-simulation .net-sim-result,body.net-print-simulation .net-sim-panel,body.net-print-simulation .net-sim-output{break-inside:auto!important;page-break-inside:auto!important;box-shadow:none!important}body.net-print-simulation .net-sim-stat,body.net-print-simulation .net-sim-whatif-item{break-inside:avoid!important;page-break-inside:avoid!important;box-shadow:none!important}
  body.net-print-simulation .net-sim-panel,body.net-print-simulation .net-sim-card,body.net-print-simulation .net-sim-result{padding:12px!important;border-radius:10px!important}
  body.net-print-simulation .net-sim-output{display:block!important;min-width:0!important;margin-top:5mm!important}
  body.net-print-simulation .net-sim-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
