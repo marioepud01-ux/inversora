@@ -88,12 +88,12 @@ function setScenario(value){
 function loadAssetDefaults(asset){
  currentAsset=asset;
  const d=assetDefaults(asset),fiscalText=((asset?.tax||'')+' '+(asset?.taxdetail||'')).toLocaleLowerCase('es');
- const hasIrpf=/\\birpf\\b/.test(fiscalText),hasIs=/\\b(?:is|sociedades)\\b/.test(fiscalText);
+ const hasIrpf=/\birpf\b/.test(fiscalText),hasIs=/\b(?:is|sociedades)\b/.test(fiscalText);
  const savings=/base del ahorro|dividendos|intereses|ganancia patrimonial/.test(fiscalText);
  const general=/base general|capital inmobiliario|actividades econ[oó]micas/.test(fiscalText);
  const realEstate=asset?.cat==='Inmobiliario';
- const hasIbi=realEstate||/\\bibi\\b/.test(fiscalText);
- const hasIva=/\\biva\\b/.test(fiscalText),hasItp=/\\bitp\\b/.test(fiscalText),hasAjd=/\\bajd\\b/.test(fiscalText);
+ const hasIbi=realEstate||/\bibi\b/.test(fiscalText);
+ const hasIva=/\biva\b/.test(fiscalText),hasItp=/\bitp\b/.test(fiscalText),hasAjd=/\bajd\b/.test(fiscalText);
  const hasPlusvalia=/plusval[ií]a municipal|iivtnu/.test(fiscalText);
  $('netEntryFee').value=d.entryFee.toFixed(2);$('netEntryFixed').value='0';
  $('netAnnualFee').value=d.annualFee.toFixed(2);$('netAnnualFixed').value='0';
@@ -124,6 +124,20 @@ function loadAssetDefaults(asset){
  $('netCostHint').textContent=d.known?'Se han detectado porcentajes en los costes descritos en la ficha. Comprueba que corresponden a tu operación concreta.':'La ficha no contiene porcentajes de costes verificables. Se parte de 0 % y puedes introducirlos manualmente.';
  $('netManualRateWrap').classList.remove('net-sim-hidden');
  runNetSimulation();
+}
+function updateTaxControls(){
+ const company=$('netTaxSubject').value==='company',savings=$('netIncomeTaxBase').value==='savings';
+ $('netIncomeTaxTitle').textContent=company?'Impuesto sobre Sociedades':'IRPF';
+ $('netIrpfFields').classList.toggle('net-sim-hidden',company);
+ $('netIncomeTaxRateWrap').classList.toggle('net-sim-hidden',!company&&!savings);
+ if(company)$('netIncomeTaxHint').textContent='Se aplica el tipo introducido sobre el beneficio estimado al final. El tipo general es 25 % en 2026, pero existen tipos reducidos y regímenes especiales.';
+ else $('netIncomeTaxHint').textContent=savings?'Se aplica la escala progresiva de la base del ahorro al beneficio estimado al final.':'Introduce tu tipo marginal aproximado de IRPF. No se puede deducir sin conocer el resto de tus rentas.';
+ $('netAcquisitionTaxRate').disabled=!$('netAcquisitionTaxEnabled').checked||$('netAcquisitionTaxType').value==='none';
+ $('netAjdRate').disabled=!$('netAjdEnabled').checked;
+ $('netIbiAnnual').disabled=!$('netIbiEnabled').checked;
+ $('netMunicipalExitTax').disabled=!$('netMunicipalEnabled').checked;
+ $('netOtherEntryTax').disabled=!$('netOtherTaxEnabled').checked;
+ $('netOtherAnnualTax').disabled=!$('netOtherTaxEnabled').checked;
 }
 function buildWaterfall(result){
  const rows=[
@@ -250,7 +264,7 @@ function setCompareOptions(){
  $('netCompare1').value=first;$('netCompare2').value=second;
 }
 function shareLink(){
- const state={asset:$('netAsset').value,capital:$('netCapital').value,monthly:$('netMonthly').value,years:$('netYears').value,scenario:selectedScenario,entry:$('netEntryFee').value,entryFixed:$('netEntryFixed').value,annual:$('netAnnualFee').value,annualFixed:$('netAnnualFixed').value,exit:$('netExitFee').value,exitFixed:$('netExitFixed').value,tax:$('netTaxRate').value,inflation:$('netInflation').value,vacancy:$('netVacancy').value,manual:$('netManualRate').value};
+ const state={asset:$('netAsset').value,capital:$('netCapital').value,monthly:$('netMonthly').value,years:$('netYears').value,scenario:selectedScenario,entry:$('netEntryFee').value,entryFixed:$('netEntryFixed').value,annual:$('netAnnualFee').value,annualFixed:$('netAnnualFixed').value,exit:$('netExitFee').value,exitFixed:$('netExitFixed').value,inflation:$('netInflation').value,vacancy:$('netVacancy').value,manual:$('netManualRate').value,taxSettings:Object.fromEntries(['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherEntryTax','netOtherAnnualTax'].map(id=>{const el=$(id);return [id,el.type==='checkbox'?el.checked:el.value]}))};
  const url=location.href.split('#')[0]+'#net-sim='+encodeURIComponent(JSON.stringify(state));
  if(navigator.share){navigator.share({title:'Mi simulación en Inversora',url}).catch(()=>{});}
  else if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>toast('Enlace copiado. Reproduce los mismos supuestos.')).catch(()=>prompt('Copia este enlace',url));}
@@ -262,19 +276,20 @@ function loadShared(){
   const s=JSON.parse(decodeURIComponent(raw[1]));
   $('netAsset').value=s.asset||'__manual__';
   ['capital','monthly','years'].forEach(k=>{if(s[k]!==undefined)$('net'+k[0].toUpperCase()+k.slice(1)).value=s[k];});
-  $('netEntryFee').value=s.entry??0;$('netEntryFixed').value=s.entryFixed??0;$('netAnnualFee').value=s.annual??0;$('netAnnualFixed').value=s.annualFixed??0;$('netExitFee').value=s.exit??0;$('netExitFixed').value=s.exitFixed??0;$('netTaxRate').value=s.tax??'';
+  $('netEntryFee').value=s.entry??0;$('netEntryFixed').value=s.entryFixed??0;$('netAnnualFee').value=s.annual??0;$('netAnnualFixed').value=s.annualFixed??0;$('netExitFee').value=s.exit??0;$('netExitFixed').value=s.exitFixed??0;
   $('netInflation').value=s.inflation??2;$('netVacancy').value=s.vacancy??0;$('netManualRate').value=s.manual??5;
   selectedScenario=s.scenario||'base';
   document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.netScenario===selectedScenario)));
   loadAssetDefaults(findAsset($('netAsset').value));
   if(s.asset==='__manual__')$('netAsset').value='__manual__';
-  runNetSimulation();
+  if(s.taxSettings)Object.entries(s.taxSettings).forEach(([id,value])=>{const el=$(id);if(el){if(el.type==='checkbox')el.checked=!!value;else el.value=value;}});
+  updateTaxControls();runNetSimulation();
  }catch(e){console.warn('No se pudo leer el enlace de simulación',e);}
 }
 function saveLocal(){
  const key='inversora_net_simulations';let items=[];
  try{items=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
- const state={...window.invSimulationState,savedAt:new Date().toISOString(),inflation:num('netInflation'),entryFee:num('netEntryFee'),entryFixed:num('netEntryFixed'),annualFee:num('netAnnualFee'),annualFixed:num('netAnnualFixed'),exitFee:num('netExitFee'),exitFixed:num('netExitFixed'),taxRate:$('netTaxRate').value};
+ const state={...window.invSimulationState,savedAt:new Date().toISOString(),inflation:num('netInflation'),entryFee:num('netEntryFee'),entryFixed:num('netEntryFixed'),annualFee:num('netAnnualFee'),annualFixed:num('netAnnualFixed'),exitFee:num('netExitFee'),exitFixed:num('netExitFixed'),taxSettings:Object.fromEntries(['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherEntryTax','netOtherAnnualTax'].map(id=>{const el=$(id);return [id,el.type==='checkbox'?el.checked:el.value]}))};
  items.unshift(state);localStorage.setItem(key,JSON.stringify(items.slice(0,20)));toast('Simulación guardada en este dispositivo.');
 }
 function openNetReport(){
@@ -293,7 +308,10 @@ function init(){
  $('netManualRate').addEventListener('input',()=>{selectedScenario='custom';document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed','false'));runNetSimulation();});
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.netScenario)));
  document.querySelectorAll('[data-net-mode]').forEach(b=>b.addEventListener('click',()=>renderMode(b.dataset.netMode)));
- $('netResetAdvanced').addEventListener('click',()=>{loadAssetDefaults(currentAsset);$('netEntryFixed').value='0';$('netAnnualFixed').value='0';$('netExitFixed').value='0';$('netTaxRate').value='';$('netInflation').value='2';$('netVacancy').value='0';runNetSimulation();});
+ $('netResetAdvanced').addEventListener('click',()=>{loadAssetDefaults(currentAsset);$('netEntryFixed').value='0';$('netAnnualFixed').value='0';$('netExitFixed').value='0';$('netInflation').value='2';$('netVacancy').value='0';runNetSimulation();});
+ ['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherEntryTax','netOtherAnnualTax'].forEach(id=>$(id).addEventListener('input',()=>{updateTaxControls();runNetSimulation();}));
+ $('netTaxSubject').addEventListener('change',()=>{if($('netTaxSubject').value==='company'&&!$('netIncomeTaxRate').value)$('netIncomeTaxRate').value='25';$('netIncomeTaxTitle').textContent=$('netTaxSubject').value==='company'?'Impuesto sobre Sociedades':'IRPF';updateTaxControls();runNetSimulation();});
+ $('netIncomeTaxBase').addEventListener('change',()=>{updateTaxControls();runNetSimulation();});
  ['netWhatInflation','netWhatRate','netWhatMonthly'].forEach(id=>$(id).addEventListener('input',()=>runWhatIf(currentResult)));
  [1,2,3,4].forEach(n=>$('netCompare'+n).addEventListener('change',renderComparison));
  $('netSave').addEventListener('click',saveLocal);$('netShare').addEventListener('click',shareLink);$('netPdf').addEventListener('click',openNetReport);
