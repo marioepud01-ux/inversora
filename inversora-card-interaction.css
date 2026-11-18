@@ -19,3 +19,76 @@
  border-left-color:#155eef!important;
  box-shadow:0 6px 22px rgba(21,94,239,.09)!important;
 }
+
+/* Cobertura completa: tarjetas y paneles creados en Inicio, Comunidad, Herramientas,
+   Favoritos, cuenta, perfiles, fichas, comparador y simuladores. */
+:where(
+ div[class*="card"],article[class*="card"],section[class*="card"],
+ div[class*="panel"],article[class*="panel"],section[class*="panel"],
+ div[class*="tile"],article[class*="tile"],section[class*="tile"],
+ div[class*="stat"],article[class*="stat"],
+ div[class*="box"],article[class*="box"],
+ div[class*="feature"],article[class*="feature"],
+ div[class*="metric"],article[class*="metric"],
+ div[class*="post"],article[class*="post"],
+ div[class*="goal"],article[class*="goal"],
+ div[class*="workspace"],article[class*="workspace"],
+ div[class*="shortcut"],article[class*="shortcut"],
+ div[class*="review"],article[class*="review"],
+ div[class*="item"],article[class*="item"],
+ .home-welcome,.home-block,.home-goal,.tools-hub,
+ .community-compose,.community-guideline,.community-stat,
+ .fav-workspace,.fav-sidebar,.fav-item,.fav-create-dialog,
+ .account-dashboard,.account-actions,
+ .profile-welcome,.profile-identity,.profile-achievement
+){
+ border-left:3px solid #b7d0ff!important;
+ transition:border-left-color .2s ease,box-shadow .2s ease,transform .2s ease!important;
+}
+@media(hover:hover){
+ :where(
+  div[class*="card"],article[class*="card"],section[class*="card"],
+  div[class*="panel"],article[class*="panel"],section[class*="panel"],
+  div[class*="tile"],article[class*="tile"],section[class*="tile"],
+  div[class*="stat"],article[class*="stat"],
+  div[class*="box"],article[class*="box"],
+  div[class*="feature"],article[class*="feature"],
+  div[class*="metric"],article[class*="metric"],
+  div[class*="post"],article[class*="post"],
+  div[class*="goal"],article[class*="goal"],
+  div[class*="workspace"],article[class*="workspace"],
+  div[class*="shortcut"],article[class*="shortcut"],
+  div[class*="review"],article[class*="review"],
+  div[class*="item"],article[class*="item"],
+  .home-welcome,.home-block,.home-goal,.tools-hub,
+  .community-compose,.community-guideline,.community-stat,
+  .fav-workspace,.fav-sidebar,.fav-item,.fav-create-dialog,
+  .account-dashboard,.account-actions,
+  .profile-welcome,.profile-identity,.profile-achievement
+ ):hover{
+  border-left-color:#155eef!important;
+  box-shadow:0 8px 26px rgba(21,94,239,.13)!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ :where(
+  div[class*="card"],article[class*="card"],section[class*="card"],
+  div[class*="panel"],article[class*="panel"],section[class*="panel"],
+  div[class*="tile"],article[class*="tile"],section[class*="tile"],
+  div[class*="stat"],article[class*="stat"],
+  div[class*="box"],article[class*="box"],
+  div[class*="feature"],article[class*="feature"],
+  div[class*="metric"],article[class*="metric"],
+  div[class*="post"],article[class*="post"],
+  div[class*="goal"],article[class*="goal"],
+  div[class*="workspace"],article[class*="workspace"],
+  div[class*="shortcut"],article[class*="shortcut"],
+  div[class*="review"],article[class*="review"],
+  div[class*="item"],article[class*="item"],
+  .home-welcome,.home-block,.home-goal,.tools-hub,
+  .community-compose,.community-guideline,.community-stat,
+  .fav-workspace,.fav-sidebar,.fav-item,.fav-create-dialog,
+  .account-dashboard,.account-actions,
+  .profile-welcome,.profile-identity,.profile-achievement
+ ){transition:none!important}
+}
