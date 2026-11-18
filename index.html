@@ -1465,7 +1465,8 @@ td,th{border-color:#e7eef8!important}
     <div id="netManualRateWrap"><label class="net-sim-label" for="netManualRate">Rentabilidad anual</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netManualRate" type="number" min="-100" max="1000" step="0.1" value="5"><span class="net-sim-input-unit" data-unit-for="netManualRate">% anual</span></div></div>
     <details class="net-sim-advanced" id="netAdvanced">
      <summary>Ajustar supuestos</summary>
-     <h3 class="net-sim-subheading">Costes y supuestos generales</h3>
+     <details class="net-sim-advanced net-sim-sub-advanced" open>
+      <summary>Costes y supuestos generales</summary>
      <div class="net-sim-advanced-grid">
       
       <div><label class="net-sim-label" for="netInflation">Inflación anual</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netInflation" type="number" min="-20" max="100" step="0.1" value="2"><span class="net-sim-input-unit" data-unit-for="netInflation">% anual</span></div></div>
@@ -1478,6 +1479,9 @@ td,th{border-color:#e7eef8!important}
       <div id="netVacancyWrap" class="net-sim-tax-card"><label class="net-sim-label" for="netVacancy">Vacancia de ingresos</label><div class="net-sim-input-wrap"><input class="net-sim-input" id="netVacancy" type="number" min="0" max="100" step="0.5" value="0"><span class="net-sim-input-unit">%</span></div></div>
      </div>
      <p class="net-sim-hint" id="netCostHint">Los costes numéricos de la ficha se proponen como punto de partida; puedes cambiarlos.</p>
+     </details>
+     <details class="net-sim-advanced net-sim-sub-advanced">
+      <summary>Impuestos</summary>
      <section class="net-sim-tax-section" aria-labelledby="netTaxHeading">
       <div class="net-sim-tax-heading"><div><h3 id="netTaxHeading">Impuestos</h3><p>Se adaptan al activo seleccionado. Revisa los datos según tu residencia, titularidad y operación.</p></div><span class="net-sim-tax-tag">Configuración fiscal</span></div>
       <p class="net-sim-tax-profile" id="netTaxProfileHint">Selecciona un activo para detectar sus impuestos habituales.</p>
@@ -1523,6 +1527,7 @@ td,th{border-color:#e7eef8!important}
       </div>
       <p class="net-sim-hint">El cálculo distingue impuestos de adquisición, cuotas anuales y tributación del beneficio. Los tipos autonómicos/municipales y la situación personal deben verificarse; los impuestos sobre beneficio se aproximan al final del horizonte, no sustituyen una liquidación fiscal.</p>
      </section>
+     </details>
      <button class="net-sim-reset" id="netResetAdvanced" type="button">Restablecer supuestos</button>
     </details>
    </aside>
@@ -1549,7 +1554,7 @@ td,th{border-color:#e7eef8!important}
      <div id="netGraph"><p class="net-sim-hint">El gráfico aparecerá al calcular el escenario.</p></div>
     </div>
     <div class="net-sim-card">
-     <h2>¿Y si…?</h2>
+     <div class="net-sim-whatif-heading"><h2>¿Y si…?</h2><details class="net-sim-whatif-help"><summary aria-label="¿Cómo funciona el apartado Y si?">?</summary><div>Este apartado calcula escenarios alternativos para que veas qué pasaría si cambias una variable (inflación, rentabilidad o aportación mensual). Los resultados se comparan con el escenario principal, pero <strong>no modifican ni se incorporan a la simulación principal</strong>. Para aplicar un cambio de verdad, ajusta los datos principales o los supuestos y vuelve a calcular.</div></details></div>
      <div class="net-sim-whatif">
       <div class="net-sim-whatif-item"><label for="netWhatInflation">¿Y si sube la inflación?</label><input id="netWhatInflation" type="range" min="0" max="8" step="0.1" value="4"><p id="netWhatInflationLabel">4 %</p><strong id="netWhatInflationResult">—</strong></div>
       <div class="net-sim-whatif-item"><label for="netWhatRate">¿Y si rinde menos?</label><input id="netWhatRate" type="range" min="0" max="8" step="0.1" value="2"><p id="netWhatRateLabel">− 2 %</p><strong id="netWhatRateResult">—</strong></div>
