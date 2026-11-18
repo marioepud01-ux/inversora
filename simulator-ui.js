@@ -614,7 +614,7 @@ function openSimulationPrint(){
  const finish=()=>{document.body.classList.remove('net-print-simulation');window.removeEventListener('afterprint',finish);};
  document.body.classList.add('net-print-simulation');
  window.addEventListener('afterprint',finish,{once:true});
- const printNow=()=>{if(document.body.classList.contains('net-print-simulation'))window.print();};
+ let printed=false;const printNow=()=>{if(!printed&&document.body.classList.contains('net-print-simulation')){printed=true;window.print();}};
  const fonts=document.fonts?.ready||Promise.resolve();
  Promise.resolve(fonts).then(()=>requestAnimationFrame(()=>requestAnimationFrame(printNow)));
  setTimeout(()=>{if(document.body.classList.contains('net-print-simulation'))printNow();},1200);
