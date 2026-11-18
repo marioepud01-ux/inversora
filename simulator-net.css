@@ -73,3 +73,35 @@
 @media(max-width:850px){.net-sim-shell{grid-template-columns:1fr}.net-sim-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.net-sim-panel,.net-sim-result,.net-sim-card{padding:16px;border-radius:17px}.net-sim-whatif{grid-template-columns:1fr}.net-sim-whatif-item label{min-height:0}.net-sim-compare-selects{grid-template-columns:1fr}.net-sim-water-row{grid-template-columns:105px minmax(55px,1fr) auto;gap:7px}.net-sim-water-row span,.net-sim-water-row b{font-size:11px}.net-sim-main-number{font-size:38px}.net-sim-actions{display:grid;grid-template-columns:1fr 1fr}.net-sim-actions button{width:100%}}
 @media(prefers-reduced-motion:reduce){.net-sim-track i{transition:none}}
+
+
+/* Editable simulator fields: blue active edge and integrated units */
+.net-sim-advanced-grid>div,
+#netManualRateWrap{
+ position:relative;
+ min-width:0;
+ margin:10px 0 2px;
+ padding:10px 11px 12px 13px;
+ border:1px solid #e7edf5;
+ border-left:3px solid #b7d0ff;
+ border-radius:12px;
+ background:#fff;
+ box-shadow:0 2px 8px #10182805;
+ transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+.net-sim-advanced-grid>div:hover,
+#netManualRateWrap:hover,
+.net-sim-advanced-grid>div:focus-within,
+#netManualRateWrap:focus-within{
+ border-left-color:#155eef;
+ box-shadow:0 5px 16px #155eef12;
+}
+.net-sim-advanced-grid .net-sim-label,
+#netManualRateWrap .net-sim-label{margin:0 0 8px}
+.net-sim-input-wrap{position:relative;width:100%}
+.net-sim-input-wrap .net-sim-input{padding-right:82px;font-variant-numeric:tabular-nums}
+.net-sim-input-unit{
+ position:absolute;right:12px;top:50%;transform:translateY(-50%);
+ color:#98a2b3;font-size:12px;font-weight:700;pointer-events:none;
+ white-space:nowrap;
+}
