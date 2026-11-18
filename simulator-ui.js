@@ -437,6 +437,7 @@ function graphSvg(prudent,base,optimistic){
 }
 function runNetSimulation(){
  if(!engine||!fiscalConfig)return;
+ const capitalField=$('netCapital');if(capitalField){capitalField.setCustomValidity('');if(capitalField.value.trim()==='')capitalField.value='0';}
  const assetName=$('netAsset').value,asset=assetName==='__manual__'?null:findAsset(assetName);
  currentAsset=asset;
  const results={prudente:calculate(asset,'prudente'),base:calculate(asset,'base'),optimista:calculate(asset,'optimista')};
@@ -557,11 +558,42 @@ function saveLocal(){
  items.unshift(state);localStorage.setItem(key,JSON.stringify(items.slice(0,20)));toast('Simulación guardada en este dispositivo.');
 }
 function openNetReport(){
- if(!currentResult)return;
- const r=currentResult,s=window.invSimulationState;
- const win=window.open('','_blank');if(!win){alert('Permite las ventanas emergentes para abrir el informe.');return;}
- const tb=r.taxBreakdown||{};const rows=[['Activo',s.assetName],['Capital inicial',euro(s.capital)],['Aportación mensual',euro(s.monthly)],['Plazo',s.years+' años'],['Rentabilidad',pct(s.rate)],['Inflación',pct(num('netInflation'))],['Costes de entrada',euro(r.costs.entry)],['Costes recurrentes',euro(r.costs.recurring)],['Costes de salida',euro(r.costs.exit)],['IVA/ITP y AJD estimados',euro((tb.acquisition||0))],['Otros impuestos de entrada',euro(tb.otherEntry||0)],['IBI y otros impuestos anuales',euro(tb.recurring||0)],['IRPF/IS estimado',euro(tb.income||0)],['Plusvalía municipal',euro(tb.municipal||0)],['Total impuestos',euro(r.taxes)],['Capital final bruto',euro(r.grossFinal)],['Capital final neto',euro(r.netNominal)],['Capital final real',euro(r.realFinal)],['Dinero aportado (euros de hoy)',euro(r.contributedReal)],['Ganancia real',euro(r.realGain)]];
- win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Informe de simulación · Inversora</title><style>body{font:14px Inter,Arial,sans-serif;color:#0f172a;max-width:850px;margin:40px auto;padding:0 24px}h1{color:#155eef}p{color:#475467;line-height:1.5}table{width:100%;border-collapse:collapse;margin:24px 0}td{padding:12px;border-bottom:1px solid #e2e8f0}td:last-child{text-align:right;font-weight:700}.notice{background:#f4f6fb;padding:14px;border-radius:12px;font-size:12px}@media print{button{display:none}}</style></head><body><h1>Inversora · Informe de simulación</h1><p>Dinero neto real estimado · '+new Date().toLocaleDateString('es-ES')+'</p><table>'+rows.map(x=>'<tr><td>'+esc(x[0])+'</td><td>'+esc(x[1])+'</td></tr>').join('')+'</table><p class="notice">Simulación educativa con supuestos editables. No es una previsión ni asesoramiento financiero o fiscal. Los impuestos se estiman según los supuestos introducidos. Los impuestos sobre beneficios se aproximan al final del horizonte; los tributos autonómicos y municipales requieren verificación y no se sustituye una liquidación fiscal.</p><button onclick="window.print()">Imprimir / Guardar como PDF</button></body></html>');
+ if(!currentResult||currentResult.error){toast('Primero completa una simulación válida.');return;}
+ const r=currentResult,s=window.invSimulationState||{},tb=r.taxBreakdown||{},a=r.assumptions||{};
+ const money=v=>euro(Number(v)||0),percent=v=>pct(Number(v)||0);
+ const grossGain=Number(r.grossFinal||0)-Number(r.contributedNominal||0);
+ const nominalProfit=Number(r.netNominal||0)-Number(r.contributedNominal||0);
+ const rows=[
+  ['Capital inicial',money(a.capital)],
+  ['Aportaciones periódicas',money(a.monthly*Number(r.months||0))],
+  ['Total de capital aportado',money(r.contributedNominal)],
+  ['Valor bruto proyectado',money(r.grossFinal)],
+  ['Rendimiento bruto generado',money(grossGain)],
+  ['Costes de entrada',money(r.costs?.entry)],
+  ['Costes recurrentes',money(r.costs?.recurring)],
+  ['Costes de salida',money(r.costs?.exit)],
+  ['Total de costes',money(r.costs?.total)],
+  ['Impuestos de adquisición',money(tb.acquisition)],
+  ['Otros impuestos de entrada',money(tb.otherEntry)],
+  ['Impuestos recurrentes (IBI y otros)',money(tb.recurring)],
+  ['IRPF / Impuesto sobre Sociedades estimado',money(tb.income)],
+  ['Plusvalía municipal estimada',money(tb.municipal)],
+  ['Total de impuestos',money(r.taxes)],
+  ['Resultado neto nominal estimado',money(nominalProfit)],
+  ['Capital final neto nominal',money(r.netNominal)],
+  ['Capital final neto en euros de hoy',money(r.realFinal)],
+  ['Ganancia / pérdida real estimada',money(r.realGain)]
+ ];
+ const escape=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ const title=escape(s.assetName||$('netAssetSearch')?.value||'Inversión');
+ const scenario=escape(({prudente:'Prudente',base:'Base',optimista:'Optimista',custom:'Manual'}[selectedScenario]||selectedScenario));
+ const date=new Date().toLocaleDateString('es-ES');
+ const assumptions=[
+  ['Activo',title],['Escenario',scenario],['Rentabilidad anual aplicada',percent(a.rate)],['Plazo',Number(a.years||0)+' años'],['Aportación mensual',money(a.monthly)],['Inflación utilizada',percent(a.inflation)],['Sujeto fiscal',$('netTaxSubject')?.value==='company'?'Sociedad':'Persona física']
+ ];
+ const win=window.open('','_blank');
+ if(!win){alert('Permite las ventanas emergentes para abrir la cuenta de resultados.');return;}
+ win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cuenta de resultados · '+title+' · Inversora</title><style>*{box-sizing:border-box}body{font:14px Inter,Arial,sans-serif;color:#101828;max-width:900px;margin:36px auto;padding:0 26px}header{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;border-bottom:2px solid #155eef;padding-bottom:18px}header small{color:#155eef;font-weight:800;letter-spacing:.12em}h1{margin:8px 0 5px;font-size:30px;letter-spacing:-1px}p{color:#667085;line-height:1.55}.actions{display:flex;gap:9px;margin:22px 0}.actions button{border:0;border-radius:10px;padding:11px 16px;background:#155eef;color:white;font-weight:750;cursor:pointer}.actions button.secondary{background:#eef4ff;color:#1849a9}.section{margin-top:25px}.section h2{font-size:16px;margin:0 0 10px}.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.fact{border:1px solid #e4e7ec;border-radius:11px;padding:11px}.fact small{display:block;color:#667085;font-size:10px;margin-bottom:5px}.fact b{font-size:13px;overflow-wrap:anywhere}table{width:100%;border-collapse:collapse;margin-top:8px}td{padding:11px 12px;border-bottom:1px solid #eaecf0}td:last-child{text-align:right;font-weight:750;font-variant-numeric:tabular-nums}.total td{background:#f2f6ff;color:#1849a9;font-weight:850}.final td{background:#101828;color:white;font-weight:850}.notice{margin-top:20px;padding:13px;border-radius:11px;background:#f8fafc;color:#667085;font-size:11px;line-height:1.55}.muted{font-size:11px;color:#98a2b3}@media(max-width:600px){body{margin:18px auto;padding:0 14px}header{display:block}.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.actions{position:sticky;top:0;background:white;padding:8px 0}}@media print{body{margin:0 auto;padding:0 8mm}.actions{display:none}header{break-after:avoid}.section{break-inside:avoid}.notice{break-inside:avoid}}</style></head><body><header><div><small>INVERSORA · INFORME FINANCIERO</small><h1>Cuenta de resultados</h1><p>'+title+' · Simulación a '+date+'</p></div><div class="muted">Documento generado desde el simulador</div></header><div class="actions"><button onclick="window.print()">Imprimir / Guardar como PDF</button><button class="secondary" onclick="window.close()">Cerrar informe</button></div><section class="section"><h2>Supuestos de la inversión</h2><div class="facts">'+assumptions.map(x=>'<div class="fact"><small>'+escape(x[0])+'</small><b>'+escape(x[1])+'</b></div>').join('')+'</div></section><section class="section"><h2>Cuenta de resultados proyectada</h2><table>'+rows.map((x,i)=>'<tr class="'+([2,8,14].includes(i)?'total':'')+' '+([15,16,17,18].includes(i)?'final':'')+'"><td>'+escape(x[0])+'</td><td>'+escape(x[1])+'</td></tr>').join('')+'</table></section><p class="notice"><b>Cómo interpretar este informe:</b> es una proyección financiera de los supuestos introducidos, no una cuenta contable oficial ni una liquidación fiscal. El rendimiento bruto se calcula como valor bruto proyectado menos capital aportado. Los costes e impuestos se muestran por separado; el resultado nominal no descuenta inflación, mientras que el capital final en euros de hoy sí. Los impuestos sobre el beneficio son aproximaciones del simulador y pueden no coincidir con la tributación real. Revisa la normativa y tu situación particular antes de tomar decisiones.</p></body></html>');
  win.document.close();
 }
 function init(){
@@ -586,7 +618,12 @@ function init(){
  $('netManualRate').addEventListener('input',()=>{selectedScenario='custom';document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed','false'));runNetSimulation();});
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.netScenario)));
  document.querySelectorAll('[data-net-mode]').forEach(b=>b.addEventListener('click',()=>renderMode(b.dataset.netMode)));
- $('netResetAdvanced').addEventListener('click',()=>{loadAssetDefaults(currentAsset);$('netEntryFee').value='0';$('netAnnualFee').value='0';$('netExitFee').value='0';$('netInflation').value='2';$('netVacancy').value='0';runNetSimulation();});
+ $('netResetAdvanced').addEventListener('click',()=>{
+  $('netCapital').value='10000';$('netMonthly').value='300';$('netYears').value='15';$('netInflation').value='2';$('netVacancy').value='0';
+  loadAssetDefaults(currentAsset);
+  $('netWhatInflation').value='2';$('netWhatRate').value='1';$('netWhatMonthly').value='100';
+  updateCostControls();updateTaxFieldControls();updateTaxControls();updateScenarioControls();runNetSimulation();
+ });
  ['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherEntryTax','netOtherAnnualTax'].forEach(id=>$(id).addEventListener('input',()=>{updateTaxFieldControls();updateTaxControls();runNetSimulation();}));
  $('netIncomeTaxRate').addEventListener('change',()=>{updateTaxControls();runNetSimulation();});
  $('netIncomeTaxRate').addEventListener('blur',()=>{updateTaxControls();runNetSimulation();});
@@ -595,7 +632,7 @@ function init(){
  $('netIncomeTaxBase').addEventListener('change',()=>{updateTaxControls();runNetSimulation();});
  ['netWhatInflation','netWhatRate','netWhatMonthly'].forEach(id=>$(id).addEventListener('input',()=>runWhatIf(currentResult)));
  [1,2,3,4].forEach(n=>$('netCompare'+n).addEventListener('change',renderComparison));
- $('netSave').addEventListener('click',saveLocal);$('netShare').addEventListener('click',shareLink);$('netPdf').addEventListener('click',openNetReport);
+ $('netSave').addEventListener('click',saveLocal);$('netShare').addEventListener('click',shareLink);$('netPdf').addEventListener('click',openNetReport);$('netIncomeStatement').addEventListener('click',openNetReport);
  $('netShareCommunity').addEventListener('click',()=>{if(typeof shareSimulationToCommunity==='function')shareSimulationToCommunity();});
  $('netCompareLaunch').addEventListener('click',simulateComparedAssets);
  const originalShow=window.showView;
