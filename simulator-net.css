@@ -204,3 +204,15 @@
 .net-asset-manual-option{display:grid;gap:3px;width:100%;margin-top:7px;padding:10px 8px;border:0;border-top:1px solid #edf0f5;background:#fff;color:#155eef;text-align:left;font-size:11px;font-weight:800;cursor:pointer}
 .net-asset-manual-option span{font-size:10px;color:#667085;font-weight:400}
 @media(max-width:560px){.net-asset-results{max-height:55vh}.net-asset-selected{padding:10px}}
+
+/* Costes: separación por momento en el que se producen */
+.net-cost-group{grid-column:1/-1;padding:14px;border:1px solid #e5eaf2;border-radius:13px;background:#fbfcff}
+.net-cost-group h4{margin:0;color:#1849a9;font-size:13px}
+.net-cost-group>p{margin:5px 0 12px;color:#667085;font-size:11px;line-height:1.45}
+.net-cost-group .net-sim-label{margin:0 0 7px}
+.net-cost-group small,#netVacancyWrap>small{display:block;margin-top:7px;color:#667085;font-size:10px;line-height:1.5}
+.net-sim-explained-heading{display:flex;align-items:center;gap:9px;margin-bottom:13px}
+.net-sim-explained-heading h2{margin:0}
+.net-sim-explain-help{margin:0}
+.net-sim-explain-help>div{width:min(390px,82vw)}
+.net-sim-explain-help p{margin:7px 0 0}
