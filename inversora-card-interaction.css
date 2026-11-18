@@ -92,3 +92,31 @@
   .profile-welcome,.profile-identity,.profile-achievement
  ){transition:none!important}
 }
+
+/* Componentes de contenido adicionales identificados en las vistas principales. */
+:where(
+ .home-map-block,.home-goals-block,.home-learning,.home-seo-compact,
+ .community-quick-actions,.community-topic-list,.community-attachment,
+ .community-list-attachment,.community-comment-form,.community-review-form,
+ .community-login,.fav-list-button,.fav-list-actions,.fav-main,
+ .profile-achievements,.profile-shortcuts,.profile-editor,
+ .inversora-chat-panel,.inversora-maintenance-card,
+ .taxonomy-map-assets,.taxonomy-map-asset
+){
+ border-left:3px solid #b7d0ff!important;
+ transition:border-left-color .2s ease,box-shadow .2s ease,transform .2s ease!important;
+}
+@media(hover:hover){
+ :where(
+  .home-map-block,.home-goals-block,.home-learning,.home-seo-compact,
+  .community-quick-actions,.community-topic-list,.community-attachment,
+  .community-list-attachment,.community-comment-form,.community-review-form,
+  .community-login,.fav-list-button,.fav-list-actions,.fav-main,
+  .profile-achievements,.profile-shortcuts,.profile-editor,
+  .inversora-chat-panel,.inversora-maintenance-card,
+  .taxonomy-map-assets,.taxonomy-map-asset
+ ):hover{
+  border-left-color:#155eef!important;
+  box-shadow:0 8px 26px rgba(21,94,239,.13)!important;
+ }
+}
