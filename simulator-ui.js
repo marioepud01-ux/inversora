@@ -10,7 +10,45 @@ const pct=n=>Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:1,maximu
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=id=>engine.number($(id)?.value??'');
 function toast(message){const old=$('netSimToast');if(old)old.remove();const el=document.createElement('div');el.id='netSimToast';el.className='net-sim-toast';el.textContent=message;document.body.appendChild(el);setTimeout(()=>el.remove(),2600)}
-function assetList(){return Array.isArray(window.investments)?window.investments:(typeof investments!=='undefined'?investments:[])}
+function assetList(){
+ const source=Array.isArray(window.investments)?window.investments:(typeof investments!=='undefined'?investments:[]);
+ // El simulador debe mostrar exactamente los tipos del catálogo oficial, no fichas heredadas.
+ const catalogNames=typeof catalogTypeNames!=='undefined'?new Set(catalogTypeNames.map(x=>String(x.name).toLocaleLowerCase('es'))):null;
+ const filtered=catalogNames?source.filter(a=>catalogNames.has(String(a.name||'').toLocaleLowerCase('es'))):source;
+ const unique=new Map();
+ filtered.forEach(a=>{const key=String(a.name||'').trim().toLocaleLowerCase('es');if(key&&!unique.has(key))unique.set(key,a);});
+ return [...unique.values()];
+}
+function normalizeAssetSearch(value){
+ return String(value||'').toLocaleLowerCase('es').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+}
+const assetSearchAliases={
+ casa:'vivienda inmueble residencial', piso:'vivienda inmueble residencial', apartamento:'vivienda inmueble residencial',
+ parking:'plaza garaje aparcamiento', aparcamiento:'plaza garaje parking', garaje:'plaza aparcamiento parking',
+ trastero:'almacenamiento guardamuebles', local:'locales comerciales negocio',
+ bolsa:'acciones renta variable mercados financieros', acciones:'accion renta variable bolsa',
+ fondos:'fondo inversion indexados gestion activa', fondo:'fondos inversion indexados',
+ bono:'bonos renta fija deuda', letras:'letras tesoro renta fija', deposito:'depositos ahorro bancario',
+ criptomoneda:'cripto criptoactivos bitcoin ethereum', crypto:'cripto criptoactivos',
+ oro:'materias primas metales preciosos lingotes', web:'pagina web negocio digital',
+ empresa:'empresas negocio participaciones empresariales', startup:'startups venture capital'
+};
+function assetSearchText(asset){
+ const base=[asset?.name,categoryOf(asset),subtypeOf(asset)].join(' ');
+ const normalized=normalizeAssetSearch(base);
+ const aliases=Object.entries(assetSearchAliases).filter(([key])=>normalized.split(' ').includes(key)).map(([,value])=>value).join(' ');
+ return normalizeAssetSearch(base+' '+aliases);
+}
+function assetSearchScore(asset,query){
+ const q=normalizeAssetSearch(query),name=normalizeAssetSearch(asset?.name),hay=assetSearchText(asset);
+ if(!q)return 0;
+ if(name===q)return 1000;
+ if(name.startsWith(q))return 800;
+ if(name.includes(q))return 650;
+ const tokens=q.split(' ').filter(Boolean);
+ if(tokens.every(token=>hay.includes(token)))return 400+tokens.length;
+ return -1;
+}
 function findAsset(name){return assetList().find(a=>a.name===name)||null}
 function rangeFor(asset){
  if(!asset)return {min:5,base:5,max:5};
@@ -49,17 +87,17 @@ function populateAssetOptions(query='',open=false){
 function renderAssetPicker(query='',open=false){
  const input=$('netAssetSearch'),panel=$('netAssetResults'),clear=$('netAssetSearchClear'),select=$('netAsset');
  if(!input||!panel||!select)return;
- const q=String(query||'').trim().toLocaleLowerCase('es');
+ const q=String(query||'').trim();
  input.setAttribute('aria-expanded',String(!!open));clear.hidden=!input.value;
  if(!open){panel.hidden=true;panel.innerHTML='';return;}
  const all=assetList().slice().sort((a,b)=>a.name.localeCompare(b.name,'es'));
- const matches=q?all.filter(a=>(a.name+' '+categoryOf(a)+' '+subtypeOf(a)).toLocaleLowerCase('es').includes(q)):all;
+ const matches=q?all.map(a=>({asset:a,score:assetSearchScore(a,q)})).filter(x=>x.score>=0).sort((a,b)=>b.score-a.score||a.asset.name.localeCompare(b.asset.name,'es')).map(x=>x.asset):all;
  const categories=[...new Set(all.map(categoryOf))].sort((a,b)=>a.localeCompare(b,'es'));
- const shown=matches.slice(0,12);
+ const shown=matches.slice(0,20);
  let content='';
  if(!q){
   content+='<div class="net-asset-explore"><small>EXPLORAR POR CATEGORÍA</small><div>'+categories.map(c=>'<button type="button" data-net-asset-category="'+esc(c)+'">'+esc(c)+'</button>').join('')+'</div></div>';
-  content+='<div class="net-asset-results-label">ACTIVOS DISPONIBLES <span>'+all.length+'</span></div>';
+  content+='<div class="net-asset-results-label">ACTIVOS DEL CATÁLOGO <span>'+all.length+'</span></div>';
  }else content+='<div class="net-asset-results-label">RESULTADOS <span>'+matches.length+'</span></div>';
  let last='';
  shown.forEach(a=>{
@@ -67,8 +105,8 @@ function renderAssetPicker(query='',open=false){
   if(cat!==last){content+='<div class="net-asset-group-label">'+esc(cat)+'</div>';last=cat;}
   content+='<button type="button" class="net-asset-option'+(select.value===a.name?' is-selected':'')+'" role="option" aria-selected="'+(select.value===a.name)+'" data-net-asset-option="'+esc(a.name)+'"><span class="net-asset-option-mark">↗</span><span class="net-asset-option-copy"><b>'+esc(a.name)+'</b><small>'+esc(cat)+' · '+esc(subtypeOf(a))+'</small></span>'+(select.value===a.name?'<span class="net-asset-option-check">✓</span>':'<span class="net-asset-option-arrow">›</span>')+'</button>';
  });
- if(!matches.length)content+='<div class="net-asset-empty"><b>No encontramos ese activo</b><span>Prueba con otro nombre o categoría, o utiliza una rentabilidad manual.</span></div>';
- if(matches.length>12)content+='<div class="net-asset-more">Mostrando 12 de '+matches.length+'. Afina la búsqueda para ver menos resultados.</div>';
+ if(!matches.length)content+='<div class="net-asset-empty"><b>No encontramos ese activo</b><span>Prueba con un nombre relacionado, una categoría o un subtipo. También puedes usar una rentabilidad manual.</span></div>';
+ if(matches.length>20)content+='<div class="net-asset-more">Mostrando 20 de '+matches.length+'. Añade otra palabra para afinar la búsqueda.</div>';
  content+='<button type="button" class="net-asset-manual-option" data-net-asset-manual="true">Usar rentabilidad manual</button>';
  panel.innerHTML=content;panel.hidden=false;
 }
@@ -78,7 +116,9 @@ function chooseNetAsset(name){
  select.value=name||'__manual__';
  if(input)input.value=name&&name!=='__manual__'?name:'Rentabilidad manual';
  renderAssetPicker('',false);
- loadAssetDefaults(findAsset(select.value));
+ const asset=findAsset(select.value);
+ loadAssetDefaults(asset);
+ showAssetTaxAdvice(asset);
 }
 
 function readInputs(asset,rateOverride){
@@ -125,40 +165,51 @@ function updateTaxFieldControls(){
  ];
  pairs.forEach(([check,fields])=>fields.forEach(id=>$(id).disabled=!$(check).checked));
 }
-function renderAssetTaxAdvice(asset){
+function showAssetTaxAdvice(asset){
  const name=String(asset?.name||'').toLocaleLowerCase('es');
  const cat=String(asset?.cat||'').toLocaleLowerCase('es');
  const sub=String(asset?.catalogSubtype||asset?.subtype||'').toLocaleLowerCase('es');
- const text=name+' '+cat+' '+sub+' '+String(asset?.tax||'')+' '+String(asset?.taxdetail||'');
  const lines=[];
  if(/inmobiliario/.test(cat)||/(vivienda|piso|local|garaje|trastero|plaza de aparcamiento|oficina|nave|terreno|suelo|edificio|inmueble)/.test(name)){
   lines.push(['Costes de entrada','Notaría, registro, gestoría, tasación e intermediación, si los pagas.']);
-  lines.push(['Costes periódicos','IBI, comunidad, seguro, mantenimiento, reparaciones y periodos sin alquilar. En alquiler, añade gestión si la contratas.']);
-  lines.push(['Costes de salida','Agencia, cancelación de cargas/hipoteca y certificados, si proceden.']);
-  lines.push(['Impuestos al comprar','ITP en muchas compras de segunda mano, o IVA y normalmente AJD en determinadas operaciones sujetas a IVA. Depende del inmueble, vendedor y comunidad autónoma.']);
-  lines.push(['Impuestos durante la tenencia','IBI. Si alquilas como persona física, IRPF por el rendimiento del alquiler; el tratamiento depende del uso y gastos deducibles.']);
+  lines.push(['Costes periódicos','IBI, comunidad, seguro, mantenimiento, reparaciones y periodos sin alquilar. En alquiler, gestión si la contratas.']);
+  lines.push(['Costes de salida','Agencia, cancelación de cargas o hipoteca y certificados, si proceden.']);
+  lines.push(['Impuestos al comprar','En segunda mano suele corresponder ITP; determinadas compras sujetas a IVA pueden llevar IVA y AJD. Depende del inmueble, vendedor, uso y comunidad autónoma.']);
+  lines.push(['Impuestos durante la tenencia','IBI. Si alquilas, IRPF por el rendimiento para persona física o IS para sociedad, según titularidad y régimen.']);
   lines.push(['Impuestos al vender','IRPF por la ganancia patrimonial o IS si vende una sociedad. Puede existir plusvalía municipal (IIVTNU) en terrenos urbanos, según el caso.']);
  }else if(/mercados financieros/.test(cat)||/(fondo|acciones|etf|bono|obligaci[oó]n|letra del tesoro|dep[oó]sito|cuenta remunerada|plan de pensiones|divisa|materia prima)/.test(name+' '+sub)){
-  lines.push(['Costes de entrada y salida','Comisión de compra/venta, cambio de divisa y diferencial entre precio comprador y vendedor, si tu intermediario los cobra.']);
-  lines.push(['Costes periódicos','Custodia, administración o asesoramiento, si existen. En fondos y ETF revisa los gastos corrientes/TER: suelen estar descontados del valor liquidativo o del fondo; evita duplicarlos.']);
-  lines.push(['Impuestos sobre rendimientos','Intereses y dividendos suelen tributar en la base del ahorro del IRPF para personas físicas residentes en España; el tratamiento concreto depende del producto y del titular.']);
-  lines.push(['Impuestos al reembolso o venta','La ganancia o pérdida puede tributar en IRPF (o IS si invierte una sociedad). Algunos fondos de inversión no cotizados permiten diferir la tributación al traspasar si se cumplen los requisitos; este régimen no se aplica a los ETF cotizados.']);
+  lines.push(['Costes de entrada y salida','Comisión de compra/venta, cambio de divisa y diferencial comprador-vendedor, si los cobra el intermediario.']);
+  lines.push(['Costes periódicos','Custodia, administración o asesoramiento, si existen. En fondos y ETF revisa los gastos corrientes/TER: suelen estar descontados del valor del producto; evita duplicarlos.']);
+  lines.push(['Impuestos sobre rendimientos','Intereses y dividendos suelen tributar en la base del ahorro del IRPF para personas físicas residentes en España; depende del producto y del titular.']);
+  lines.push(['Impuestos al reembolso o venta','La ganancia o pérdida puede tributar en IRPF o IS. Algunos fondos de inversión permiten diferir la tributación mediante traspasos si se cumplen los requisitos; no se aplica igual a los ETF cotizados.']);
  }else if(/empresas y negocios/.test(cat)||/(empresa|negocio|franquicia|startup|participaci[oó]n|pr[eé]stamo participativo)/.test(name+' '+sub)){
   lines.push(['Costes de entrada','Due diligence, asesoría legal/contable, valoración, notaría y gastos de constitución o adquisición, si corresponden.']);
-  lines.push(['Costes periódicos','Personal, alquiler, suministros, seguros, mantenimiento, licencias, gestoría y financiación; introduce solo los costes atribuibles a tu inversión.']);
+  lines.push(['Costes periódicos','Personal, alquiler, suministros, seguros, mantenimiento, licencias, gestoría y financiación; incluye solo los atribuibles a tu inversión.']);
   lines.push(['Costes de salida','Asesoría, intermediación, formalización y posibles costes de transmisión o cancelación.']);
-  lines.push(['Impuestos','IVA u otros tributos según la actividad y operación. Los beneficios tributan por IS en sociedades o por IRPF en actividades de persona física; una venta de participaciones/activos puede generar tributación adicional.']);
+  lines.push(['Impuestos','IVA u otros tributos según actividad y operación. El beneficio puede tributar por IS o IRPF según la forma jurídica; vender participaciones o activos puede generar tributación adicional.']);
  }else if(/alternativos/.test(cat)||/(cripto|bitcoin|ethereum|oro|plata|arte|vino|reloj|coleccion|crowdfunding|crowdlending|pr[eé]stamo|token)/.test(name+' '+sub)){
   lines.push(['Costes de entrada y salida','Comisiones de plataforma/intercambio, diferencial de compra-venta, red o intermediación, según el activo.']);
   lines.push(['Costes periódicos','Custodia, almacenamiento, seguro o gestión, especialmente en activos físicos.']);
-  lines.push(['Impuestos','Dependen mucho del activo y de cómo se obtenga el rendimiento. Criptoactivos y ventas de bienes pueden generar ganancias/pérdidas en IRPF; intereses o rendimientos de plataformas tienen su propia calificación. IVA y otros impuestos pueden variar (por ejemplo, oro de inversión tiene régimen específico).']);
+  lines.push(['Impuestos','Dependen del activo y del rendimiento. Criptoactivos y ventas de bienes pueden generar ganancias/pérdidas en IRPF; intereses y rendimientos de plataformas tienen su propia calificación. IVA y otros impuestos pueden variar; el oro de inversión tiene un régimen específico.']);
  }else{
-  lines.push(['Costes','Comprueba comisiones de entrada/salida, mantenimiento, custodia, gestión y cualquier coste de financiación.']);
-  lines.push(['Impuestos','La tributación depende de la naturaleza del rendimiento, del titular y de la operación. Para una persona física puede ser IRPF; para una sociedad, IS. Verifica si hay IVA/ITP u otros tributos específicos.']);
+  lines.push(['Costes','Comprueba comisiones de entrada/salida, mantenimiento, custodia, gestión y financiación, si existen.']);
+  lines.push(['Impuestos','Dependen de la naturaleza del rendimiento, titular y operación. Puede corresponder IRPF o IS y, en su caso, IVA/ITP u otros tributos.']);
  }
- const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const escapeHtml=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  const title=asset?.name||'Rentabilidad manual';
- $('netAssetTaxAdvice').innerHTML='<div class="net-advice-head"><strong>Qué podrías incluir para '+esc(title)+'</strong><span>Orientación · España</span></div><p>No se activa ni se añade nada automáticamente. Revisa estos conceptos y marca únicamente los que realmente correspondan a tu operación.</p><div class="net-advice-list">'+lines.map(([h,d])=>'<div><b>'+esc(h)+'</b><span>'+esc(d)+'</span></div>').join('')+'</div><small>Orientación general, no una determinación fiscal. Puede variar por comunidad autónoma, municipio, residencia, titularidad, fecha y características concretas. No dupliques costes ya incluidos en la rentabilidad o en el producto.</small>';
+ let modal=$('netAssetAdviceModal');
+ if(!modal){
+  modal=document.createElement('div');modal.id='netAssetAdviceModal';modal.className='net-asset-advice-overlay';modal.hidden=true;
+  modal.innerHTML='<section class="net-asset-advice-dialog" role="dialog" aria-modal="true" aria-labelledby="netAssetAdviceTitle"><button type="button" class="net-asset-advice-close" aria-label="Cerrar aviso">×</button><div class="net-asset-advice-kicker">ANTES DE SIMULAR</div><h2 id="netAssetAdviceTitle"></h2><p class="net-asset-advice-intro">Estos son los conceptos que podrías valorar para este tipo de inversión. No se añade ni se activa ningún coste o impuesto: tú decides cuáles incluir en el simulador.</p><div class="net-advice-list"></div><p class="net-asset-advice-footnote">Orientación general para España, no asesoramiento fiscal. La aplicación concreta depende de la comunidad autónoma, municipio, residencia, titularidad, fecha y características de la operación. No dupliques costes ya descontados en la rentabilidad o en el producto.</p><button type="button" class="net-asset-advice-done">Entendido</button></section>';
+  document.body.appendChild(modal);
+  const close=()=>{modal.hidden=true;document.body.classList.remove('net-asset-advice-open');$('netAssetSearch')?.focus({preventScroll:true});};
+  modal.addEventListener('click',e=>{if(e.target===modal||e.target.closest('.net-asset-advice-close,.net-asset-advice-done'))close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden)close();});
+ }
+ modal.querySelector('#netAssetAdviceTitle').textContent='Costes e impuestos que puedes valorar · '+title;
+ modal.querySelector('.net-advice-list').innerHTML=lines.map(([heading,detail])=>'<div><b>'+escapeHtml(heading)+'</b><span>'+escapeHtml(detail)+'</span></div>').join('');
+ modal.hidden=false;document.body.classList.add('net-asset-advice-open');
+ modal.querySelector('.net-asset-advice-close').focus({preventScroll:true});
 }
 function loadAssetDefaults(asset){
  currentAsset=asset;
@@ -198,8 +249,8 @@ function loadAssetDefaults(asset){
  $('netAjdEnabled').checked=false;$('netAjdRate').value='';
  $('netMunicipalEnabled').checked=false;$('netMunicipalExitTax').value='0';
  $('netOtherTaxEnabled').checked=false;$('netOtherTaxName').value='';$('netOtherEntryTax').value='0';$('netOtherAnnualTax').value='0';
- $('netTaxProfileHint').textContent='Los impuestos aparecen desactivados inicialmente. Consulta el aviso del activo y marca solo los que correspondan a tu operación.'; 
- renderAssetTaxAdvice(asset);
+ // El aviso contextual se muestra como ventana emergente al elegir un activo, fuera de los desplegables fiscales.
+ $('netTaxProfileHint')?.remove();$('netAssetTaxAdvice')?.remove();
  $('netIncomeTaxHint').textContent=savings?'Se propone la escala del ahorro, calculada progresivamente sobre la ganancia positiva al final.':'La ficha apunta a rentas de base general o actividad. Introduce tu tipo marginal aproximado; no se presupone un porcentaje personal.';
  // La visibilidad del tipo se gestiona de forma centralizada en updateTaxControls().
  $('netIncomeTaxTitle').textContent=$('netTaxSubject').value==='company'?'Impuesto sobre Sociedades':'IRPF';
@@ -393,6 +444,7 @@ function openNetReport(){
  win.document.close();
 }
 function init(){
+ $('netTaxProfileHint')?.remove();$('netAssetTaxAdvice')?.remove();
  // Los desplegables avanzados siempre comienzan cerrados, incluso si el navegador restaura su estado anterior.
  document.querySelectorAll('#netAdvanced, #netAdvanced > details').forEach(section=>{section.open=false;});
  fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();if(location.hash.includes('net-sim=')){loadShared();}else{$('netAsset').value=findAsset('Fondos indexados')?'Fondos indexados':(assetList()[0]?.name||'__manual__');loadAssetDefaults(findAsset($('netAsset').value));}$('netAssetSearch').value=$('netAsset').value==='__manual__'?'Rentabilidad manual':$('netAsset').value;renderAssetPicker('',false);setCompareOptions();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
