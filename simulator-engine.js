@@ -103,13 +103,16 @@
     const netNominal=Math.max(0,afterExit-tax);
     const realFinal=netNominal/Math.pow(1+inflation/100,years);
     const directCosts=entryCosts+recurringCosts+exitCosts;
-    const totalCosts=directCosts;
+    // Coste total económico: diferencia exacta entre el capital bruto y el valor tras costes.
+    // Incluye el efecto acumulado de dejar de capitalizar importes pagados durante el plazo.
+    const totalCosts=Math.max(0,gross-afterExit);
+    const compoundingImpact=totalCosts-directCosts;
     const realGain=realFinal-contributedReal;
     const annualized=years>0?monthlyIrr([...realCashflows,realFinal]):0;
     const realAnnualRate=annualized===null?null:(Math.pow(1+annualized,12)-1)*100;
     if(![gross,netNominal,realFinal,totalCosts,tax,contributedReal].every(Number.isFinite))return {error:'No se ha podido calcular este escenario. Comprueba los valores.'};
     return {
-      grossFinal:gross,costs:{entry:entryCosts,recurring:recurringCosts,exit:exitCosts,directTotal:directCosts,total:totalCosts},
+      grossFinal:gross,costs:{entry:entryCosts,recurring:recurringCosts,exit:exitCosts,directTotal:directCosts,compoundingImpact,total:totalCosts},
       taxes:tax+acquisitionTax+recurringTaxes,taxBreakdown:taxes,netNominal,realFinal,contributedNominal:contributed,contributedReal,
       realGain,realAnnualRate,points,months,adjustedRate,taxableGain,
       assumptions:{...p,rate:adjustedRate},taxMethod:incomeTaxEnabled?(incomeTaxType==='is'?'Impuesto sobre Sociedades estimado sobre ganancia final':incomeTaxBase==='savings'?'IRPF: escala del ahorro simplificada':'IRPF: tipo marginal introducido'):'Sin impuesto sobre beneficio seleccionado'
