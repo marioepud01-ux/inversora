@@ -90,9 +90,7 @@
  transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
 }
 .net-sim-advanced-grid>div:hover,
-#netManualRateWrap:hover,
-.net-sim-advanced-grid>div:focus-within,
-#netManualRateWrap:focus-within{
+#netManualRateWrap:hover{
  border-left-color:#155eef;
  box-shadow:0 5px 16px #155eef12;
 }
@@ -115,7 +113,7 @@
 .net-sim-tax-profile{margin:0 0 13px;padding:10px 12px;border-left:3px solid #155eef;border-radius:8px;background:#f7f9ff;color:#475467;font-size:11px;line-height:1.5}
 .net-sim-tax-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .net-sim-tax-card{min-width:0;padding:13px;border:1px solid #e5eaf2;border-left:3px solid #b7d0ff;border-radius:13px;background:#fff;transition:border-color .18s ease,box-shadow .18s ease}
-.net-sim-tax-card:hover,.net-sim-tax-card:focus-within{border-left-color:#155eef;box-shadow:0 5px 16px #155eef12}
+.net-sim-tax-card:hover{border-left-color:#155eef;box-shadow:0 5px 16px #155eef12}
 .net-sim-tax-card-wide{grid-column:1/-1}
 .net-sim-tax-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
 .net-sim-tax-card-head>label{font-size:12px;font-weight:750;color:#344054}
@@ -222,7 +220,7 @@
  border-left:3px solid #b7d0ff;
  transition:border-color .2s ease,box-shadow .2s ease;
 }
-.net-sim-panel:hover,.net-sim-panel:focus-within{
+.net-sim-panel:hover{
  border-left-color:#155eef;
  box-shadow:0 8px 28px #155eef18;
 }
@@ -250,16 +248,12 @@
  border-left-color:#155eef;
  box-shadow:0 6px 20px #155eef18;
 }
-/* No iluminar por foco de teclado/campo: únicamente al situar el puntero sobre el cuadro. */
-.net-sim-panel:focus-within,
-.net-sim-result:focus-within,
-.net-sim-card:focus-within,
-.net-sim-stat:focus-within,
-.net-sim-tax-card:focus-within,
-.net-sim-advanced-grid>div:focus-within,
-#netManualRateWrap:focus-within{
- border-left-color:#e2e8f0;
- box-shadow:0 8px 28px #10182808;
+/* Los cuadros de costes y desplegables también reaccionan solo al hover. */
+.net-cost-group,.net-sim-sub-advanced{transition:border-color .2s ease,box-shadow .2s ease}
+.net-cost-group:hover,.net-sim-sub-advanced:hover{
+ border-color:#b7ccf8;
+ border-left-color:#155eef;
+ box-shadow:0 6px 20px #155eef12;
 }
 @media(prefers-reduced-motion:reduce){
  .net-sim-panel,.net-sim-result,.net-sim-card,.net-sim-stat,.net-sim-tax-card,.net-sim-advanced-grid>div,#netManualRateWrap{transition:none}
