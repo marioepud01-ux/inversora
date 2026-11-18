@@ -34,28 +34,56 @@ function assetDefaults(asset){
 function isRentalAsset(asset){return asset?.cat==='Inmobiliario'&&/(vivienda|local(es)? comerciales|plaza(s)? de garaje|trastero|oficina|nave(s)? industriales|edificio|inmueble(s)? tur[ií]stico)/i.test(asset.name||'')}
 function categoryOf(asset){return asset?.cat||'Otros'}
 function subtypeOf(asset){return asset?.catalogSubtype||(typeof subtypeFor==='function'?subtypeFor(asset):'')||asset?.subtype||'Otros'}
-function populateAssetOptions(query=''){
+function populateAssetOptions(query='',open=false){
  const select=$('netAsset'),keep=select?.value||'Fondos indexados';if(!select)return;
  const q=query.trim().toLocaleLowerCase('es');
  select.innerHTML='';
  const manual=document.createElement('option');manual.value='__manual__';manual.textContent='Rentabilidad manual';select.appendChild(manual);
- const groups=new Map();
- assetList().slice().sort((a,b)=>categoryOf(a).localeCompare(categoryOf(b),'es')||subtypeOf(a).localeCompare(subtypeOf(b),'es')||a.name.localeCompare(b.name,'es')).forEach(a=>{
-  if(q&&!((a.name+' '+categoryOf(a)+' '+subtypeOf(a)).toLocaleLowerCase('es').includes(q)))return;
-  const key=categoryOf(a)+'|||'+subtypeOf(a);
-  if(!groups.has(key))groups.set(key,[]);
-  groups.get(key).push(a);
- });
- for(const [key,items] of groups){
-  const [cat,sub]=key.split('|||');
-  const optgroup=document.createElement('optgroup');optgroup.label=cat+' · '+sub;
-  items.forEach(a=>{const opt=document.createElement('option');opt.value=a.name;opt.textContent=a.name;optgroup.appendChild(opt)});
-  select.appendChild(optgroup);
- }
+ const sorted=assetList().slice().sort((a,b)=>categoryOf(a).localeCompare(categoryOf(b),'es')||subtypeOf(a).localeCompare(subtypeOf(b),'es')||a.name.localeCompare(b.name,'es'));
+ sorted.forEach(a=>{const opt=document.createElement('option');opt.value=a.name;opt.textContent=a.name;select.appendChild(opt);});
  if([...select.options].some(o=>o.value===keep))select.value=keep;
- else if(q)select.value='__manual__';
- else if(select.options.length>1)select.selectedIndex=1;
+ else if(!q&&select.options.length>1)select.value=findAsset('Fondos indexados')?'Fondos indexados':sorted[0]?.name||'__manual__';
+ else select.value='__manual__';
+ renderAssetPicker(q,open);
 }
+function renderAssetPicker(query='',open=false){
+ const input=$('netAssetSearch'),panel=$('netAssetResults'),selected=$('netAssetSelected'),clear=$('netAssetSearchClear'),select=$('netAsset');
+ if(!input||!panel||!selected||!select)return;
+ const q=String(query||'').trim().toLocaleLowerCase('es'),chosen=select.value==='__manual__'?null:findAsset(select.value);
+ input.setAttribute('aria-expanded',String(!!open));clear.hidden=!input.value;
+ selected.innerHTML=chosen
+  ?'<span class="net-asset-selected-icon" aria-hidden="true">✓</span><span class="net-asset-selected-copy"><small>ACTIVO SELECCIONADO</small><b>'+esc(chosen.name)+'</b><span>'+esc(categoryOf(chosen))+' · '+esc(subtypeOf(chosen))+'</span></span><button type="button" data-net-asset-manual="true">Cambiar</button>'
+  :'<span class="net-asset-selected-icon" aria-hidden="true">↗</span><span class="net-asset-selected-copy"><small>SIMULACIÓN PERSONALIZADA</small><b>Rentabilidad manual</b><span>Introduce tu propia hipótesis de rentabilidad</span></span>';
+ if(!open){panel.hidden=true;panel.innerHTML='';return;}
+ const all=assetList().slice().sort((a,b)=>a.name.localeCompare(b.name,'es'));
+ const matches=q?all.filter(a=>(a.name+' '+categoryOf(a)+' '+subtypeOf(a)).toLocaleLowerCase('es').includes(q)):all;
+ const categories=[...new Set(all.map(categoryOf))].sort((a,b)=>a.localeCompare(b,'es'));
+ const shown=matches.slice(0,12);
+ let content='';
+ if(!q){
+  content+='<div class="net-asset-explore"><small>EXPLORAR POR CATEGORÍA</small><div>'+categories.map(c=>'<button type="button" data-net-asset-category="'+esc(c)+'">'+esc(c)+'</button>').join('')+'</div></div>';
+  content+='<div class="net-asset-results-label">ACTIVOS DISPONIBLES <span>'+all.length+'</span></div>';
+ }else content+='<div class="net-asset-results-label">RESULTADOS <span>'+matches.length+'</span></div>';
+ let last='';
+ shown.forEach(a=>{
+  const cat=categoryOf(a);
+  if(cat!==last){content+='<div class="net-asset-group-label">'+esc(cat)+'</div>';last=cat;}
+  content+='<button type="button" class="net-asset-option'+(select.value===a.name?' is-selected':'')+'" role="option" aria-selected="'+(select.value===a.name)+'" data-net-asset-option="'+esc(a.name)+'"><span class="net-asset-option-mark">↗</span><span class="net-asset-option-copy"><b>'+esc(a.name)+'</b><small>'+esc(subtypeOf(a))+'</small></span>'+(select.value===a.name?'<span class="net-asset-option-check">✓</span>':'<span class="net-asset-option-arrow">›</span>')+'</button>';
+ });
+ if(!matches.length)content+='<div class="net-asset-empty"><b>No encontramos ese activo</b><span>Prueba con otro nombre o una categoría. También puedes simularlo con una rentabilidad manual.</span></div>';
+ if(matches.length>12)content+='<div class="net-asset-more">Mostrando 12 de '+matches.length+'. Afina la búsqueda para ver menos resultados.</div>';
+ content+='<button type="button" class="net-asset-manual-option" data-net-asset-manual="true">Usar rentabilidad manual <span>Simular sin seleccionar un activo concreto</span></button>';
+ panel.innerHTML=content;panel.hidden=false;
+}
+function chooseNetAsset(name){
+ const select=$('netAsset'),input=$('netAssetSearch');
+ if(!select)return;
+ select.value=name||'__manual__';
+ if(input)input.value='';
+ renderAssetPicker('',false);
+ loadAssetDefaults(findAsset(select.value));
+}
+
 function readInputs(asset,rateOverride){
  return {
   capital:num('netCapital'),monthly:num('netMonthly'),years:num('netYears'),
@@ -309,8 +337,14 @@ function openNetReport(){
 }
 function init(){
  fetch('fiscalidad-espana.json').then(r=>{if(!r.ok)throw new Error('No se pudo cargar la configuración fiscal');return r.json();}).then(c=>{fiscalConfig=c;populateAssetOptions();if(location.hash.includes('net-sim=')){loadShared();}else{$('netAsset').value=findAsset('Fondos indexados')?'Fondos indexados':(assetList()[0]?.name||'__manual__');loadAssetDefaults(findAsset($('netAsset').value));}setCompareOptions();}).catch(err=>{$('netSimError').textContent='No se ha podido cargar la configuración fiscal. Recarga la página o inténtalo más tarde.';$('netSimError').classList.remove('net-sim-hidden');console.error(err);});
- $('netAssetSearch').addEventListener('input',e=>{const before=$('netAsset').value;populateAssetOptions(e.target.value);if(before!==$('netAsset').value&&$('netAsset').value==='__manual__')loadAssetDefaults(null);});
- $('netAsset').addEventListener('change',()=>loadAssetDefaults(findAsset($('netAsset').value)));
+ $('netAssetSearch').addEventListener('input',e=>populateAssetOptions(e.target.value,true));
+ $('netAssetSearch').addEventListener('focus',()=>renderAssetPicker($('netAssetSearch').value,true));
+ $('netAssetSearch').addEventListener('keydown',e=>{if(e.key==='Escape'){renderAssetPicker($('netAssetSearch').value,false);$('netAssetSearch').blur();}else if(e.key==='Enter'){const first=$('netAssetResults')?.querySelector('[data-net-asset-option]');if(first){e.preventDefault();chooseNetAsset(first.dataset.netAssetOption);}}});
+ $('netAssetResults').addEventListener('click',e=>{const option=e.target.closest('[data-net-asset-option]'),category=e.target.closest('[data-net-asset-category]'),manual=e.target.closest('[data-net-asset-manual]');if(option)chooseNetAsset(option.dataset.netAssetOption);else if(category){$('netAssetSearch').value=category.dataset.netAssetCategory;populateAssetOptions(category.dataset.netAssetCategory,true);}else if(manual)chooseNetAsset('__manual__');});
+ $('netAssetSelected').addEventListener('click',e=>{if(e.target.closest('[data-net-asset-manual]')){$('netAssetSearch').focus();renderAssetPicker('',true);}});
+ $('netAssetSearchClear').addEventListener('click',()=>{$('netAssetSearch').value='';populateAssetOptions('',true);$('netAssetSearch').focus();});
+ document.addEventListener('click',e=>{if(!$('netAssetPicker')?.contains(e.target))renderAssetPicker($('netAssetSearch')?.value||'',false);});
+ $('netAsset').addEventListener('change',()=>{loadAssetDefaults(findAsset($('netAsset').value));renderAssetPicker('',false);});
  ['netCapital','netMonthly','netYears','netEntryFee','netEntryFixed','netAnnualFee','netAnnualFixed','netExitFee','netExitFixed','netInflation','netVacancy'].forEach(id=>$(id).addEventListener('input',()=>runNetSimulation()));
  $('netManualRate').addEventListener('input',()=>{selectedScenario='custom';document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed','false'));runNetSimulation();});
  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.netScenario)));
