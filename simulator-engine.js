@@ -95,7 +95,7 @@
     let incomeTax=0;
     if(incomeTaxEnabled&&taxableGain>0){
       if(incomeTaxType==='is')incomeTax=taxableGain*(incomeTaxRate??25)/100;
-      else if(incomeTaxBase==='savings')incomeTax=progressiveTax(taxableGain,brackets);
+      else if(incomeTaxBase==='savings'&&incomeTaxRate===null)incomeTax=progressiveTax(taxableGain,brackets);
       else if(incomeTaxRate!==null)incomeTax=taxableGain*incomeTaxRate/100;
     }
     const taxes={acquisition:capital*(acquisitionTaxRate+ajdRate)/100,otherEntry:otherEntryTax,recurring:recurringTaxes,income:incomeTax,municipal:municipalExitTax,total:acquisitionTax+recurringTaxes+incomeTax+municipalExitTax};
