@@ -3,3 +3,19 @@
 @media(hover:hover){:where(.home-map-intro,.home-featured-block,.home-compare-card,.tool-hub-card,.community-side-card,.account-panel,.compare-card,.sim-analysis-card,.disclaimer-card,.card,.investment-card,.category-tile,.category-tile-v2,.asset-section,.standard-analysis-card,.asset-rating-card,.asset-overview-panel,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-cost-card,.asset-ratings-panel,.asset-barrier-section,.asset-outlook-section,.asset-detail,.moderation-panel,.account-stat,.community-simulation-card,.community-comparison-card,.auth-success-panel,.profile-review-item,.profile-reviews-section,.profile-settings-section,.asset-community-modal-card,.shared-list-hero,.score-modal-card,.fp-asset,.fp-create-panel,.legal-page,.net-sim-panel,.net-sim-card,.net-sim-result,.net-sim-stat,.net-sim-whatif-item):hover{border-left-color:#155eef!important;box-shadow:0 8px 26px rgba(21,94,239,.11)!important}}
 :where(.home-map-intro,.home-featured-block,.home-compare-card,.tool-hub-card,.community-side-card,.account-panel,.compare-card,.sim-analysis-card,.disclaimer-card,.card,.investment-card,.category-tile,.category-tile-v2,.asset-section,.standard-analysis-card,.asset-rating-card,.asset-overview-panel,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-cost-card,.asset-ratings-panel,.asset-barrier-section,.asset-outlook-section,.asset-detail,.moderation-panel,.account-stat,.community-simulation-card,.community-comparison-card,.auth-success-panel,.profile-review-item,.profile-reviews-section,.profile-settings-section,.asset-community-modal-card,.shared-list-hero,.score-modal-card,.fp-asset,.fp-create-panel,.legal-page,.net-sim-panel,.net-sim-card,.net-sim-result,.net-sim-stat,.net-sim-whatif-item):focus-within{border-left-color:#155eef!important;box-shadow:0 6px 22px rgba(21,94,239,.09)!important}
 @media(prefers-reduced-motion:reduce){:where(.home-map-intro,.home-featured-block,.home-compare-card,.tool-hub-card,.community-side-card,.account-panel,.compare-card,.sim-analysis-card,.disclaimer-card,.card,.investment-card,.category-tile,.category-tile-v2,.asset-section,.standard-analysis-card,.asset-rating-card,.asset-overview-panel,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-cost-card,.asset-ratings-panel,.asset-barrier-section,.asset-outlook-section,.asset-detail,.moderation-panel,.account-stat,.community-simulation-card,.community-comparison-card,.auth-success-panel,.profile-review-item,.profile-reviews-section,.profile-settings-section,.asset-community-modal-card,.shared-list-hero,.score-modal-card,.fp-asset,.fp-create-panel,.legal-page,.net-sim-panel,.net-sim-card,.net-sim-result,.net-sim-stat,.net-sim-whatif-item){transition:none!important}}
+
+/* Banners y paneles amplios que también forman parte del sistema de tarjetas */
+:where(.hero,.tool-hero,.community-hero,.account-hero,.compare-hero,.asset-hero,.asset-overview,.asset-community,.taxonomy-map-universe,.asset-print-sheet){
+ border-left:3px solid #b7d0ff!important;
+ transition:border-left-color .2s ease,box-shadow .2s ease!important;
+}
+@media(hover:hover){
+ :where(.hero,.tool-hero,.community-hero,.account-hero,.compare-hero,.asset-hero,.asset-overview,.asset-community,.taxonomy-map-universe,.asset-print-sheet):hover{
+  border-left-color:#155eef!important;
+  box-shadow:0 8px 26px rgba(21,94,239,.11)!important;
+ }
+}
+:where(.hero,.tool-hero,.community-hero,.account-hero,.compare-hero,.asset-hero,.asset-overview,.asset-community,.taxonomy-map-universe,.asset-print-sheet):focus-within{
+ border-left-color:#155eef!important;
+ box-shadow:0 6px 22px rgba(21,94,239,.09)!important;
+}
