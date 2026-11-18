@@ -87,7 +87,7 @@
     const fixedExit=Math.min(Math.max(0,net-variableExit),exitFixed);
     const exitCosts=variableExit+fixedExit;
     const afterExit=Math.max(0,net-exitCosts);
-    const taxableGain=Math.max(0,afterExit-contributed-acquisitionTax);
+    const taxableGain=Math.max(0,afterExit-contributed+acquisitionTax);
     const brackets=config?.savingsTaxBrackets||[];
     let incomeTax=0;
     if(incomeTaxEnabled&&taxableGain>0){
@@ -95,12 +95,12 @@
       else if(incomeTaxBase==='savings')incomeTax=progressiveTax(taxableGain,brackets);
       else if(incomeTaxRate!==null)incomeTax=taxableGain*incomeTaxRate/100;
     }
-    const taxes={acquisition:capital*(acquisitionTaxRate+ajdRate)/100,otherEntry:otherEntryTax,recurring:recurringTaxes,income:incomeTax,municipal:municipalExitTax,otherRecurring:otherAnnualTax,total:acquisitionTax+recurringTaxes+incomeTax+municipalExitTax};
+    const taxes={acquisition:capital*(acquisitionTaxRate+ajdRate)/100,otherEntry:otherEntryTax,recurring:recurringTaxes,income:incomeTax,municipal:municipalExitTax,total:acquisitionTax+recurringTaxes+incomeTax+municipalExitTax};
     const tax=incomeTax+municipalExitTax;
     const netNominal=Math.max(0,afterExit-tax);
     const realFinal=netNominal/Math.pow(1+inflation/100,years);
     const directCosts=entryCosts+recurringCosts+exitCosts;
-    const totalCosts=Math.max(0,gross-afterExit);
+    const totalCosts=directCosts;
     const realGain=realFinal-contributedReal;
     const annualized=years>0?monthlyIrr([...realCashflows,realFinal]):0;
     const realAnnualRate=annualized===null?null:(Math.pow(1+annualized,12)-1)*100;
