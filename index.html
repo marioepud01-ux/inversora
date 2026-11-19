@@ -2372,8 +2372,8 @@ async function startSocialAuth(provider){const msg=document.getElementById('auth
 let invProfilePhotoRemoved=false,invProfileEditorOpen=false,invPendingAvatarFile=null,invPendingAvatarPromise=null,invPendingAvatarPreviewUrl='',invAvatarPreviewToken=0;
 function invClearPendingAvatar(){invAvatarPreviewToken++;if(invPendingAvatarPreviewUrl){URL.revokeObjectURL(invPendingAvatarPreviewUrl);invPendingAvatarPreviewUrl=''}invPendingAvatarFile=null;invPendingAvatarPromise=null}
 function invProfileAvatarSrc(url){if(!url)return '';const value=String(url);return value+(value.includes('?')?'&':'?')+'profile_refresh='+Date.now()}
-function invToggleProfileEditor(open){invProfileEditorOpen=!!open;invProfilePhotoRemoved=false;invClearPendingAvatar();Promise.resolve(renderAccount()).catch(e=>{console.error('No se pudo actualizar el perfil:',e);invNotice('No se ha podido mostrar el perfil. Recarga la página e inténtalo de nuevo.')})}
-function invCloseProfileEditor(ev){if(ev){ev.preventDefault();ev.stopPropagation()}invProfileEditorOpen=false;invProfilePhotoRemoved=false;invClearPendingAvatar();Promise.resolve(renderAccount()).catch(e=>{console.error('No se pudo volver al perfil:',e);invNotice('No se ha podido volver al perfil. Recarga la página e inténtalo de nuevo.')})}
+function invToggleProfileEditor(open){invProfileEditorOpen=!!open;invProfilePhotoRemoved=false;invClearPendingAvatar();if(open){renderAccount();return}showView('account')}
+function invCloseProfileEditor(ev){if(ev){ev.preventDefault();ev.stopPropagation()}invProfileEditorOpen=false;invProfilePhotoRemoved=false;invClearPendingAvatar();showView('account');return false}
 async function invPrepareProfilePhoto(file){
  if(!file||file.size>15*1024*1024)throw new Error('La imagen original no puede superar 15 MB.');
  const objectUrl=URL.createObjectURL(file);
@@ -2582,8 +2582,7 @@ async function renderAccount(){
      <div class="profile-save-row"><button class="auth-submit" type="submit">Guardar cambios</button><span>Los campos opcionales pueden dejarse en blanco.</span></div><div id="profileSaveMessage" class="auth-message" role="status" aria-live="polite"></div>
     </form>
    </div>`;
-   const backButton=el.querySelector('[data-profile-back]');
-   if(backButton)backButton.addEventListener('click',invCloseProfileEditor,{once:true});
+   // La navegación de vuelta se gestiona con un listener delegado global.
   }
   return;
  }
@@ -2659,7 +2658,8 @@ async function logoutLocal(){await invDb.auth.signOut();invUser=null;invProfile=
 async function startSocialAuth(provider){const m=document.getElementById('authMessage');if(m){m.className='auth-message';m.textContent='Conectando con Google…'}try{const {error}=await invDb.auth.signInWithOAuth({provider,options:{redirectTo:window.location.origin}});if(error)throw error}catch(e){if(m){m.className='auth-message';const message=String(e?.message||'');m.textContent=/provider is not enabled/i.test(message)?'Google todavía no está activado en la autenticación de Inversora. El acceso por correo sigue disponible; para activar Google faltan las credenciales OAuth del proveedor en Supabase.':'No se ha podido iniciar el acceso con Google. '+message}}}
 // Keep the legacy screen transitions, but load cloud data before presenting account/favorites/community.
 const invOriginalShowView=showView;
-showView=function(id){invOriginalShowView(id);if(id==='favorites'&&invUser)invLoadLists().then(renderFavorites).catch(e=>console.error(e));if(id==='community')renderCommunity()};
+showView=function(id){invOriginalShowView(id);if(id==='account'&&invUser){const uid=invUser.id;invLoadProfile().then(()=>{if(invUser?.id===uid&&!document.getElementById('account').classList.contains('hidden')){refreshAccountNav();renderAccount()}}).catch(e=>console.error('No se pudo cargar el perfil de la cuenta:',e))}if(id==='favorites'&&invUser)invLoadLists().then(renderFavorites).catch(e=>console.error(e));if(id==='community')renderCommunity()};
+document.addEventListener('click',function(event){const back=event.target?.closest?.('[data-profile-back]');if(!back)return;invCloseProfileEditor(event)},true);
 invDb.auth.onAuthStateChange((event,session)=>{
   invUser=session?.user||null;
   setTimeout(async()=>{
