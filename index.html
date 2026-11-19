@@ -1927,7 +1927,193 @@ function printComparisonSheet(){
  if(!win){invNotice('El navegador ha bloqueado la nueva pestaña. Permite las ventanas emergentes para Inversora.');return}
  const printCss='<style>html,body{background:#fff!important;color:#101828!important;margin:0!important;padding:0!important}.compare-page{display:block!important;max-width:none!important;width:100%!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}.compare-page button{display:none!important}.compare-table-wrap,.compare-card{break-inside:avoid;box-shadow:none!important}@page{size:A4 landscape;margin:10mm}</style>';
  win.document.open();
- win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparativa · Inversora</title>'+styles+printCss+'</head><body>'+page.outerHTML+'<script src="/simulator-engine.js"><\/script><script src="/simulator-ui.js"><\/script></body></html>');
+ win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparativa · Inversora</title>'+styles+printCss+'</head><body>'+page.outerHTML+'<script src="/simulator-engine.js"><\/script><script src="/simulator-ui.js"><\/script>
+<style id="inv-profile-redesign-2026-11">
+/* Mi perfil — rediseño integral aislado */
+#account>.account-page{max-width:1040px;margin:0 auto}
+#account .account-hero{display:none!important}
+#account .account-panel{padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;min-height:0!important}
+#account .profile-redesign{--pr-ink:#10294e;--pr-muted:#66758b;--pr-blue:#155eef;max-width:100%;color:var(--pr-ink)}
+#account .pr-topline{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:0 0 18px}
+#account .pr-kicker{font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#6480a5}
+#account .pr-topline h1{font-size:clamp(30px,4vw,43px);line-height:1.08;letter-spacing:-1.8px;margin:7px 0 0;color:var(--pr-ink)}
+#account .pr-topline p{margin:8px 0 0;color:var(--pr-muted);font-size:14px}
+#account .pr-card{background:#fff;border:1px solid #dfe7f2;border-radius:22px;box-shadow:0 8px 26px rgba(21,53,93,.055);overflow:hidden}
+#account .pr-login-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.82fr);gap:18px;align-items:stretch}
+#account .pr-welcome-panel{padding:clamp(22px,4vw,38px);background:linear-gradient(145deg,#10294e,#174a80);color:#fff;display:flex;flex-direction:column;justify-content:space-between;min-height:430px}
+#account .pr-welcome-panel .pr-kicker{color:#b9d2f5}
+#account .pr-welcome-panel h2{font-size:clamp(28px,3.5vw,39px);line-height:1.08;letter-spacing:-1.4px;margin:18px 0 12px;color:#fff}
+#account .pr-welcome-panel p{font-size:14px;line-height:1.7;color:#d7e5f7;max-width:430px;margin:0}
+#account .pr-welcome-mark{width:64px;height:64px;border-radius:19px;display:grid;place-items:center;background:#ffffff18;border:1px solid #ffffff30;font-size:30px;color:#d9e9ff}
+#account .pr-benefits{display:grid;gap:12px;margin-top:28px}
+#account .pr-benefit{display:flex;align-items:center;gap:11px;color:#e4efff;font-size:13px}
+#account .pr-benefit b{width:25px;height:25px;display:grid;place-items:center;border-radius:50%;background:#ffffff18;color:#fff;font-size:12px}
+#account .pr-auth-card{padding:clamp(20px,3vw,30px)}
+#account .pr-auth-card h2{font-size:23px;letter-spacing:-.6px;margin:0 0 6px;color:var(--pr-ink)}
+#account .pr-auth-sub{margin:0 0 20px;color:var(--pr-muted);font-size:13px;line-height:1.5}
+#account .pr-oauth{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#account .pr-oauth button{min-height:48px;border:1px solid #d7e0ed;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:9px;font-size:13px;font-weight:750;color:#1d3557;transition:border-color .18s,background .18s,box-shadow .18s}
+#account .pr-oauth button:hover{border-color:#9bbcf2;background:#f8fbff;box-shadow:0 4px 14px #155eef12}
+#account .pr-oauth button:disabled{opacity:.6;cursor:wait}
+#account .pr-google-g{font-weight:900;font-size:19px;background:conic-gradient(from -45deg,#4285f4 0 25%,#34a853 25% 50%,#fbbc05 50% 75%,#ea4335 75%);color:transparent;background-clip:text}
+#account .pr-apple{font-size:19px;color:#111}
+#account .pr-divider{display:flex;align-items:center;gap:11px;color:#98a5b7;font-size:11px;margin:19px 0}
+#account .pr-divider:before,#account .pr-divider:after{content:"";height:1px;background:#e8edf4;flex:1}
+#account .pr-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#f0f4f9;border-radius:11px;padding:4px;margin-bottom:16px}
+#account .pr-tabs button{background:transparent;border-radius:8px;padding:10px;color:#63738a;font-size:13px;font-weight:750}
+#account .pr-tabs button.active{background:#fff;color:#155eef;box-shadow:0 2px 7px #10294e12}
+#account .pr-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#account .pr-form .auth-field{min-width:0;gap:6px}
+#account .pr-form .auth-field.full{grid-column:1/-1}
+#account .pr-form .auth-field label{font-size:12px;color:#344b69;font-weight:750}
+#account .pr-form input:not([type=checkbox]){width:100%;min-width:0;padding:12px;border:1px solid #d9e2ee;border-radius:10px;background:#fff;color:#10294e;outline:none}
+#account .pr-form input:focus{border-color:#7ca8f5;box-shadow:0 0 0 3px #155eef13}
+#account .pr-form input[type=checkbox]{accent-color:#155eef}
+#account .pr-legal{font-size:11px;line-height:1.5;color:#718096}
+#account .pr-legal a{color:#155eef;margin-right:12px}
+#account .pr-submit{grid-column:1/-1;width:100%;border-radius:11px;background:#155eef;color:white;padding:13px;font-weight:800;box-shadow:0 5px 14px #155eef22}
+#account .pr-submit:hover{background:#0d4ed1}
+#account .pr-note{font-size:11px;line-height:1.55;color:#8390a2;margin:14px 0 0}
+#account .pr-profile-hero{position:relative;padding:clamp(22px,4vw,36px);background:linear-gradient(120deg,#10294e,#1b4f84);color:white}
+#account .pr-profile-hero:after{content:"";position:absolute;width:250px;height:250px;border-radius:50%;right:-85px;top:-145px;border:1px solid #ffffff20;box-shadow:0 0 0 30px #ffffff08,0 0 0 60px #ffffff05;pointer-events:none}
+#account .pr-profile-head{position:relative;z-index:1;display:flex;align-items:center;gap:20px;min-width:0}
+#account .pr-avatar-wrap{position:relative;flex:0 0 94px;width:94px;height:94px}
+#account .pr-avatar{width:94px;height:94px;display:block;border-radius:50%;object-fit:cover;border:3px solid #ffffffd9;background:#e9eff8;box-shadow:0 5px 20px #071c3b35}
+#account .pr-profile-copy{min-width:0}
+#account .pr-profile-copy .pr-kicker{color:#bfd6f8}
+#account .pr-profile-copy h2{font-size:clamp(23px,3vw,31px);line-height:1.15;letter-spacing:-.8px;margin:6px 0;color:#fff;overflow-wrap:anywhere}
+#account .pr-profile-copy p{font-size:13px;color:#d4e3f6;margin:0;overflow-wrap:anywhere}
+#account .pr-bio{margin:13px 0 0!important;max-width:650px;line-height:1.6}
+#account .pr-edit-button{position:relative;z-index:2;margin-left:auto;flex:0 0 auto;background:#fff;color:#174a80;padding:12px 16px;border-radius:11px;font-size:13px;font-weight:800;box-shadow:0 5px 15px #071c3b25}
+#account .pr-edit-button:hover{background:#eef5ff}
+#account .pr-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:16px 0}
+#account .pr-stat{padding:17px 18px}
+#account .pr-stat strong{display:block;font-size:25px;letter-spacing:-.8px;color:#155eef}
+#account .pr-stat span{display:block;margin-top:4px;color:#687b95;font-size:11px}
+#account .pr-section{padding:21px;margin-top:14px}
+#account .pr-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+#account .pr-section-head h3{margin:0;font-size:16px;color:#18365d}
+#account .pr-section-head p{margin:4px 0 0;color:#7a899e;font-size:12px}
+#account .pr-links{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#account .pr-link{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border:1px solid #e2e9f3;border-radius:13px;background:#fff;color:#1c385e}
+#account .pr-link:hover{border-color:#a9c5f4;background:#f8fbff}
+#account .pr-link-icon{width:37px;height:37px;display:grid;place-items:center;border-radius:11px;background:#edf4ff;color:#155eef;font-size:19px}
+#account .pr-link b{display:block;font-size:13px}
+#account .pr-link small{display:block;margin-top:3px;color:#7a899e;font-size:11px}
+#account .pr-arrow{margin-left:auto;color:#6480a5;font-size:18px}
+#account .pr-account-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:16px}
+#account .pr-account-actions button{padding:11px 14px;border-radius:10px;font-size:12px;font-weight:750}
+#account .pr-secondary{background:#fff;border:1px solid #dce5f0;color:#3d587a}
+#account .pr-danger{background:#fff2f1;color:#b42318}
+#account .pr-editor-head{display:flex;align-items:center;gap:12px;margin:0 0 18px}
+#account .pr-back{background:#fff;border:1px solid #dce5f0;border-radius:10px;padding:10px 13px;color:#345474;font-weight:750;font-size:12px}
+#account .pr-editor-title h2{font-size:27px;letter-spacing:-.8px;margin:4px 0;color:#10294e}
+#account .pr-editor-title p{margin:0;color:#75859b;font-size:12px;line-height:1.5}
+#account .pr-editor-form{display:grid;gap:13px}
+#account .pr-editor-card{padding:21px}
+#account .pr-editor-card-head{display:flex;align-items:center;gap:12px;padding-bottom:15px;border-bottom:1px solid #edf1f6}
+#account .pr-editor-icon{width:39px;height:39px;display:grid;place-items:center;border-radius:12px;background:#edf4ff;color:#155eef;font-size:18px}
+#account .pr-editor-card-head h3{font-size:14px;margin:0;color:#18365d}
+#account .pr-editor-card-head p{font-size:11px;color:#7b8aa0;margin:4px 0 0}
+#account .pr-fields{display:grid;grid-template-columns:1fr 1fr;gap:13px;padding-top:16px}
+#account .pr-fields .auth-field.full{grid-column:1/-1}
+#account .pr-fields label{font-size:12px;font-weight:750;color:#344b69;margin-bottom:6px}
+#account .pr-fields input,#account .pr-fields textarea{width:100%;padding:12px;border:1px solid #d9e2ee;border-radius:10px;background:#fff;color:#10294e;outline:none}
+#account .pr-fields textarea{resize:vertical;min-height:100px;line-height:1.55}
+#account .pr-fields input:focus,#account .pr-fields textarea:focus{border-color:#7ca8f5;box-shadow:0 0 0 3px #155eef13}
+#account .pr-fields small{font-size:10px;color:#8290a3;margin-top:5px}
+#account .pr-photo-row{display:flex;align-items:center;gap:18px;padding-top:17px}
+#account .pr-photo-row .profile-photo-preview{width:88px;height:88px;flex:0 0 88px;border-radius:50%;object-fit:cover;background:#edf2f8;border:2px solid #e2eaf5}
+#account .pr-photo-actions{display:flex;align-items:flex-start;flex-direction:column;gap:8px}
+#account .pr-photo-actions .profile-upload-button{border-radius:10px;background:#f2f7ff;border-color:#d4e3fb;color:#1553b4}
+#account .pr-photo-actions small{color:#8491a4;font-size:10px}
+#account .pr-editor-footer{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#account .pr-editor-footer .auth-submit{width:auto;min-width:170px;padding:13px 18px;border-radius:11px}
+#account .pr-editor-footer .pr-cancel{background:#fff;border:1px solid #dce5f0;color:#49617e;padding:12px 15px;border-radius:10px;font-weight:750}
+#account .pr-editor-footer .pr-save-hint{font-size:11px;color:#8190a4}
+#account .pr-auth-message{min-height:18px}
+#account .pr-account-shell{max-width:100%}
+#account .pr-empty-note{padding:17px;border:1px dashed #d7e1ef;border-radius:13px;color:#75859b;font-size:12px;line-height:1.6;background:#f9fbfe}
+@media(max-width:760px){
+ #account .pr-login-layout{grid-template-columns:1fr}
+ #account .pr-welcome-panel{min-height:0;padding:23px}
+ #account .pr-welcome-panel h2{font-size:29px}
+ #account .pr-benefits{grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+ #account .pr-profile-head{align-items:flex-start;flex-wrap:wrap}
+ #account .pr-edit-button{margin-left:0}
+ #account .pr-stats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+ #account .pr-topline{align-items:flex-start}
+ #account .pr-topline h1{font-size:30px}
+ #account .pr-auth-card{padding:19px}
+ #account .pr-oauth{grid-template-columns:1fr}
+ #account .pr-form,#account .pr-fields{grid-template-columns:1fr}
+ #account .pr-form .auth-field.full,#account .pr-fields .auth-field.full{grid-column:auto}
+ #account .pr-profile-head{gap:13px}
+ #account .pr-avatar-wrap,#account .pr-avatar{width:74px;height:74px;flex-basis:74px}
+ #account .pr-profile-copy{flex:1}
+ #account .pr-profile-copy h2{font-size:23px}
+ #account .pr-edit-button{width:100%}
+ #account .pr-links{grid-template-columns:1fr}
+ #account .pr-section,#account .pr-editor-card{padding:16px}
+ #account .pr-photo-row{align-items:flex-start;gap:13px}
+ #account .pr-editor-footer .auth-submit{width:100%}
+ #account .pr-editor-footer .pr-save-hint{width:100%}
+}
+@media(prefers-reduced-motion:reduce){#account .pr-card,#account .pr-link,#account .pr-oauth button{transition:none!important}}
+</style>
+<script id="inv-profile-redesign-2026-11-js">
+(function(){
+ const esc=v=>typeof invEsc==='function'?invEsc(v):String(v??'');
+ const fallback='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2250%22 fill=%22%23edf2f8%22/%3E%3Ccircle cx=%2250%22 cy=%2237%22 r=%2218%22 fill=%22%2398a8ba%22/%3E%3Cpath d=%22M15 91c3-21 17-32 35-32s32 11 35 32%22 fill=%22%2398a8ba%22/%3E%3C/svg%3E';
+ function setNav(){
+  const b=document.getElementById('accountNav');if(!b)return;
+  const signed=!!invUser,photo=invProfile?.avatar_url;
+  b.innerHTML=(photo?'<img class="profile-nav-avatar" src="'+esc(photo)+'" alt="">':'<span class="profile-nav-avatar-fallback" aria-hidden="true"></span>')+'<span class="profile-nav-label">Mi perfil</span><span class="profile-dropdown-cue" aria-hidden="true"><svg class="reference-profile-chevron" viewBox="0 0 12 12"><path d="m2 4 4 4 4-4"/></svg></span>';
+  b.setAttribute('aria-label',signed?'Mi perfil':'Acceder a Mi perfil');b.title=signed?'Ver y personalizar tu perfil':'Iniciar sesión o crear una cuenta';
+ }
+ window.refreshAccountNav=setNav;
+ window.renderAccount=function(){
+  const host=document.getElementById('accountContent');if(!host)return;
+  setNav();
+  const heading='<div class="pr-topline"><div><div class="pr-kicker">Tu espacio personal</div><h1>Mi perfil</h1><p>Tu identidad y tu actividad dentro de Inversora.</p></div></div>';
+  if(typeof invPendingConfirmationEmail!=='undefined'&&invPendingConfirmationEmail){
+   host.innerHTML='<div class="pr-card pr-auth-card"><div class="pr-kicker">Un último paso</div><h2>Confirma tu correo</h2><p class="pr-auth-sub">Hemos enviado un enlace a <b>'+esc(invPendingConfirmationEmail)+'</b>. Abre el mensaje para activar tu cuenta.</p><button class="pr-submit" id="resendConfirmationBtn" onclick="resendConfirmationEmail()">Reenviar correo de confirmación</button><button class="pr-secondary" style="margin-top:10px;padding:11px 14px;border-radius:10px" onclick="invPendingConfirmationEmail=\'\';authMode=\'login\';renderAccount()">Volver al acceso</button><div id="authMessage" class="auth-message pr-auth-message" role="status"></div></div>';return;
+  }
+  if(!invUser){
+   const register=authMode==='register';
+   host.innerHTML='<div class="pr-login-layout"><section class="pr-card pr-welcome-panel"><div><div class="pr-welcome-mark">↗</div><div class="pr-kicker" style="margin-top:25px">Inversora · Tu espacio</div><h2>Tu forma de invertir empieza por entender.</h2><p>Crea tu perfil para guardar inversiones, organizar favoritos y participar en la comunidad con una identidad propia.</p></div><div class="pr-benefits"><div class="pr-benefit"><b>✓</b> Favoritos sincronizados</div><div class="pr-benefit"><b>✓</b> Perfil personalizable</div><div class="pr-benefit"><b>✓</b> Actividad de comunidad</div></div></section><section class="pr-card pr-auth-card"><h2>'+(register?'Crear tu cuenta':'Bienvenido de nuevo')+'</h2><p class="pr-auth-sub">'+(register?'Únete a Inversora en unos pasos.':'Accede a tu espacio y continúa donde lo dejaste.')+'</p><div class="pr-oauth"><button type="button" onclick="startSocialAuth(\'google\')"><span class="pr-google-g">G</span> Google</button><button type="button" onclick="startSocialAuth(\'apple\')"><span class="pr-apple">●</span> Apple</button></div><div class="pr-divider">o con tu correo electrónico</div><div class="pr-tabs"><button type="button" id="registerTab" class="'+(register?'active':'')+'" onclick="setAuthMode(\'register\')">Crear cuenta</button><button type="button" id="loginTab" class="'+(!register?'active':'')+'" onclick="setAuthMode(\'login\')">Iniciar sesión</button></div><form id="authForm" class="pr-form" onsubmit="submitAuth(event)">'+(register?'<div class="auth-field"><label for="authFirstName">Nombre *</label><input id="authFirstName" name="first_name" autocomplete="given-name" maxlength="40" required placeholder="Tu nombre"></div><div class="auth-field"><label for="authLastName">Apellidos *</label><input id="authLastName" name="last_name" autocomplete="family-name" maxlength="80" required placeholder="Tus apellidos"></div>':'')+'<div class="auth-field full"><label for="authEmail">Correo electrónico *</label><input id="authEmail" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="tu@correo.com"></div><div class="auth-field full"><label for="authPassword">Contraseña *</label><input id="authPassword" name="password" type="password" autocomplete="'+(register?'new-password':'current-password')+'" minlength="8" required placeholder="Mínimo 8 caracteres"></div>'+(register?'<div class="auth-field full"><label for="authConfirm">Repite la contraseña *</label><input id="authConfirm" name="confirm" type="password" autocomplete="new-password" minlength="8" required></div><div class="auth-field full"><label style="display:flex;gap:8px;align-items:flex-start;font-weight:500"><input type="checkbox" id="authTerms" required style="margin-top:3px"> Acepto las condiciones de uso y la política de privacidad. *</label><div class="pr-legal"><a href="#" onclick="event.preventDefault();showView(\'terms\')">Condiciones de uso</a><a href="#" onclick="event.preventDefault();showView(\'privacy\')">Privacidad</a></div></div>':'')+'<button class="pr-submit" type="submit">'+(register?'Crear cuenta':'Iniciar sesión')+'</button></form>'+(register?'':'<button type="button" class="back" style="margin-top:13px" onclick="invPasswordRecovery()">He olvidado mi contraseña</button>')+'<div id="authMessage" class="auth-message pr-auth-message" role="status" aria-live="polite"></div><p class="pr-note">Tu cuenta se gestiona de forma segura mediante Inversora. Nunca te pediremos la contraseña de Google o Apple.</p></section></div>';
+   return;
+  }
+  const profile=invProfile||{},meta=invUser.user_metadata||{},display=String(profile.display_name||meta.display_name||meta.full_name||meta.name||invUser.email?.split('@')[0]||'Miembro'),parts=display.trim().split(/\s+/),first=String(profile.first_name||meta.first_name||parts[0]||''),last=String(profile.last_name||meta.last_name||(parts.length>1?parts.slice(1).join(' '):'')),bio=String(profile.bio||''),avatar=profile.avatar_url||fallback;
+  const editor=!!invProfileEditorOpen;
+  if(editor){
+   host.innerHTML=heading+'<div class="pr-editor-head"><button type="button" class="pr-back" onclick="invToggleProfileEditor(false)">← Volver a mi perfil</button><div class="pr-editor-title"><div class="pr-kicker">Personalización</div><h2>Personalizar perfil</h2><p>Actualiza la información que se muestra en tu perfil.</p></div></div><form id="profileEditForm" class="pr-editor-form" onsubmit="saveInversoraProfile(event)"><section class="pr-card pr-editor-card"><div class="pr-editor-card-head"><span class="pr-editor-icon">◉</span><div><h3>Información personal</h3><p>Cómo aparecerás en Inversora y en la comunidad.</p></div></div><div class="pr-fields"><div class="auth-field"><label for="profileFirstName">Nombre</label><input id="profileFirstName" name="first_name" maxlength="40" value="'+esc(first)+'" autocomplete="given-name" required></div><div class="auth-field"><label for="profileLastName">Apellidos</label><input id="profileLastName" name="last_name" maxlength="80" value="'+esc(last)+'" autocomplete="family-name" required></div><div class="auth-field full"><label for="profileBio">Biografía <span style="font-weight:500;color:#8795a8">· Opcional</span></label><textarea id="profileBio" name="bio" maxlength="240" rows="4" placeholder="Cuéntale algo a la comunidad…">'+esc(bio)+'</textarea><small>Hasta 240 caracteres. No incluyas información privada.</small></div></div></section><section class="pr-card pr-editor-card"><div class="pr-editor-card-head"><span class="pr-editor-icon">▣</span><div><h3>Fotografía de perfil</h3><p>Elige una imagen que te represente.</p></div></div><div class="pr-photo-row"><img id="profileAvatarPreview" class="profile-photo-preview" src="'+esc(avatar)+'" alt="Vista previa de tu fotografía"><div class="pr-photo-actions"><input class="profile-file-input" id="profilePhoto" name="avatar" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" onchange="invPreviewProfilePhoto(event)"><label class="profile-upload-button" for="profilePhoto">↑ Elegir fotografía</label><small>JPG, PNG o WebP · Máximo 15 MB antes de optimizar.</small><button type="button" class="profile-remove-photo" onclick="invRemoveProfilePhoto()">Eliminar fotografía</button></div></div></section><div class="pr-editor-footer"><button class="auth-submit" type="submit">Guardar cambios</button><button class="pr-cancel" type="button" onclick="invToggleProfileEditor(false)">Cancelar</button><span class="pr-save-hint">Podrás modificar estos datos cuando quieras.</span></div><div id="profileSaveMessage" class="auth-message pr-auth-message" role="status" aria-live="polite"></div></form>';
+   return;
+  }
+  const fav=typeof getFavorites==='function'?getFavorites().length:0,lists=Array.isArray(invListsCache)?invListsCache.length:0;
+  host.innerHTML=heading+'<div class="pr-card pr-profile-hero"><div class="pr-profile-head"><div class="pr-avatar-wrap"><img class="pr-avatar" src="'+esc(avatar)+'" alt="Fotografía de '+esc(display)+'"></div><div class="pr-profile-copy"><div class="pr-kicker">Perfil personal</div><h2>'+esc(display)+'</h2><p>'+esc(invUser.email||'')+'</p>'+(bio?'<p class="pr-bio">'+esc(bio)+'</p>':'')+'</div><button type="button" class="pr-edit-button" onclick="invToggleProfileEditor(true)">✎ Personalizar perfil</button></div></div><div class="pr-stats"><div class="pr-card pr-stat"><strong>'+fav+'</strong><span>Inversiones favoritas</span></div><div class="pr-card pr-stat"><strong>'+lists+'</strong><span>Listas personalizadas</span></div><div class="pr-card pr-stat"><strong>'+(profile.avatar_url?'✓':'—')+'</strong><span>Fotografía añadida</span></div><div class="pr-card pr-stat"><strong>'+(bio?'✓':'—')+'</strong><span>Biografía completada</span></div></div><section class="pr-card pr-section"><div class="pr-section-head"><div><h3>Tu espacio en Inversora</h3><p>Accede directamente a tus inversiones y preferencias.</p></div></div><div class="pr-links"><button type="button" class="pr-link" onclick="showView(\'favorites\')"><span class="pr-link-icon">♡</span><span><b>Mis favoritos</b><small>Consulta tus inversiones guardadas</small></span><span class="pr-arrow">→</span></button><button type="button" class="pr-link" onclick="showView(\'explore\')"><span class="pr-link-icon">⌕</span><span><b>Explorar inversiones</b><small>Descubre nuevas alternativas</small></span><span class="pr-arrow">→</span></button></div></section><div class="pr-account-actions"><button type="button" class="pr-secondary" onclick="invExportMyData()">Descargar mis datos</button><button type="button" class="pr-danger" onclick="logoutLocal()">Cerrar sesión</button><button type="button" class="pr-danger" onclick="invDeleteMyAccount()">Eliminar mi cuenta</button></div>';
+ };
+ window.startSocialAuth=async function(provider){
+  const p=String(provider||'').toLowerCase();if(!['google','apple'].includes(p))return;
+  const msg=document.getElementById('authMessage'),buttons=document.querySelectorAll('.pr-oauth button');
+  if(msg){msg.className='auth-message pr-auth-message';msg.textContent='Conectando con '+(p==='google'?'Google':'Apple')+'…'}
+  buttons.forEach(b=>b.disabled=true);
+  try{
+   const {error}=await invDb.auth.signInWithOAuth({provider:p,options:{redirectTo:window.location.origin}});
+   if(error)throw error;
+  }catch(e){
+   if(msg){msg.className='auth-message pr-auth-message';const m=String(e?.message||'');msg.textContent=/provider is not enabled/i.test(m)?'El acceso con '+(p==='google'?'Google':'Apple')+' aún no está activado en Supabase. Hay que habilitar el proveedor y añadir sus credenciales.':'No se ha podido iniciar el acceso. '+m}
+   buttons.forEach(b=>b.disabled=false);
+  }
+ };
+ // Sincroniza avatar en el menú sin reconstruirlo en cada refresco ni provocar parpadeos.
+ setNav();
+})();
+</script>
+
+</body></html>');
  win.document.close();
  const doPrint=()=>setTimeout(()=>{try{win.focus();win.print()}catch(err){console.error('Print comparison:',err)}},450);
  if(win.document.readyState==='complete')doPrint();else win.addEventListener('load',doPrint,{once:true});
