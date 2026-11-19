@@ -2410,7 +2410,8 @@ function invRemoveProfilePhoto(){const input=document.getElementById('profilePho
   invProfile=data;invUser={...invUser,user_metadata:{...(invUser.user_metadata||{}),display_name,first_name,last_name}};invProfilePhotoRemoved=false;invProfileEditorOpen=false;refreshAccountNav();renderAccount();if(msg){msg.className='auth-message ok';msg.textContent='Perfil actualizado correctamente.'}invNotice('Tu perfil se ha actualizado.');
  }catch(e){if(msg){msg.className='auth-message';msg.textContent=e.message||'No se han podido guardar los cambios.'}}
  finally{const b=document.querySelector('#profileEditForm button[type="submit"]');if(b){b.disabled=false;b.textContent='Guardar perfil'}}
-}function setAuthMode(mode){authMode=mode;renderAccount()}
+}
+function setAuthMode(mode){authMode=mode;renderAccount()}
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function hashPassword(password){if(!window.crypto||!crypto.subtle)throw new Error('No está disponible el cifrado en este contexto. Abre el archivo en un navegador compatible o usa una versión alojada con HTTPS.');let bytes=new TextEncoder().encode(password),digest=await crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('')}
 async function submitAuth(ev){ev.preventDefault();let form=ev.currentTarget,fd=new FormData(form),email=String(fd.get('email')||'').trim().toLowerCase(),password=String(fd.get('password')||''),msg=document.getElementById('authMessage');msg.className='auth-message';msg.textContent='';try{let users=getUsers();if(authMode==='register'){let name=String(fd.get('name')||'').trim(),confirm=String(fd.get('confirm')||'');if(name.length<2){msg.textContent='Introduce tu nombre completo.';return}if(password.length<10){msg.textContent='La contraseña debe tener al menos 10 caracteres.';return}if(password!==confirm){msg.textContent='Las contraseñas no coinciden.';return}if(!document.getElementById('authTerms').checked){msg.textContent='Debes aceptar las condiciones de esta demostración.';return}if(users[email]){msg.textContent='Ya existe una cuenta local con ese correo. Inicia sesión.';return}users[email]={name,email,passwordHash:await hashPassword(password),createdAt:new Date().toISOString()};localStorage.setItem(USERS_KEY,JSON.stringify(users));sessionStorage.setItem(SESSION_KEY,JSON.stringify({email}));msg.className='auth-message ok';msg.textContent='Cuenta local creada. Ya puedes guardar favoritos.';renderAccount();renderFavorites();return}else{let user=users[email];if(!user||user.passwordHash!==await hashPassword(password)){msg.textContent='Correo o contraseña incorrectos en esta demostración local.';return}sessionStorage.setItem(SESSION_KEY,JSON.stringify({email}));renderAccount();renderFavorites();return}}catch(err){msg.textContent=err.message||'No se ha podido completar la operación.'}}
@@ -2595,7 +2596,8 @@ async function submitAuth(ev){
  }finally{
   const b=document.querySelector('#authForm button[type="submit"]');if(b){b.disabled=false;b.removeAttribute('aria-busy');b.textContent=b.dataset.originalText|| (authMode==='register'?'Crear cuenta':'Iniciar sesión')}
  }
-}async function invFinishAuthentication(user){
+}
+async function invFinishAuthentication(user){
  if(!user)throw new Error('La autenticación no ha devuelto una cuenta válida. Inténtalo de nuevo.');
  invUser=user;invPendingConfirmationEmail='';authMode='login';
  invProfileActivity={userId:user.id,reviews:[],posts:0,comments:0,loaded:false,loading:false};
