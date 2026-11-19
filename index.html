@@ -2462,7 +2462,7 @@ const invDb=invSupabaseAvailable
  ? window.supabase.createClient(INV_SUPABASE_URL,INV_SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,experimental:{passkey:true}}})
  : {auth:{onAuthStateChange(){return {data:{subscription:{unsubscribe(){}}}}},getSession:async()=>({data:{session:null},error:null}),signOut:async()=>({error:null}),signInWithPassword:async()=>({data:null,error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')}),signUp:async()=>({data:null,error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')}),signInWithOAuth:async()=>({data:null,error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')}),resend:async()=>({error:new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.')})},from:()=>invUnavailableQuery()};
 if(!invSupabaseAvailable)console.error('Inversora: Supabase CDN no disponible; el catálogo seguirá funcionando en modo lectura.');
-let invUser=null, invProfile=null, invListsCache=[], invCommunityCache=[];
+let invUser=null, invProfile=null, invListsCache=[], invCommunityCache=[], invDefaultListId=null;
 const invEsc=escapeHtml;
 function invDisplayName(){const meta=invUser?.user_metadata||{};return String(invProfile?.display_name||meta.display_name||meta.full_name||meta.name||invUser?.email?.split('@')[0]||'Miembro').trim()||'Miembro'}
 function invFirstName(){const saved=String(invProfile?.first_name||invUser?.user_metadata?.first_name||'').trim();if(saved)return saved;return invDisplayName().split(/\s+/)[0]||'Miembro'}
@@ -2798,7 +2798,7 @@ openDetail=function(name){
 
 /* Listas compartidas: enlaces públicos, lectura sin cuenta y creación guiada */
 
-let invDefaultListId=null;
+
 async function invLoadLists(){
  if(!invUser){invListsCache=[];invDefaultListId=null;return}
  const {data:lists,error}=await invDb.from('favorite_lists').select('id,name,is_public,created_at').eq('user_id',invUser.id).order('created_at');
