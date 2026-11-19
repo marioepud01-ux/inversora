@@ -3652,62 +3652,74 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
 </style>
 
 
-<style id="inversora-unified-blue-card-edges-v1">
-/* Lenguaje común: todos los paneles blancos usan el acento azul lateral del simulador. */
+<style id="inversora-unified-blue-card-edges-v2">
+/* Solo tarjetas y paneles blancos reales: mismo borde lateral que los resultados del simulador. */
 .view :is(
-  .home-block,.home-map-intro,.section,.card,.detail,.subtype-panel,.filters,.form,.metric,.term,.empty,
-  .home-goal,.home-compare-card,.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,
+  .home-block,.home-map-intro,.home-goal,.home-compare-card,.category-tile,.category-tile-v2,
+  .card,.term,.subtype-panel,
+  .asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,
   .asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,
   .asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.asset-costs,
-  .compare-picker,.compare-card,.compare-panel,.compare-table-wrap,.tool-card,.tool-hub-card,.sim-panel,
-  .sim-form,.sim-output,.sim-breakdown,.sim-report,.sim-report-item,.sim-selected-card,.disclaimer-card,
-  .glossary-enhanced,.gloss-search-wrap,.glossary,.community-compose,.community-post,.community-side-card,
-  .community-review,.community-review-form,.community-stat,.account-panel,.account-card,.account-dashboard,
-  .profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,.auth-form,.social-auth,
-  .auth-success-panel,.favorites-empty,.community-empty
+  .compare-picker,.compare-card,.compare-panel,
+  .tool-card,.tool-hub-card,
+  .sim-panel,.sim-form,.sim-output,.sim-breakdown,.sim-report,.sim-report-item,.sim-selected-card,
+  .disclaimer-card,.glossary-enhanced,.gloss-search-wrap,
+  .community-compose,.community-post,.community-side-card,.community-review,.community-review-form,.community-stat,
+  .account-panel,.account-card,.account-dashboard,.profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,
+  .auth-form,.social-auth,.auth-success-panel,.favorites-empty,.community-empty
 ){
-  border-left:3px solid #8bb5f5!important;
-  transition:border-color .22s ease,box-shadow .22s ease,transform .22s ease,background-color .22s ease!important;
+  border-left:3px solid #b7d0ff!important;
+  transition:border-color .2s ease,box-shadow .2s ease!important;
 }
 .view :is(
-  .home-block,.home-map-intro,.section,.card,.detail,.subtype-panel,.filters,.form,.metric,.term,.empty,
-  .home-goal,.home-compare-card,.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,
+  .home-block,.home-map-intro,.home-goal,.home-compare-card,.category-tile,.category-tile-v2,
+  .card,.term,.subtype-panel,
+  .asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,
   .asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,
   .asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.asset-costs,
-  .compare-picker,.compare-card,.compare-panel,.compare-table-wrap,.tool-card,.tool-hub-card,.sim-panel,
-  .sim-form,.sim-output,.sim-breakdown,.sim-report,.sim-report-item,.sim-selected-card,.disclaimer-card,
-  .glossary-enhanced,.gloss-search-wrap,.glossary,.community-compose,.community-post,.community-side-card,
-  .community-review,.community-review-form,.community-stat,.account-panel,.account-card,.account-dashboard,
-  .profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,.auth-form,.social-auth,
-  .auth-success-panel,.favorites-empty,.community-empty
-):hover{
+  .compare-picker,.compare-card,.compare-panel,
+  .tool-card,.tool-hub-card,
+  .sim-panel,.sim-form,.sim-output,.sim-breakdown,.sim-report,.sim-report-item,.sim-selected-card,
+  .disclaimer-card,.glossary-enhanced,.gloss-search-wrap,
+  .community-compose,.community-post,.community-side-card,.community-review,.community-review-form,.community-stat,
+  .account-panel,.account-card,.account-dashboard,.profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,
+  .auth-form,.social-auth,.auth-success-panel,.favorites-empty,.community-empty
+):is(:hover,:focus-within){
   border-left-color:#155eef!important;
-  box-shadow:0 9px 24px rgba(21,94,239,.09)!important;
+  box-shadow:0 7px 22px #155eef18!important;
 }
-/* Las cuatro tarjetas de universos llevan el acento azul en el borde superior. */
+/* Las cuatro tarjetas de categorías son la única excepción: acento azul arriba. */
 .view .taxonomy-map-universe{
-  --universe-color:#155eef!important;--universe-soft:#eef4ff!important;--universe-border:#d1e0ff!important;
+  --universe-color:#155eef!important;
+  --universe-soft:#eef4ff!important;
+  --universe-border:#d1e0ff!important;
   border:1px solid #dce8f8!important;
-  border-top:4px solid #8bb5f5!important;
+  border-top:3px solid #b7d0ff!important;
   background:#fff!important;
-  transition:border-color .22s ease,box-shadow .22s ease,transform .22s ease!important;
+  transition:border-color .2s ease,box-shadow .2s ease!important;
 }
-.view .taxonomy-map-universe:before{
-  height:0!important;background:#155eef!important;
-}
-.view .taxonomy-map-universe:hover,
-.view .taxonomy-map-universe:focus-within{
+.view .taxonomy-map-universe:is(:hover,:focus-within){
   border-top-color:#155eef!important;
-  border-color:#b5cff2!important;
-  box-shadow:0 10px 25px rgba(21,94,239,.10)!important;
-  transform:translateY(-2px);
+  box-shadow:0 7px 22px #155eef18!important;
 }
+.view .taxonomy-map-universe:before{height:0!important;background:#155eef!important}
 .view .taxonomy-map-universe .taxonomy-map-symbol{
   color:#155eef!important;background:#eef4ff!important;border-color:#d1e0ff!important;
 }
 .view .taxonomy-map-universe .taxonomy-map-universe-head strong{color:#183967!important}
 @media(prefers-reduced-motion:reduce){
-  .view :is(.home-block,.home-map-intro,.section,.card,.detail,.subtype-panel,.filters,.form,.metric,.term,.empty,.home-goal,.home-compare-card,.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,.asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,.asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.asset-costs,.compare-picker,.compare-card,.compare-panel,.compare-table-wrap,.tool-card,.tool-hub-card,.sim-panel,.sim-form,.sim-output,.sim-breakdown,.sim-report,.sim-report-item,.sim-selected-card,.disclaimer-card,.glossary-enhanced,.gloss-search-wrap,.glossary,.community-compose,.community-post,.community-side-card,.community-review,.community-review-form,.community-stat,.account-panel,.account-card,.account-dashboard,.profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,.auth-form,.social-auth,.auth-success-panel,.favorites-empty,.community-empty,.taxonomy-map-universe){transition:none!important}
+  .view :is(
+    .home-block,.home-map-intro,.home-goal,.home-compare-card,.category-tile,.category-tile-v2,
+    .card,.term,.subtype-panel,.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,
+    .asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,
+    .asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.asset-costs,
+    .compare-picker,.compare-card,.compare-panel,.tool-card,.tool-hub-card,.sim-panel,.sim-form,.sim-output,
+    .sim-breakdown,.sim-report,.sim-report-item,.sim-selected-card,.disclaimer-card,.glossary-enhanced,
+    .gloss-search-wrap,.community-compose,.community-post,.community-side-card,.community-review,
+    .community-review-form,.community-stat,.account-panel,.account-card,.account-dashboard,.profile-card,
+    .profile-editor,.profile-settings-section,.profile-shortcut,.auth-form,.social-auth,.auth-success-panel,
+    .favorites-empty,.community-empty,.taxonomy-map-universe
+  ){transition:none!important}
 }
 </style>
 
