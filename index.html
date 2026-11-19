@@ -2454,11 +2454,9 @@ function currentUser(){return invUser?{id:invUser.id,email:invUser.email,name:in
 function getLists(){return invListsCache}
 function getFavorites(){const base=invListsCache.find(x=>x.name==='Favoritos')||invListsCache[0];return base?.items||[]}
 function isFavorite(name){return getFavorites().includes(name)}
-async function invLoadProfile(userId=invUser?.id){if(!userId){invProfile=null;return null}const {data,error}=await invDb.from('profiles').select('*').eq('id',userId).maybeSingle();if(error)throw error;if(invUser?.id===userId&&data)invProfile=data;return data}
+async function invLoadProfile(){if(!invUser){invProfile=null;return}const {data,error}=await invDb.from('profiles').select('*').eq('id',invUser.id).maybeSingle();if(error)throw error;invProfile=data}
 async function invLoadLists(){if(!invUser){invListsCache=[];return}const {data:lists,error}=await invDb.from('favorite_lists').select('id,name,is_public,created_at').eq('user_id',invUser.id).order('created_at');if(error)throw error;const ids=(lists||[]).map(x=>x.id);let items=[];if(ids.length){const r=await invDb.from('favorite_items').select('id,list_id,investment_key,investment_name').in('list_id',ids);if(r.error)throw r.error;items=r.data||[]}invListsCache=(lists||[]).map(l=>({...l,items:items.filter(i=>i.list_id===l.id).map(i=>i.investment_name)}));if(!invListsCache.some(l=>l.name==='Favoritos')){const {data,error:e}=await invDb.from('favorite_lists').insert({user_id:invUser.id,name:'Favoritos'}).select().single();if(e)throw e;invListsCache.unshift({...data,items:[]})}}
-let invProfileRetryUserId=null;
-function invRetryProfile(userId){if(!userId||invProfileRetryUserId===userId)return;invProfileRetryUserId=userId;setTimeout(async()=>{try{if(invUser?.id!==userId)return;const data=await invLoadProfile(userId);if(invUser?.id===userId&&data){refreshAccountNav();if(!document.getElementById('account').classList.contains('hidden'))renderAccount()}else if(invUser?.id===userId)console.warn('Inversora: el perfil sigue sin estar disponible tras reintentar la consulta.')}catch(e){console.warn('Inversora: tampoco se pudo recuperar el perfil en el segundo intento:',e)}finally{if(invProfileRetryUserId===userId)invProfileRetryUserId=null}},1200)}
-async function invRefresh(){try{const {data:{session},error:authError}=await invDb.auth.getSession();if(authError)throw authError;const user=session?.user||null;invUser=user;let syncError=null;if(user){const uid=user.id;const [profileResult,listsResult]=await Promise.allSettled([invLoadProfile(),invLoadLists()]);if(invUser?.id!==uid)return;if(profileResult.status==='rejected'){syncError=profileResult.reason;console.error('Inversora: no se pudo actualizar el perfil; se conserva el último perfil válido:',profileResult.reason);invRetryProfile(uid)}else if(!profileResult.value){invRetryProfile(uid)}if(listsResult.status==='rejected'){if(!syncError)syncError=listsResult.reason;invListsCache=[];console.error('Inversora: no se pudieron cargar las listas:',listsResult.reason)}}else{invProfile=null;invListsCache=[]}refreshAccountNav();if(!document.getElementById('account').classList.contains('hidden'))renderAccount();if(!document.getElementById('favorites').classList.contains('hidden'))renderFavorites();if(!document.getElementById('community').classList.contains('hidden'))renderCommunity();renderHome();renderExplore();if(syncError)invNotice('Tu sesión está activa. Algunos datos no se han podido actualizar; inténtalo de nuevo en unos instantes.')}catch(e){console.error('Inversora sync:',e);invNotice('No se ha podido verificar la sesión. Comprueba la conexión e inténtalo de nuevo.')}}
+async function invRefresh(){try{const {data:{user}}=await invDb.auth.getUser();invUser=user||null;await invLoadProfile();await invLoadLists();refreshAccountNav();if(!document.getElementById('account').classList.contains('hidden'))renderAccount();if(!document.getElementById('favorites').classList.contains('hidden'))renderFavorites();if(!document.getElementById('community').classList.contains('hidden'))renderCommunity();renderHome();renderExplore()}catch(e){console.error('Inversora sync:',e);invNotice('No se han podido sincronizar tus datos. Comprueba la conexión e inténtalo de nuevo.') }}
 function invNotice(message){const node=document.getElementById('invGlobalNotice');if(node){node.textContent=message;node.hidden=false;setTimeout(()=>node.hidden=true,6500)}}
 async function saveLists(lists){invListsCache=lists;renderFavorites()}
 async function toggleFavorite(name,detail=false){if(!invUser){showView('account');authMode='register';renderAccount();const m=document.getElementById('authMessage');if(m)m.textContent='Crea una cuenta o inicia sesión para guardar tus inversiones.';return}try{let base=invListsCache.find(x=>x.name==='Favoritos');if(!base){const r=await invDb.from('favorite_lists').insert({user_id:invUser.id,name:'Favoritos'}).select().single();if(r.error)throw r.error;base={...r.data,items:[]};invListsCache.unshift(base)}const exists=base.items.includes(name);if(exists){const {data:row}=await invDb.from('favorite_items').select('id').eq('list_id',base.id).eq('investment_key',name).maybeSingle();if(row){const r=await invDb.from('favorite_items').delete().eq('id',row.id);if(r.error)throw r.error}base.items=base.items.filter(x=>x!==name)}else{const r=await invDb.from('favorite_items').insert({list_id:base.id,investment_key:name,investment_name:name});if(r.error)throw r.error;base.items.push(name)}renderHome();renderExplore();renderFavorites();if(detail)openDetail(name)}catch(e){console.error(e);alert('No se ha podido guardar el favorito: '+e.message)}}
@@ -2529,19 +2527,9 @@ async function shareComparisonToCommunity(){
 
 function refreshAccountNav(){
  const b=document.getElementById('accountNav');if(!b)return;
- const signed=!!invUser,name=signed?invFirstName():'Mi perfil',avatar=signed?invProfileAvatarSrc(invProfile?.avatar_url||''):'';
+ const signed=!!invUser,name=signed?invFirstName():'Mi perfil',avatar=signed?(invProfile?.avatar_url||''):'';
  const fallback=(signed?(name.trim()[0]||'U'):'M').toLocaleUpperCase('es');
- let img=b.querySelector('.profile-nav-avatar'),fallbackNode=b.querySelector('.profile-nav-avatar-fallback'),label=b.querySelector('.profile-nav-label');
- if(avatar){
-  if(!img){if(fallbackNode)fallbackNode.remove();img=document.createElement('img');img.className='profile-nav-avatar';img.alt='';b.insertBefore(img,label||null)}
-  if(img.getAttribute('src')!==avatar)img.setAttribute('src',avatar);
- }else{
-  if(img)img.remove();
-  if(!fallbackNode){fallbackNode=document.createElement('span');fallbackNode.className='profile-nav-avatar-fallback';fallbackNode.setAttribute('aria-hidden','true');b.insertBefore(fallbackNode,label||null)}
-  if(fallbackNode.textContent!==fallback)fallbackNode.textContent=fallback;
- }
- if(!label){label=document.createElement('span');label.className='profile-nav-label';b.appendChild(label)}
- if(label.textContent!==(signed?name:'Mi perfil'))label.textContent=signed?name:'Mi perfil';
+ b.innerHTML=(avatar?'<img class="profile-nav-avatar" src="'+invEsc(avatar)+'" alt="">':'<span class="profile-nav-avatar-fallback" aria-hidden="true">'+invEsc(fallback)+'</span>')+'<span class="profile-nav-label">'+(signed?invEsc(name):'Mi perfil')+'</span>';
  b.setAttribute('aria-label',signed?'Mi perfil: '+name:'Mi perfil');b.title=signed?'Abrir mi perfil':'Iniciar sesión o crear una cuenta';
 }
 let invPendingConfirmationEmail='';
@@ -2554,28 +2542,10 @@ async function renderAccount(){
  }
  if(invUser){
   const avatar=invProfile?.avatar_url||'',bio=invProfile?.bio||'',name=invEsc(currentUser().name),rawName=String(invProfile?.display_name||invUser?.user_metadata?.display_name||invUser?.user_metadata?.full_name||'' ).trim(),parts=rawName.split(/\s+/),firstName=invEsc(invProfile?.first_name||invUser?.user_metadata?.first_name||parts[0]||invFirstName()),lastName=invEsc(invProfile?.last_name||invUser?.user_metadata?.last_name||(parts.length>1?parts.slice(1).join(' '):''));
-  const avatarSrc=avatar?invEsc(invProfileAvatarSrc(avatar)):'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2250%22 fill=%22%23eef2f7%22/%3E%3Ccircle cx=%2250%22 cy=%2237%22 r=%2218%22 fill=%22%2398a2b3%22/%3E%3Cpath d=%22M15 91c3-21 17-32 35-32s32 11 35 32%22 fill=%22%2398a2b3%22/%3E%3C/svg%3E';
+  const avatarSrc=avatar?invEsc(avatar):'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2250%22 fill=%22%23eef2f7%22/%3E%3Ccircle cx=%2250%22 cy=%2237%22 r=%2218%22 fill=%22%2398a2b3%22/%3E%3Cpath d=%22M15 91c3-21 17-32 35-32s32 11 35 32%22 fill=%22%2398a2b3%22/%3E%3C/svg%3E';
   if(!invProfileEditorOpen){
-   if(invProfileActivity.userId!==invUser.id)invProfileActivity={userId:invUser.id,reviews:[],posts:0,comments:0,loaded:false,loading:false};
-   const myReviews=invProfileActivity.reviews,myPostCount=invProfileActivity.posts,myCommentCount=invProfileActivity.comments;
-   if(!invProfileActivity.loaded&&!invProfileActivity.loading){
-    const uid=invUser.id;invProfileActivity.loading=true;
-    const bounded=(promise,ms=5000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Timeout cargando actividad')),ms))]);
-    Promise.allSettled([
-     bounded(invDb.from('asset_reviews').select('asset_key,asset_name,comment,created_at,updated_at,return_potential,risk_control,liquidity,periodic_income,management_ease,simplicity').eq('user_id',uid).eq('status','published').order('created_at',{ascending:false}).limit(500)),
-     bounded(invDb.from('community_posts').select('id',{count:'exact',head:true}).eq('user_id',uid)),
-     bounded(invDb.from('community_comments').select('id',{count:'exact',head:true}).eq('user_id',uid))
-    ]).then(results=>{
-     if(invUser?.id!==uid)return;
-     const resultAt=(index,fallback)=>{const item=results[index];return item?.status==='fulfilled'&&!item.value?.error?item.value:fallback};
-     const reviews=resultAt(0,{data:[]}),posts=resultAt(1,{count:0}),comments=resultAt(2,{count:0});
-     invProfileActivity={userId:uid,reviews:reviews.data||[],posts:posts.count||0,comments:comments.count||0,loaded:true,loading:false};
-     renderAccount();
-    }).catch(e=>{
-     console.warn('No se pudo cargar la actividad del perfil:',e);
-     if(invUser?.id===uid){invProfileActivity={userId:uid,reviews:[],posts:0,comments:0,loaded:true,loading:false};renderAccount();}
-    });
-   }
+   let myReviews=[];try{const {data,error}=await invDb.from('asset_reviews').select('asset_key,asset_name,comment,created_at,updated_at,return_potential,risk_control,liquidity,periodic_income,management_ease,simplicity').eq('user_id',invUser.id).eq('status','published').order('created_at',{ascending:false}).limit(500);if(error)throw error;myReviews=data||[]}catch(e){console.warn('No se pudieron cargar tus valoraciones:',e)}
+   let myPostCount=0,myCommentCount=0;try{const [postsCount,commentsCount]=await Promise.all([invDb.from('community_posts').select('id',{count:'exact',head:true}).eq('user_id',invUser.id),invDb.from('community_comments').select('id',{count:'exact',head:true}).eq('user_id',invUser.id)]);if(!postsCount.error)myPostCount=postsCount.count||0;if(!commentsCount.error)myCommentCount=commentsCount.count||0;}catch(e){console.warn('No se pudo cargar el resumen de actividad:',e)}
    const myReviewItems=myReviews.map(r=>{const assetName=r.asset_name||r.asset_key||'Activo';const score=invReviewWeightedScore(r)/2;const date=r.updated_at||r.created_at;const when=date?new Date(date).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}):'';const safe=JSON.stringify(assetName).replace(/</g,'\\u003c');return '<article class="profile-review-item"><div><b>'+invEsc(assetName)+'</b><small>'+invEsc(when)+' · '+invStarsMarkup(score)+' '+score.toLocaleString('es-ES',{maximumFractionDigits:1})+'/5</small>'+(r.comment?'<p>'+invEsc(r.comment)+'</p>':'<p class="profile-review-no-comment">Valoración por criterios, sin comentario escrito.</p>')+'</div><button type="button" onclick="openDetail('+safe+');setTimeout(()=>invOpenCommunityModal('+safe+'),250)">Ver activo →</button></article>'}).join('');
    el.innerHTML=`<div class="profile-page">
     <div class="profile-welcome"><div class="profile-identity"><img class="profile-main-avatar" src="${avatarSrc}" alt="Foto de perfil"><div><div class="eyebrow">Mi espacio</div><h2>Hola, ${name}</h2><p>${invEsc(invUser.email||'')}</p>${bio?'<p class="profile-bio-text">'+invEsc(bio)+'</p>':''}</div></div><button class="profile-edit-cta" onclick="invToggleProfileEditor(true)">Personalizar perfil <span>→</span></button></div>
@@ -2585,7 +2555,7 @@ async function renderAccount(){
    </div>`;
   }else{
    el.innerHTML=`<div class="profile-editor">
-    <button type="button" class="back profile-back" onclick="invToggleProfileEditor(false)">← Volver a mi perfil</button>
+    <button class="back profile-back" onclick="invToggleProfileEditor(false)">← Volver a mi perfil</button>
     <div class="profile-editor-heading"><div class="eyebrow">Configuración de cuenta</div><h2>Personalizar perfil</h2><p>Completa únicamente la información que quieras compartir. Puedes modificarla cuando quieras.</p></div>
     <form id="profileEditForm" class="profile-edit-form" onsubmit="saveInversoraProfile(event)">
      <section class="profile-settings-section"><div class="profile-section-heading"><span class="profile-section-icon">👤</span><div><h3>Información personal</h3><p>Cómo te verá el resto de la comunidad.</p></div></div><div class="profile-section-fields"><div class="auth-field"><label for="profileFirstName">Nombre</label><input id="profileFirstName" name="first_name" maxlength="40" value="${firstName}" autocomplete="given-name" required></div><div class="auth-field"><label for="profileLastName">Apellidos</label><input id="profileLastName" name="last_name" maxlength="80" value="${lastName}" autocomplete="family-name" required></div><div class="auth-field full"><small>Tu nombre y apellidos se mostrarán juntos en tu perfil y en la comunidad.</small></div><div class="auth-field full"><label for="profileBio">Sobre mí <span class="profile-optional">Opcional</span></label><textarea id="profileBio" name="bio" maxlength="240" rows="4" placeholder="Cuéntale algo a la comunidad…">${invEsc(bio)}</textarea><small>Máximo 240 caracteres. Evita incluir información privada.</small></div></div></section>
