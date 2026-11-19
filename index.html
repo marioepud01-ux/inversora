@@ -3653,7 +3653,7 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
 
 
 <style id="inversora-unified-blue-card-edges-v2">
-/* Solo tarjetas y paneles blancos reales: mismo borde lateral que los resultados del simulador. */
+/* Tarjetas: contorno neutro de 1 px y único acento azul en el lateral izquierdo. */
 .view :is(
   .home-block,.home-map-intro,.home-goal,.home-compare-card,.category-tile,.category-tile-v2,.filters,
   .card,.term,.subtype-panel,
@@ -3668,9 +3668,11 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
   .account-panel,.account-card,.account-dashboard,.profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,
   .auth-form,.social-auth,.auth-success-panel,.favorites-empty,.community-empty
 ){
-  border:1px solid #b7d0ff!important;
-  box-shadow:0 5px 18px rgba(16,24,40,.04)!important; outline:0!important;
-  transition:border-color .2s ease,box-shadow .2s ease!important;
+  border:1px solid #e4e7ec!important;
+  border-left:3px solid #b7d0ff!important;
+  box-shadow:0 5px 18px rgba(16,24,40,.04)!important;
+  outline:0!important;
+  transition:border-left-color .2s ease,box-shadow .2s ease!important;
 }
 .view :is(
   .home-block,.home-map-intro,.home-goal,.home-compare-card,.category-tile,.category-tile-v2,.filters,
@@ -3686,7 +3688,8 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
   .account-panel,.account-card,.account-dashboard,.profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,
   .auth-form,.social-auth,.auth-success-panel,.favorites-empty,.community-empty
 ):is(:hover,:focus-within){
-  border-color:#155eef!important;
+  border-color:#e4e7ec!important;
+  border-left-color:#155eef!important;
   box-shadow:0 7px 22px #155eef18!important;
 }
 /* Las cuatro tarjetas de categorías son la única excepción: acento azul arriba. */
@@ -3697,9 +3700,10 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
   border:1px solid #dce8f8!important;
   border-top:3px solid #b7d0ff!important;
   background:#fff!important;
-  transition:border-color .2s ease,box-shadow .2s ease!important;
+  transition:border-top-color .2s ease,box-shadow .2s ease!important;
 }
 .view .taxonomy-map-universe:is(:hover,:focus-within){
+  border-color:#dce8f8!important;
   border-top-color:#155eef!important;
   box-shadow:0 7px 22px #155eef18!important;
 }
@@ -3710,7 +3714,7 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
 .view .taxonomy-map-universe .taxonomy-map-universe-head strong{color:#183967!important}
 @media(prefers-reduced-motion:reduce){
   .view :is(
-    .home-block,.home-map-intro,.home-goal,.home-compare-card,.category-tile,.category-tile-v2,
+    .home-block,.home-map-intro,.home-goal,.home-compare-card,.category-tile,.category-tile-v2,.filters,
     .card,.term,.subtype-panel,.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,
     .asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,
     .asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.asset-costs,
