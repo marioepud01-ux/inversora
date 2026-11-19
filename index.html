@@ -2371,9 +2371,9 @@ function renderAccount(){let el=document.getElementById('accountContent');if(!el
 async function startSocialAuth(provider){const msg=document.getElementById('authMessage');if(!msg)return;msg.className='auth-message';msg.textContent='Conectando con '+provider+'…';try{const {error}=await invDb.auth.signInWithOAuth({provider:String(provider).toLowerCase(),options:{redirectTo:window.location.origin}});if(error)throw error;}catch(e){msg.className='auth-message';msg.textContent=/provider is not enabled/i.test(String(e?.message||''))?'El acceso con '+provider+' todavía no está activado. Habilita el proveedor y configura sus credenciales en Supabase.':'No se ha podido iniciar sesión con '+provider+'. '+(e.message||'Inténtalo de nuevo.');msg.scrollIntoView({behavior:'smooth',block:'nearest'});}}
 let invProfilePhotoRemoved=false,invProfileEditorOpen=false,invPendingAvatarFile=null,invPendingAvatarPromise=null,invPendingAvatarPreviewUrl='',invAvatarPreviewToken=0;
 function invClearPendingAvatar(){invAvatarPreviewToken++;if(invPendingAvatarPreviewUrl){URL.revokeObjectURL(invPendingAvatarPreviewUrl);invPendingAvatarPreviewUrl=''}invPendingAvatarFile=null;invPendingAvatarPromise=null}
-function invProfileAvatarSrc(url){if(!url)return '';const value=String(url);return value+(value.includes('?')?'&':'?')+'profile_refresh='+Date.now()}
+function invProfileAvatarSrc(url){return url?String(url):''}
 function invToggleProfileEditor(open){invProfileEditorOpen=!!open;invProfilePhotoRemoved=false;invClearPendingAvatar();if(open){renderAccount();return}showView('account')}
-function invCloseProfileEditor(ev){if(ev){ev.preventDefault();ev.stopPropagation()}invProfileEditorOpen=false;invProfilePhotoRemoved=false;invClearPendingAvatar();showView('account');return false}
+function invCloseProfileEditor(ev){if(ev){ev.preventDefault();ev.stopPropagation()}invProfileEditorOpen=false;invProfilePhotoRemoved=false;invClearPendingAvatar();renderAccount();return false}
 async function invPrepareProfilePhoto(file){
  if(!file||file.size>15*1024*1024)throw new Error('La imagen original no puede superar 15 MB.');
  const objectUrl=URL.createObjectURL(file);
@@ -2530,7 +2530,17 @@ function refreshAccountNav(){
  const b=document.getElementById('accountNav');if(!b)return;
  const signed=!!invUser,name=signed?invFirstName():'Mi perfil',avatar=signed?invProfileAvatarSrc(invProfile?.avatar_url||''):'';
  const fallback=(signed?(name.trim()[0]||'U'):'M').toLocaleUpperCase('es');
- b.innerHTML=(avatar?'<img class="profile-nav-avatar" src="'+invEsc(avatar)+'" alt="">':'<span class="profile-nav-avatar-fallback" aria-hidden="true">'+invEsc(fallback)+'</span>')+'<span class="profile-nav-label">'+(signed?invEsc(name):'Mi perfil')+'</span>';
+ let img=b.querySelector('.profile-nav-avatar'),fallbackNode=b.querySelector('.profile-nav-avatar-fallback'),label=b.querySelector('.profile-nav-label');
+ if(avatar){
+  if(!img){if(fallbackNode)fallbackNode.remove();img=document.createElement('img');img.className='profile-nav-avatar';img.alt='';b.insertBefore(img,label||null)}
+  if(img.getAttribute('src')!==avatar)img.setAttribute('src',avatar);
+ }else{
+  if(img)img.remove();
+  if(!fallbackNode){fallbackNode=document.createElement('span');fallbackNode.className='profile-nav-avatar-fallback';fallbackNode.setAttribute('aria-hidden','true');b.insertBefore(fallbackNode,label||null)}
+  if(fallbackNode.textContent!==fallback)fallbackNode.textContent=fallback;
+ }
+ if(!label){label=document.createElement('span');label.className='profile-nav-label';b.appendChild(label)}
+ if(label.textContent!==(signed?name:'Mi perfil'))label.textContent=signed?name:'Mi perfil';
  b.setAttribute('aria-label',signed?'Mi perfil: '+name:'Mi perfil');b.title=signed?'Abrir mi perfil':'Iniciar sesión o crear una cuenta';
 }
 let invPendingConfirmationEmail='';
@@ -2574,7 +2584,7 @@ async function renderAccount(){
    </div>`;
   }else{
    el.innerHTML=`<div class="profile-editor">
-    <button type="button" class="back profile-back" data-profile-back>← Volver a mi perfil</button>
+    <button type="button" class="back profile-back" onclick="return invCloseProfileEditor(event)">← Volver a mi perfil</button>
     <div class="profile-editor-heading"><div class="eyebrow">Configuración de cuenta</div><h2>Personalizar perfil</h2><p>Completa únicamente la información que quieras compartir. Puedes modificarla cuando quieras.</p></div>
     <form id="profileEditForm" class="profile-edit-form" onsubmit="saveInversoraProfile(event)">
      <section class="profile-settings-section"><div class="profile-section-heading"><span class="profile-section-icon">👤</span><div><h3>Información personal</h3><p>Cómo te verá el resto de la comunidad.</p></div></div><div class="profile-section-fields"><div class="auth-field"><label for="profileFirstName">Nombre</label><input id="profileFirstName" name="first_name" maxlength="40" value="${firstName}" autocomplete="given-name" required></div><div class="auth-field"><label for="profileLastName">Apellidos</label><input id="profileLastName" name="last_name" maxlength="80" value="${lastName}" autocomplete="family-name" required></div><div class="auth-field full"><small>Tu nombre y apellidos se mostrarán juntos en tu perfil y en la comunidad.</small></div><div class="auth-field full"><label for="profileBio">Sobre mí <span class="profile-optional">Opcional</span></label><textarea id="profileBio" name="bio" maxlength="240" rows="4" placeholder="Cuéntale algo a la comunidad…">${invEsc(bio)}</textarea><small>Máximo 240 caracteres. Evita incluir información privada.</small></div></div></section>
@@ -2659,7 +2669,6 @@ async function startSocialAuth(provider){const m=document.getElementById('authMe
 // Keep the legacy screen transitions, but load cloud data before presenting account/favorites/community.
 const invOriginalShowView=showView;
 showView=function(id){invOriginalShowView(id);if(id==='account'&&invUser){const uid=invUser.id;invLoadProfile().then(()=>{if(invUser?.id===uid&&!document.getElementById('account').classList.contains('hidden')){refreshAccountNav();renderAccount()}}).catch(e=>console.error('No se pudo cargar el perfil de la cuenta:',e))}if(id==='favorites'&&invUser)invLoadLists().then(renderFavorites).catch(e=>console.error(e));if(id==='community')renderCommunity()};
-document.addEventListener('click',function(event){const back=event.target?.closest?.('[data-profile-back]');if(!back)return;invCloseProfileEditor(event)},true);
 invDb.auth.onAuthStateChange((event,session)=>{
   invUser=session?.user||null;
   setTimeout(async()=>{
