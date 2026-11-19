@@ -1397,7 +1397,7 @@ td,th{border-color:#e7eef8!important}
 <button class="header-icon-btn" id="invGlobalSearchToggle" type="button" onclick="invToggleGlobalSearch()" aria-label="Buscar en toda la web" title="Buscar"><span class="reference-search-icon" aria-hidden="true"></span></button>
 <button class="menu-toggle" type="button" onclick="invToggleMenu()" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="invSidebar"><span></span><span></span><span></span></button>
 <div class="profile-menu-wrap">
-<button class="profile-nav-btn" type="button" id="accountNav" onclick="invToggleProfileMenu()" aria-label="Abrir menú de perfil" title="Mi perfil" aria-expanded="false" aria-controls="invProfileMenu"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span><span class="profile-dropdown-cue" aria-hidden="true"><svg class="reference-profile-chevron" viewBox="0 0 12 12"><path d="m2 4 4 4 4-4"/></svg></span></button>
+<button class="profile-nav-btn" type="button" id="accountNav" onclick="invToggleProfileMenu()" aria-label="Abrir menú de perfil" title="Mi perfil" aria-expanded="false" aria-controls="invProfileMenu"><span class="profile-nav-avatar-fallback">M</span><span class="profile-nav-label">Mi perfil</span></button>
 <div class="profile-dropdown" id="invProfileMenu" hidden>
 <div class="profile-dropdown-heading" id="invProfileHeading">Tu espacio en Inversora</div>
 <button type="button" onclick="invProfileNavigate('account')">Mi perfil <span>›</span></button>
@@ -1927,14 +1927,7 @@ function printComparisonSheet(){
  if(!win){invNotice('El navegador ha bloqueado la nueva pestaña. Permite las ventanas emergentes para Inversora.');return}
  const printCss='<style>html,body{background:#fff!important;color:#101828!important;margin:0!important;padding:0!important}.compare-page{display:block!important;max-width:none!important;width:100%!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}.compare-page button{display:none!important}.compare-table-wrap,.compare-card{break-inside:avoid;box-shadow:none!important}@page{size:A4 landscape;margin:10mm}</style>';
  win.document.open();
- win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparativa · Inversora</title>'+styles+printCss+'</head><body>'+page.outerHTML+'<script src="/simulator-engine.js"><\/script><script src="/simulator-ui.js"><\/script>
-<style id="inversora-profile-chevron-no-circle-v1">
-/* La flecha del perfil va directamente junto al texto, sin círculo ni fondo. */
-@media(min-width:801px){
-  .inv-header .profile-dropdown-cue{display:none!important}
-}
-</style>
-</body></html>');
+ win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparativa · Inversora</title>'+styles+printCss+'</head><body>'+page.outerHTML+'<script src="/simulator-engine.js"><\/script><script src="/simulator-ui.js"><\/script></body></html>');
  win.document.close();
  const doPrint=()=>setTimeout(()=>{try{win.focus();win.print()}catch(err){console.error('Print comparison:',err)}},450);
  if(win.document.readyState==='complete')doPrint();else win.addEventListener('load',doPrint,{once:true});
