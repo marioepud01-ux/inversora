@@ -2108,6 +2108,55 @@ function printComparisonSheet(){
    buttons.forEach(b=>b.disabled=false);
   }
  };
+
+ // Foto de perfil: usar siempre la imagen optimizada antes de subirla al bucket (2 MB).
+ window.invRemoveProfilePhoto=function(){
+  const input=document.getElementById('profilePhoto'),img=document.getElementById('profileAvatarPreview');
+  if(input)input.value='';
+  if(img)img.src=fallback;
+  if(typeof invClearPendingAvatar==='function')invClearPendingAvatar();
+  invProfilePhotoRemoved=true;
+ };
+ window.saveInversoraProfile=async function(ev){
+  ev.preventDefault();if(!invUser)return;
+  const form=ev.currentTarget,button=form.querySelector('button[type="submit"]'),msg=document.getElementById('profileSaveMessage'),fd=new FormData(form);
+  const first_name=String(fd.get('first_name')||'').trim(),last_name=String(fd.get('last_name')||'').trim(),display_name=[first_name,last_name].filter(Boolean).join(' '),bio=String(fd.get('bio')||'').trim();
+  if(first_name.length<2){if(msg)msg.textContent='Introduce un nombre de al menos 2 caracteres.';return}
+  if(last_name.length<2){if(msg)msg.textContent='Introduce tus apellidos.';return}
+  if(display_name.length>40){if(msg)msg.textContent='El nombre y los apellidos juntos no pueden superar 40 caracteres.';return}
+  if(button){button.disabled=true;button.textContent='Guardando…'}
+  if(msg){msg.className='auth-message pr-auth-message';msg.textContent='Guardando los cambios…'}
+  try{
+   if(invPendingAvatarPromise)await invPendingAvatarPromise;
+   const inputFile=document.getElementById('profilePhoto')?.files?.[0];
+   let file=invPendingAvatarFile;
+   if(inputFile&&!file)file=await invPrepareProfilePhoto(inputFile);
+   let avatar_url=invProfile?.avatar_url||null;
+   if(file){
+    const path=invUser.id+'/avatar.jpg';
+    const {error:uploadError}=await invDb.storage.from('profile-photos').upload(path,file,{upsert:true,contentType:'image/jpeg',cacheControl:'0'});
+    if(uploadError)throw uploadError;
+    avatar_url=invDb.storage.from('profile-photos').getPublicUrl(path).data.publicUrl+'?v='+Date.now();
+   }
+   if(invProfilePhotoRemoved)avatar_url=null;
+   const payload={id:invUser.id,first_name,last_name,display_name,bio,avatar_url,updated_at:new Date().toISOString()};
+   const {data,error}=await invDb.from('profiles').upsert(payload,{onConflict:'id'}).select().single();
+   if(error)throw error;
+   const {error:metaError}=await invDb.auth.updateUser({data:{display_name,first_name,last_name}});
+   if(metaError)throw metaError;
+   invProfile=data;invUser={...invUser,user_metadata:{...(invUser.user_metadata||{}),display_name,first_name,last_name}};
+   invProfilePhotoRemoved=false;invProfileEditorOpen=false;
+   if(typeof invClearPendingAvatar==='function')invClearPendingAvatar();
+   setNav();window.renderAccount();if(msg){msg.className='auth-message ok';msg.textContent='Perfil actualizado correctamente.'}
+   if(typeof invNotice==='function')invNotice('Tu perfil se ha actualizado.');
+  }catch(error){
+   if(msg){msg.className='auth-message pr-auth-message';msg.textContent=error?.message||'No se han podido guardar los cambios.'}
+  }finally{
+   const current=document.querySelector('#profileEditForm button[type="submit"]');
+   if(current){current.disabled=false;current.textContent='Guardar cambios'}
+  }
+ };
+
  // Sincroniza avatar en el menú sin reconstruirlo en cada refresco ni provocar parpadeos.
  setNav();
 })();
