@@ -2549,6 +2549,7 @@ function refreshAccountNav(){
  b.setAttribute('aria-label',signed?'Mi perfil: '+name:'Mi perfil');b.title=signed?'Abrir mi perfil':'Iniciar sesión o crear una cuenta';
 }
 let invPendingConfirmationEmail='';
+let invProfileActivity={userId:null,reviews:[],posts:0,comments:0,loaded:false,loading:false};
 async function renderAccount(){
  const el=document.getElementById('accountContent');if(!el)return;refreshAccountNav();
  if(invPendingConfirmationEmail){
@@ -2559,8 +2560,24 @@ async function renderAccount(){
   const avatar=invProfile?.avatar_url||'',bio=invProfile?.bio||'',name=invEsc(currentUser().name),rawName=String(invProfile?.display_name||invUser?.user_metadata?.display_name||invUser?.user_metadata?.full_name||'' ).trim(),parts=rawName.split(/\s+/),firstName=invEsc(invProfile?.first_name||invUser?.user_metadata?.first_name||parts[0]||invFirstName()),lastName=invEsc(invProfile?.last_name||invUser?.user_metadata?.last_name||(parts.length>1?parts.slice(1).join(' '):''));
   const avatarSrc=avatar?invEsc(avatar):'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2250%22 fill=%22%23eef2f7%22/%3E%3Ccircle cx=%2250%22 cy=%2237%22 r=%2218%22 fill=%22%2398a2b3%22/%3E%3Cpath d=%22M15 91c3-21 17-32 35-32s32 11 35 32%22 fill=%22%2398a2b3%22/%3E%3C/svg%3E';
   if(!invProfileEditorOpen){
-   let myReviews=[];try{const {data,error}=await invDb.from('asset_reviews').select('asset_key,asset_name,comment,created_at,updated_at,return_potential,risk_control,liquidity,periodic_income,management_ease,simplicity').eq('user_id',invUser.id).eq('status','published').order('created_at',{ascending:false}).limit(500);if(error)throw error;myReviews=data||[]}catch(e){console.warn('No se pudieron cargar tus valoraciones:',e)}
-   let myPostCount=0,myCommentCount=0;try{const [postsCount,commentsCount]=await Promise.all([invDb.from('community_posts').select('id',{count:'exact',head:true}).eq('user_id',invUser.id),invDb.from('community_comments').select('id',{count:'exact',head:true}).eq('user_id',invUser.id)]);if(!postsCount.error)myPostCount=postsCount.count||0;if(!commentsCount.error)myCommentCount=commentsCount.count||0;}catch(e){console.warn('No se pudo cargar el resumen de actividad:',e)}
+   if(invProfileActivity.userId!==invUser.id)invProfileActivity={userId:invUser.id,reviews:[],posts:0,comments:0,loaded:false,loading:false};
+   const myReviews=invProfileActivity.reviews,myPostCount=invProfileActivity.posts,myCommentCount=invProfileActivity.comments;
+   if(!invProfileActivity.loaded&&!invProfileActivity.loading){
+    const uid=invUser.id;invProfileActivity.loading=true;
+    const bounded=(promise,ms=5000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Timeout cargando actividad')),ms))]);
+    Promise.all([
+     bounded(invDb.from('asset_reviews').select('asset_key,asset_name,comment,created_at,updated_at,return_potential,risk_control,liquidity,periodic_income,management_ease,simplicity').eq('user_id',uid).eq('status','published').order('created_at',{ascending:false}).limit(500)),
+     bounded(invDb.from('community_posts').select('id',{count:'exact',head:true}).eq('user_id',uid)),
+     bounded(invDb.from('community_comments').select('id',{count:'exact',head:true}).eq('user_id',uid))
+    ]).then(([reviews,posts,comments])=>{
+     if(invUser?.id!==uid)return;
+     invProfileActivity={userId:uid,reviews:reviews.error?[]:(reviews.data||[]),posts:posts.error?0:(posts.count||0),comments:comments.error?0:(comments.count||0),loaded:true,loading:false};
+     renderAccount();
+    }).catch(e=>{
+     console.warn('No se pudo cargar la actividad del perfil:',e);
+     if(invUser?.id===uid){invProfileActivity={userId:uid,reviews:[],posts:0,comments:0,loaded:true,loading:false};renderAccount();}
+    });
+   }
    const myReviewItems=myReviews.map(r=>{const assetName=r.asset_name||r.asset_key||'Activo';const score=invReviewWeightedScore(r)/2;const date=r.updated_at||r.created_at;const when=date?new Date(date).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}):'';const safe=JSON.stringify(assetName).replace(/</g,'\\u003c');return '<article class="profile-review-item"><div><b>'+invEsc(assetName)+'</b><small>'+invEsc(when)+' · '+invStarsMarkup(score)+' '+score.toLocaleString('es-ES',{maximumFractionDigits:1})+'/5</small>'+(r.comment?'<p>'+invEsc(r.comment)+'</p>':'<p class="profile-review-no-comment">Valoración por criterios, sin comentario escrito.</p>')+'</div><button type="button" onclick="openDetail('+safe+');setTimeout(()=>invOpenCommunityModal('+safe+'),250)">Ver activo →</button></article>'}).join('');
    el.innerHTML=`<div class="profile-page">
     <div class="profile-welcome"><div class="profile-identity"><img class="profile-main-avatar" src="${avatarSrc}" alt="Foto de perfil"><div><div class="eyebrow">Mi espacio</div><h2>Hola, ${name}</h2><p>${invEsc(invUser.email||'')}</p>${bio?'<p class="profile-bio-text">'+invEsc(bio)+'</p>':''}</div></div><button class="profile-edit-cta" onclick="invToggleProfileEditor(true)">Personalizar perfil <span>→</span></button></div>
@@ -2590,18 +2607,17 @@ async function submitAuth(ev){
  if(button){button.disabled=true;button.dataset.originalText=button.textContent;button.textContent=authMode==='register'?'Creando tu cuenta…':'Iniciando sesión…';button.setAttribute('aria-busy','true')}
  if(msg){msg.className='auth-message';msg.textContent='Estamos procesando tu solicitud. No cierres esta ventana…';msg.setAttribute('aria-live','polite')}
  try{
+  if(!invSupabaseAvailable)throw new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.');
   if(authMode==='register'){
    const first_name=String(fd.get('first_name')||'').trim(),last_name=String(fd.get('last_name')||'').trim(),name=[first_name,last_name].filter(Boolean).join(' '),confirm=String(fd.get('confirm')||'');
    if(first_name.length<2)throw new Error('Introduce un nombre de al menos 2 caracteres.');
    if(last_name.length<2)throw new Error('Introduce tus apellidos.');
    if(password!==confirm)throw new Error('Las contraseñas no coinciden.');
-   if(!document.getElementById('authTerms').checked)throw new Error('Debes aceptar las condiciones.');
+   if(!document.getElementById('authTerms')?.checked)throw new Error('Debes aceptar las condiciones.');
    const {data,error}=await invDb.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin+'/?auth=confirmed',data:{display_name:name,first_name,last_name,accepted_terms_version:'2026-11-09',accepted_terms_at:new Date().toISOString()}}});
    if(error)throw error;
-   if(data.session){
-    invUser=data.user;invPendingConfirmationEmail='';await invLoadProfile();await invLoadLists();renderAccount();renderFavorites();refreshAccountNav();
-    invNotice('Tu cuenta se ha creado correctamente.');
-   }else if(data.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0){
+   if(data.session&&data.user){await invFinishAuthentication(data.user)}
+   else if(data.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0){
     authMode='login';renderAccount();
     const m=document.getElementById('authMessage');if(m){m.className='auth-message';m.textContent='Este correo ya tiene una cuenta. Inicia sesión o utiliza «He olvidado mi contraseña» si no recuerdas la clave.'}
    }else{
@@ -2609,14 +2625,33 @@ async function submitAuth(ev){
     const m=document.getElementById('authMessage');if(m){m.className='auth-message ok';m.textContent='Solicitud de registro recibida. Si el correo es válido y no existe ya una cuenta, recibirás el enlace de confirmación.'}
    }
   }else{
-   const {data,error}=await invDb.auth.signInWithPassword({email,password});if(error)throw error;
-   invUser=data.user;invPendingConfirmationEmail='';await invLoadProfile();await invLoadLists();renderAccount();renderFavorites();refreshAccountNav();
-   invNotice('Sesión iniciada correctamente.');
+   const {data,error}=await invDb.auth.signInWithPassword({email,password});
+   if(error)throw error;
+   await invFinishAuthentication(data?.user);
   }
  }catch(e){
-  const m=document.getElementById('authMessage');if(m){m.className='auth-message';m.textContent=e.message||'No se ha podido completar el acceso.'}
+  console.error('Inversora auth:',e);
+  const m=document.getElementById('authMessage');
+  if(m){m.className='auth-message';m.textContent=e?.message||'No se ha podido completar el acceso.'}
  }finally{
-  const b=document.querySelector('#authForm button[type="submit"]');if(b){b.disabled=false;b.removeAttribute('aria-busy');b.textContent=b.dataset.originalText|| (authMode==='register'?'Crear cuenta':'Iniciar sesión')}
+  const b=document.querySelector('#authForm button[type="submit"]');
+  if(b){b.disabled=false;b.removeAttribute('aria-busy');b.textContent=b.dataset.originalText||(authMode==='register'?'Crear cuenta':'Iniciar sesión')}
+ }
+}
+async function invFinishAuthentication(user){
+ if(!user)throw new Error('La autenticación no ha devuelto una cuenta válida. Inténtalo de nuevo.');
+ invUser=user;invPendingConfirmationEmail='';authMode='login';
+ invProfileActivity={userId:user.id,reviews:[],posts:0,comments:0,loaded:false,loading:false};
+ const sync=Promise.allSettled([invLoadProfile(),invLoadLists()]);
+ renderAccount();renderFavorites();refreshAccountNav();
+ invNotice('Sesión iniciada correctamente.');
+ const timeout=new Promise(resolve=>setTimeout(()=>resolve('timeout'),4000));
+ const result=await Promise.race([sync,timeout]);
+ if(result!=='timeout'){
+  if(invUser?.id===user.id){renderAccount();renderFavorites();refreshAccountNav();}
+ }else{
+  sync.then(()=>{if(invUser?.id===user.id){renderAccount();renderFavorites();refreshAccountNav();}})
+      .catch(e=>console.warn('Sincronización de cuenta pendiente:',e));
  }
 }
 async function resendConfirmationEmail(){
