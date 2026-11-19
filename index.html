@@ -2395,30 +2395,22 @@ function invPreviewProfilePhoto(ev){
  const button=document.querySelector('#profileEditForm button[type="submit"]');if(button)button.disabled=true;
  invPendingAvatarPromise=invPrepareProfilePhoto(file).then(prepared=>{if(previewToken!==invAvatarPreviewToken)return;invPendingAvatarFile=prepared;invPendingAvatarPreviewUrl=URL.createObjectURL(prepared);img.src=invPendingAvatarPreviewUrl;img.style.display='block';if(msg){msg.className='auth-message ok';msg.textContent='Foto preparada. Pulsa «Guardar cambios» para aplicarla.'}}).catch(error=>{if(previewToken!==invAvatarPreviewToken)return;ev.target.value='';if(msg){msg.className='auth-message';msg.textContent=error.message||'No se ha podido preparar la fotografía.'}}).finally(()=>{if(previewToken===invAvatarPreviewToken){if(button)button.disabled=false;invPendingAvatarPromise=null}});
 }
-function invRemoveProfilePhoto(){const input=document.getElementById('profilePhoto'),img=document.getElementById('profileAvatarPreview');if(input)input.value='';if(img){img.removeAttribute('src');img.style.display='none'}invClearPendingAvatar();invProfilePhotoRemoved=true}
-async function saveInversoraProfile(ev){
- ev.preventDefault();if(!invUser)return;
- const form=ev.currentTarget,btn=form.querySelector('button[type="submit"]'),msg=document.getElementById('profileSaveMessage'),fd=new FormData(form);
- const first_name=String(fd.get('first_name')||'').trim(),last_name=String(fd.get('last_name')||'').trim(),display_name=[first_name,last_name].filter(Boolean).join(' '),bio=String(fd.get('bio')||'').trim();
- if(first_name.length<2){msg.textContent='Introduce un nombre de al menos 2 caracteres.';return}if(last_name.length<2){msg.textContent='Introduce tus apellidos.';return}
+function invRemoveProfilePhoto(){const input=document.getElementById('profilePhoto'),img=document.getElementById('profileAvatarPreview');if(input)input.value='';if(img){img.removeAttribute('src');img.style.display='none'}invProfilePhotoRemoved=true}async function saveInversoraProfile(ev){
+ ev.preventDefault();if(!invUser)return;const form=ev.currentTarget,btn=form.querySelector('button[type="submit"]'),msg=document.getElementById('profileSaveMessage'),fd=new FormData(form),first_name=String(fd.get('first_name')||'').trim(),last_name=String(fd.get('last_name')||'').trim(),display_name=[first_name,last_name].filter(Boolean).join(' '),bio=String(fd.get('bio')||'').trim(),file=document.getElementById('profilePhoto')?.files?.[0];
+ if(first_name.length<2){msg.textContent='Introduce un nombre de al menos 2 caracteres.';return}
+ if(last_name.length<2){msg.textContent='Introduce tus apellidos.';return}
  if(btn){btn.disabled=true;btn.textContent='Guardando…'}if(msg){msg.className='auth-message';msg.textContent='Guardando tus cambios…'}
  try{
-  if(invPendingAvatarPromise)await invPendingAvatarPromise;
-  const inputFile=document.getElementById('profilePhoto')?.files?.[0];let file=invPendingAvatarFile;
-  if(inputFile&&!file)file=await invPrepareProfilePhoto(inputFile);
   let avatar_url=invProfile?.avatar_url||null;
-  if(file){const path=invUser.id+'/avatar.jpg';const {error:uploadError}=await invDb.storage.from('profile-photos').upload(path,file,{upsert:true,contentType:'image/jpeg',cacheControl:'0'});if(uploadError)throw uploadError;avatar_url=invDb.storage.from('profile-photos').getPublicUrl(path).data.publicUrl+'?v='+Date.now()}
+  if(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>2*1024*1024)throw new Error('La foto debe ser JPG, PNG o WebP y pesar como máximo 2 MB.');const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg',path=invUser.id+'/avatar.'+ext;const {error:uploadError}=await invDb.storage.from('profile-photos').upload(path,file,{upsert:true,contentType:file.type,cacheControl:'3600'});if(uploadError)throw uploadError;avatar_url=invDb.storage.from('profile-photos').getPublicUrl(path).data.publicUrl+'?v='+Date.now()}
   if(invProfilePhotoRemoved)avatar_url=null;
   const payload={id:invUser.id,first_name,last_name,display_name,bio,avatar_url,updated_at:new Date().toISOString()};
   const {data,error}=await invDb.from('profiles').upsert(payload,{onConflict:'id'}).select().single();if(error)throw error;
   const {error:metaError}=await invDb.auth.updateUser({data:{display_name,first_name,last_name}});if(metaError)throw metaError;
-  invProfile=data;invUser={...invUser,user_metadata:{...(invUser.user_metadata||{}),display_name,first_name,last_name}};
-  invProfilePhotoRemoved=false;invProfileEditorOpen=false;invClearPendingAvatar();refreshAccountNav();await renderAccount();invNotice('Tu perfil se ha actualizado.');
+  invProfile=data;invUser={...invUser,user_metadata:{...(invUser.user_metadata||{}),display_name,first_name,last_name}};invProfilePhotoRemoved=false;invProfileEditorOpen=false;refreshAccountNav();renderAccount();if(msg){msg.className='auth-message ok';msg.textContent='Perfil actualizado correctamente.'}invNotice('Tu perfil se ha actualizado.');
  }catch(e){if(msg){msg.className='auth-message';msg.textContent=e.message||'No se han podido guardar los cambios.'}}
- finally{const button=document.querySelector('#profileEditForm button[type="submit"]');if(button){button.disabled=false;button.textContent='Guardar cambios'}}
-}
-
-function setAuthMode(mode){authMode=mode;renderAccount()}
+ finally{const b=document.querySelector('#profileEditForm button[type="submit"]');if(b){b.disabled=false;b.textContent='Guardar perfil'}}
+}function setAuthMode(mode){authMode=mode;renderAccount()}
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function hashPassword(password){if(!window.crypto||!crypto.subtle)throw new Error('No está disponible el cifrado en este contexto. Abre el archivo en un navegador compatible o usa una versión alojada con HTTPS.');let bytes=new TextEncoder().encode(password),digest=await crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('')}
 async function submitAuth(ev){ev.preventDefault();let form=ev.currentTarget,fd=new FormData(form),email=String(fd.get('email')||'').trim().toLowerCase(),password=String(fd.get('password')||''),msg=document.getElementById('authMessage');msg.className='auth-message';msg.textContent='';try{let users=getUsers();if(authMode==='register'){let name=String(fd.get('name')||'').trim(),confirm=String(fd.get('confirm')||'');if(name.length<2){msg.textContent='Introduce tu nombre completo.';return}if(password.length<10){msg.textContent='La contraseña debe tener al menos 10 caracteres.';return}if(password!==confirm){msg.textContent='Las contraseñas no coinciden.';return}if(!document.getElementById('authTerms').checked){msg.textContent='Debes aceptar las condiciones de esta demostración.';return}if(users[email]){msg.textContent='Ya existe una cuenta local con ese correo. Inicia sesión.';return}users[email]={name,email,passwordHash:await hashPassword(password),createdAt:new Date().toISOString()};localStorage.setItem(USERS_KEY,JSON.stringify(users));sessionStorage.setItem(SESSION_KEY,JSON.stringify({email}));msg.className='auth-message ok';msg.textContent='Cuenta local creada. Ya puedes guardar favoritos.';renderAccount();renderFavorites();return}else{let user=users[email];if(!user||user.passwordHash!==await hashPassword(password)){msg.textContent='Correo o contraseña incorrectos en esta demostración local.';return}sessionStorage.setItem(SESSION_KEY,JSON.stringify({email}));renderAccount();renderFavorites();return}}catch(err){msg.textContent=err.message||'No se ha podido completar la operación.'}}
@@ -2575,17 +2567,18 @@ async function submitAuth(ev){
  if(button){button.disabled=true;button.dataset.originalText=button.textContent;button.textContent=authMode==='register'?'Creando tu cuenta…':'Iniciando sesión…';button.setAttribute('aria-busy','true')}
  if(msg){msg.className='auth-message';msg.textContent='Estamos procesando tu solicitud. No cierres esta ventana…';msg.setAttribute('aria-live','polite')}
  try{
-  if(!invSupabaseAvailable)throw new Error('El servicio de acceso no está disponible. Recarga la página e inténtalo de nuevo.');
   if(authMode==='register'){
    const first_name=String(fd.get('first_name')||'').trim(),last_name=String(fd.get('last_name')||'').trim(),name=[first_name,last_name].filter(Boolean).join(' '),confirm=String(fd.get('confirm')||'');
    if(first_name.length<2)throw new Error('Introduce un nombre de al menos 2 caracteres.');
    if(last_name.length<2)throw new Error('Introduce tus apellidos.');
    if(password!==confirm)throw new Error('Las contraseñas no coinciden.');
-   if(!document.getElementById('authTerms')?.checked)throw new Error('Debes aceptar las condiciones.');
+   if(!document.getElementById('authTerms').checked)throw new Error('Debes aceptar las condiciones.');
    const {data,error}=await invDb.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin+'/?auth=confirmed',data:{display_name:name,first_name,last_name,accepted_terms_version:'2026-11-09',accepted_terms_at:new Date().toISOString()}}});
    if(error)throw error;
-   if(data.session&&data.user){await invFinishAuthentication(data.user)}
-   else if(data.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0){
+   if(data.session){
+    invUser=data.user;invPendingConfirmationEmail='';await invLoadProfile();await invLoadLists();renderAccount();renderFavorites();refreshAccountNav();
+    invNotice('Tu cuenta se ha creado correctamente.');
+   }else if(data.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0){
     authMode='login';renderAccount();
     const m=document.getElementById('authMessage');if(m){m.className='auth-message';m.textContent='Este correo ya tiene una cuenta. Inicia sesión o utiliza «He olvidado mi contraseña» si no recuerdas la clave.'}
    }else{
@@ -2593,20 +2586,16 @@ async function submitAuth(ev){
     const m=document.getElementById('authMessage');if(m){m.className='auth-message ok';m.textContent='Solicitud de registro recibida. Si el correo es válido y no existe ya una cuenta, recibirás el enlace de confirmación.'}
    }
   }else{
-   const {data,error}=await invDb.auth.signInWithPassword({email,password});
-   if(error)throw error;
-   await invFinishAuthentication(data?.user);
+   const {data,error}=await invDb.auth.signInWithPassword({email,password});if(error)throw error;
+   invUser=data.user;invPendingConfirmationEmail='';await invLoadProfile();await invLoadLists();renderAccount();renderFavorites();refreshAccountNav();
+   invNotice('Sesión iniciada correctamente.');
   }
  }catch(e){
-  console.error('Inversora auth:',e);
-  const m=document.getElementById('authMessage');
-  if(m){m.className='auth-message';m.textContent=e?.message||'No se ha podido completar el acceso.'}
+  const m=document.getElementById('authMessage');if(m){m.className='auth-message';m.textContent=e.message||'No se ha podido completar el acceso.'}
  }finally{
-  const b=document.querySelector('#authForm button[type="submit"]');
-  if(b){b.disabled=false;b.removeAttribute('aria-busy');b.textContent=b.dataset.originalText||(authMode==='register'?'Crear cuenta':'Iniciar sesión')}
+  const b=document.querySelector('#authForm button[type="submit"]');if(b){b.disabled=false;b.removeAttribute('aria-busy');b.textContent=b.dataset.originalText|| (authMode==='register'?'Crear cuenta':'Iniciar sesión')}
  }
-}
-async function invFinishAuthentication(user){
+}async function invFinishAuthentication(user){
  if(!user)throw new Error('La autenticación no ha devuelto una cuenta válida. Inténtalo de nuevo.');
  invUser=user;invPendingConfirmationEmail='';authMode='login';
  invProfileActivity={userId:user.id,reviews:[],posts:0,comments:0,loaded:false,loading:false};
