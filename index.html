@@ -2371,7 +2371,6 @@ function renderAccount(){let el=document.getElementById('accountContent');if(!el
 async function startSocialAuth(provider){const msg=document.getElementById('authMessage');if(!msg)return;msg.className='auth-message';msg.textContent='Conectando con '+provider+'…';try{const {error}=await invDb.auth.signInWithOAuth({provider:String(provider).toLowerCase(),options:{redirectTo:window.location.origin}});if(error)throw error;}catch(e){msg.className='auth-message';msg.textContent=/provider is not enabled/i.test(String(e?.message||''))?'El acceso con '+provider+' todavía no está activado. Habilita el proveedor y configura sus credenciales en Supabase.':'No se ha podido iniciar sesión con '+provider+'. '+(e.message||'Inténtalo de nuevo.');msg.scrollIntoView({behavior:'smooth',block:'nearest'});}}
 let invProfilePhotoRemoved=false,invProfileEditorOpen=false,invPendingAvatarFile=null,invPendingAvatarPromise=null,invPendingAvatarPreviewUrl='',invAvatarPreviewToken=0;
 function invClearPendingAvatar(){invAvatarPreviewToken++;if(invPendingAvatarPreviewUrl){URL.revokeObjectURL(invPendingAvatarPreviewUrl);invPendingAvatarPreviewUrl=''}invPendingAvatarFile=null;invPendingAvatarPromise=null}
-function invProfileAvatarSrc(url){return url?String(url):''}
 function invToggleProfileEditor(open){invProfileEditorOpen=!!open;invProfilePhotoRemoved=false;invClearPendingAvatar();renderAccount()}
 async function invPrepareProfilePhoto(file){
  if(!file||file.size>15*1024*1024)throw new Error('La imagen original no puede superar 15 MB.');
@@ -2395,6 +2394,29 @@ function invPreviewProfilePhoto(ev){
  const button=document.querySelector('#profileEditForm button[type="submit"]');if(button)button.disabled=true;
  invPendingAvatarPromise=invPrepareProfilePhoto(file).then(prepared=>{if(previewToken!==invAvatarPreviewToken)return;invPendingAvatarFile=prepared;invPendingAvatarPreviewUrl=URL.createObjectURL(prepared);img.src=invPendingAvatarPreviewUrl;img.style.display='block';if(msg){msg.className='auth-message ok';msg.textContent='Foto preparada. Pulsa «Guardar cambios» para aplicarla.'}}).catch(error=>{if(previewToken!==invAvatarPreviewToken)return;ev.target.value='';if(msg){msg.className='auth-message';msg.textContent=error.message||'No se ha podido preparar la fotografía.'}}).finally(()=>{if(previewToken===invAvatarPreviewToken){if(button)button.disabled=false;invPendingAvatarPromise=null}});
 }
+function invRemoveProfilePhoto(){const input=document.getElementById('profilePhoto'),img=document.getElementById('profileAvatarPreview');if(input)input.value='';if(img){img.removeAttribute('src');img.style.display='none'}invClearPendingAvatar();invProfilePhotoRemoved=true}
+async function saveInversoraProfile(ev){
+ ev.preventDefault();if(!invUser)return;
+ const form=ev.currentTarget,btn=form.querySelector('button[type="submit"]'),msg=document.getElementById('profileSaveMessage'),fd=new FormData(form);
+ const first_name=String(fd.get('first_name')||'').trim(),last_name=String(fd.get('last_name')||'').trim(),display_name=[first_name,last_name].filter(Boolean).join(' '),bio=String(fd.get('bio')||'').trim();
+ if(first_name.length<2){msg.textContent='Introduce un nombre de al menos 2 caracteres.';return}if(last_name.length<2){msg.textContent='Introduce tus apellidos.';return}
+ if(btn){btn.disabled=true;btn.textContent='Guardando…'}if(msg){msg.className='auth-message';msg.textContent='Guardando tus cambios…'}
+ try{
+  if(invPendingAvatarPromise)await invPendingAvatarPromise;
+  const inputFile=document.getElementById('profilePhoto')?.files?.[0];let file=invPendingAvatarFile;
+  if(inputFile&&!file)file=await invPrepareProfilePhoto(inputFile);
+  let avatar_url=invProfile?.avatar_url||null;
+  if(file){const path=invUser.id+'/avatar.jpg';const {error:uploadError}=await invDb.storage.from('profile-photos').upload(path,file,{upsert:true,contentType:'image/jpeg',cacheControl:'0'});if(uploadError)throw uploadError;avatar_url=invDb.storage.from('profile-photos').getPublicUrl(path).data.publicUrl+'?v='+Date.now()}
+  if(invProfilePhotoRemoved)avatar_url=null;
+  const payload={id:invUser.id,first_name,last_name,display_name,bio,avatar_url,updated_at:new Date().toISOString()};
+  const {data,error}=await invDb.from('profiles').upsert(payload,{onConflict:'id'}).select().single();if(error)throw error;
+  const {error:metaError}=await invDb.auth.updateUser({data:{display_name,first_name,last_name}});if(metaError)throw metaError;
+  invProfile=data;invUser={...invUser,user_metadata:{...(invUser.user_metadata||{}),display_name,first_name,last_name}};
+  invProfilePhotoRemoved=false;invProfileEditorOpen=false;invClearPendingAvatar();refreshAccountNav();await renderAccount();invNotice('Tu perfil se ha actualizado.');
+ }catch(e){if(msg){msg.className='auth-message';msg.textContent=e.message||'No se han podido guardar los cambios.'}}
+ finally{const button=document.querySelector('#profileEditForm button[type="submit"]');if(button){button.disabled=false;button.textContent='Guardar cambios'}}
+}
+
 function invRemoveProfilePhoto(){const input=document.getElementById('profilePhoto'),img=document.getElementById('profileAvatarPreview');if(input)input.value='';if(img){img.removeAttribute('src');img.style.display='none'}invProfilePhotoRemoved=true}
 async function saveInversoraProfile(ev){
  ev.preventDefault();if(!invUser)return;const form=ev.currentTarget,btn=form.querySelector('button[type="submit"]'),msg=document.getElementById('profileSaveMessage'),fd=new FormData(form),first_name=String(fd.get('first_name')||'').trim(),last_name=String(fd.get('last_name')||'').trim(),display_name=[first_name,last_name].filter(Boolean).join(' '),bio=String(fd.get('bio')||'').trim(),file=document.getElementById('profilePhoto')?.files?.[0];
@@ -2527,7 +2549,6 @@ function refreshAccountNav(){
  b.setAttribute('aria-label',signed?'Mi perfil: '+name:'Mi perfil');b.title=signed?'Abrir mi perfil':'Iniciar sesión o crear una cuenta';
 }
 let invPendingConfirmationEmail='';
-let invProfileActivity={userId:null,reviews:[],posts:0,comments:0,loaded:false,loading:false};
 async function renderAccount(){
  const el=document.getElementById('accountContent');if(!el)return;refreshAccountNav();
  if(invPendingConfirmationEmail){
@@ -2596,22 +2617,6 @@ async function submitAuth(ev){
   const m=document.getElementById('authMessage');if(m){m.className='auth-message';m.textContent=e.message||'No se ha podido completar el acceso.'}
  }finally{
   const b=document.querySelector('#authForm button[type="submit"]');if(b){b.disabled=false;b.removeAttribute('aria-busy');b.textContent=b.dataset.originalText|| (authMode==='register'?'Crear cuenta':'Iniciar sesión')}
- }
-}
-async function invFinishAuthentication(user){
- if(!user)throw new Error('La autenticación no ha devuelto una cuenta válida. Inténtalo de nuevo.');
- invUser=user;invPendingConfirmationEmail='';authMode='login';
- invProfileActivity={userId:user.id,reviews:[],posts:0,comments:0,loaded:false,loading:false};
- const sync=Promise.allSettled([invLoadProfile(),invLoadLists()]);
- renderAccount();renderFavorites();refreshAccountNav();
- invNotice('Sesión iniciada correctamente.');
- const timeout=new Promise(resolve=>setTimeout(()=>resolve('timeout'),4000));
- const result=await Promise.race([sync,timeout]);
- if(result!=='timeout'){
-  if(invUser?.id===user.id){renderAccount();renderFavorites();refreshAccountNav();}
- }else{
-  sync.then(()=>{if(invUser?.id===user.id){renderAccount();renderFavorites();refreshAccountNav();}})
-      .catch(e=>console.warn('Sincronización de cuenta pendiente:',e));
  }
 }
 async function resendConfirmationEmail(){
