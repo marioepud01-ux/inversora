@@ -2372,6 +2372,21 @@ async function startSocialAuth(provider){const msg=document.getElementById('auth
 let invProfilePhotoRemoved=false,invProfileEditorOpen=false,invPendingAvatarFile=null,invPendingAvatarPromise=null,invPendingAvatarPreviewUrl='',invAvatarPreviewToken=0;
 function invClearPendingAvatar(){invAvatarPreviewToken++;if(invPendingAvatarPreviewUrl){URL.revokeObjectURL(invPendingAvatarPreviewUrl);invPendingAvatarPreviewUrl=''}invPendingAvatarFile=null;invPendingAvatarPromise=null}
 function invToggleProfileEditor(open){invProfileEditorOpen=!!open;invProfilePhotoRemoved=false;invClearPendingAvatar();renderAccount()}
+function invCloseProfileEditor(ev){
+ if(ev){ev.preventDefault();ev.stopPropagation()}
+ invProfileEditorOpen=false;invProfilePhotoRemoved=false;invClearPendingAvatar();
+ const el=document.getElementById('accountContent');if(!el)return;
+ try{
+  const pending=renderAccount();
+  if(pending&&typeof pending.then==='function')pending.catch(error=>{
+   console.error('No se pudo volver al perfil:',error);
+   el.innerHTML='<div class="profile-page"><p>No se ha podido mostrar tu perfil.</p><button type="button" class="secondary-action" onclick="invCloseProfileEditor()">Volver a intentarlo</button></div>';
+  });
+ }catch(error){
+  console.error('No se pudo volver al perfil:',error);
+  el.innerHTML='<div class="profile-page"><p>No se ha podido mostrar tu perfil.</p><button type="button" class="secondary-action" onclick="invCloseProfileEditor()">Volver a intentarlo</button></div>';
+ }
+}
 async function invPrepareProfilePhoto(file){
  if(!file||file.size>15*1024*1024)throw new Error('La imagen original no puede superar 15 MB.');
  const objectUrl=URL.createObjectURL(file);
@@ -2565,13 +2580,15 @@ async function renderAccount(){
    if(!invProfileActivity.loaded&&!invProfileActivity.loading){
     const uid=invUser.id;invProfileActivity.loading=true;
     const bounded=(promise,ms=5000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Timeout cargando actividad')),ms))]);
-    Promise.all([
+    Promise.allSettled([
      bounded(invDb.from('asset_reviews').select('asset_key,asset_name,comment,created_at,updated_at,return_potential,risk_control,liquidity,periodic_income,management_ease,simplicity').eq('user_id',uid).eq('status','published').order('created_at',{ascending:false}).limit(500)),
      bounded(invDb.from('community_posts').select('id',{count:'exact',head:true}).eq('user_id',uid)),
      bounded(invDb.from('community_comments').select('id',{count:'exact',head:true}).eq('user_id',uid))
-    ]).then(([reviews,posts,comments])=>{
+    ]).then(results=>{
      if(invUser?.id!==uid)return;
-     invProfileActivity={userId:uid,reviews:reviews.error?[]:(reviews.data||[]),posts:posts.error?0:(posts.count||0),comments:comments.error?0:(comments.count||0),loaded:true,loading:false};
+     const resultAt=(index,fallback)=>{const item=results[index];return item?.status==='fulfilled'&&!item.value?.error?item.value:fallback};
+     const reviews=resultAt(0,{data:[]}),posts=resultAt(1,{count:0}),comments=resultAt(2,{count:0});
+     invProfileActivity={userId:uid,reviews:reviews.data||[],posts:posts.count||0,comments:comments.count||0,loaded:true,loading:false};
      renderAccount();
     }).catch(e=>{
      console.warn('No se pudo cargar la actividad del perfil:',e);
@@ -2580,14 +2597,14 @@ async function renderAccount(){
    }
    const myReviewItems=myReviews.map(r=>{const assetName=r.asset_name||r.asset_key||'Activo';const score=invReviewWeightedScore(r)/2;const date=r.updated_at||r.created_at;const when=date?new Date(date).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}):'';const safe=JSON.stringify(assetName).replace(/</g,'\\u003c');return '<article class="profile-review-item"><div><b>'+invEsc(assetName)+'</b><small>'+invEsc(when)+' · '+invStarsMarkup(score)+' '+score.toLocaleString('es-ES',{maximumFractionDigits:1})+'/5</small>'+(r.comment?'<p>'+invEsc(r.comment)+'</p>':'<p class="profile-review-no-comment">Valoración por criterios, sin comentario escrito.</p>')+'</div><button type="button" onclick="openDetail('+safe+');setTimeout(()=>invOpenCommunityModal('+safe+'),250)">Ver activo →</button></article>'}).join('');
    el.innerHTML=`<div class="profile-page">
-    <div class="profile-welcome"><div class="profile-identity"><img class="profile-main-avatar" src="${avatarSrc}" alt="Foto de perfil"><div><div class="eyebrow">Mi espacio</div><h2>Hola, ${name}</h2><p>${invEsc(invUser.email||'')}</p>${bio?'<p class="profile-bio-text">'+invEsc(bio)+'</p>':''}</div></div><button class="profile-edit-cta" onclick="invToggleProfileEditor(true)">Personalizar perfil <span>→</span></button></div>
+    <div class="profile-welcome"><div class="profile-identity"><img class="profile-main-avatar" src="${avatarSrc}" alt="Foto de perfil" loading="eager" decoding="async" referrerpolicy="no-referrer" style="display:block;visibility:visible;opacity:1" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2250%22 fill=%22%23eef2f7%22/%3E%3Ccircle cx=%2250%22 cy=%2237%22 r=%2218%22 fill=%22%2398a2b3%22/%3E%3Cpath d=%22M15 91c3-21 17-32 35-32s32 11 35 32%22 fill=%22%2398a2b3%22/%3E%3C/svg%3E'"><div><div class="eyebrow">Mi espacio</div><h2>Hola, ${name}</h2><p>${invEsc(invUser.email||'')}</p>${bio?'<p class="profile-bio-text">'+invEsc(bio)+'</p>':''}</div></div><button class="profile-edit-cta" onclick="invToggleProfileEditor(true)">Personalizar perfil <span>→</span></button></div>
     <div class="account-dashboard"><div class="account-stat"><b>${getFavorites().length}</b><span>inversiones favoritas</span></div><div class="account-stat"><b>${invListsCache.length}</b><span>listas personalizadas</span></div><div class="account-stat"><b>${myReviews.length}</b><span>valoraciones</span></div><div class="account-stat"><b>${myPostCount}</b><span>publicaciones</span></div><div class="account-stat"><b>${myCommentCount}</b><span>comentarios</span></div></div><section class="profile-achievements"><div class="profile-achievements-heading"><div><span class="eyebrow">Tu recorrido</span><h3>Insignias de Inversora</h3><p>Tu actividad va construyendo tu historial en la comunidad.</p></div></div><div class="profile-achievement-list">${avatar&&bio?'<span class="profile-achievement earned">✦ Perfil completo</span>':''}${getFavorites().length?'<span class="profile-achievement earned">⌕ Explorador</span>':''}${myReviews.length?'<span class="profile-achievement earned">▤ Analista</span>':''}${myPostCount||myCommentCount?'<span class="profile-achievement earned">◉ Participante</span>':''}${invListsCache.length>1?'<span class="profile-achievement earned">♡ Organizador</span>':''}</div><p class="profile-achievements-next">${!(getFavorites().length||myReviews.length||myPostCount||myCommentCount)?'Tu primera insignia te espera: guarda una inversión, publica una opinión o participa en un debate.':'Sigue explorando, comparando y compartiendo ideas para construir tu historial de actividad.'}</p></section><section class="profile-reviews-section"><div class="profile-reviews-heading"><div><span class="eyebrow">Tu actividad</span><h3>Mis valoraciones</h3><p>Todas las valoraciones que has publicado en Inversora.</p></div><span class="profile-reviews-total">${myReviews.length}</span></div>${myReviews.length?'<div class="profile-review-list">'+myReviewItems+'</div>':'<div class="community-empty">Todavía no has publicado ninguna valoración. Entra en la ficha de un activo y comparte tu opinión con la comunidad.</div>'}</section>
     <div class="profile-shortcuts"><button onclick="showView('favorites')"><span class="profile-shortcut-icon">♡</span><span><b>Mis favoritos</b><small>Consulta tus inversiones guardadas</small></span><i>→</i></button><button onclick="showView('explore')"><span class="profile-shortcut-icon">⌕</span><span><b>Explorar inversiones</b><small>Descubre nuevas oportunidades</small></span><i>→</i></button></div>
     <div class="account-actions profile-account-actions"><button class="secondary-action" onclick="invExportMyData()">Descargar mis datos</button><button class="logout-action" onclick="logoutLocal()">Cerrar sesión</button><button class="logout-action" onclick="invDeleteMyAccount()">Eliminar mi cuenta</button></div>
    </div>`;
   }else{
    el.innerHTML=`<div class="profile-editor">
-    <button class="back profile-back" onclick="invToggleProfileEditor(false)">← Volver a mi perfil</button>
+    <button type="button" class="back profile-back" onclick="invCloseProfileEditor(event)">← Volver a mi perfil</button>
     <div class="profile-editor-heading"><div class="eyebrow">Configuración de cuenta</div><h2>Personalizar perfil</h2><p>Completa únicamente la información que quieras compartir. Puedes modificarla cuando quieras.</p></div>
     <form id="profileEditForm" class="profile-edit-form" onsubmit="saveInversoraProfile(event)">
      <section class="profile-settings-section"><div class="profile-section-heading"><span class="profile-section-icon">👤</span><div><h3>Información personal</h3><p>Cómo te verá el resto de la comunidad.</p></div></div><div class="profile-section-fields"><div class="auth-field"><label for="profileFirstName">Nombre</label><input id="profileFirstName" name="first_name" maxlength="40" value="${firstName}" autocomplete="given-name" required></div><div class="auth-field"><label for="profileLastName">Apellidos</label><input id="profileLastName" name="last_name" maxlength="80" value="${lastName}" autocomplete="family-name" required></div><div class="auth-field full"><small>Tu nombre y apellidos se mostrarán juntos en tu perfil y en la comunidad.</small></div><div class="auth-field full"><label for="profileBio">Sobre mí <span class="profile-optional">Opcional</span></label><textarea id="profileBio" name="bio" maxlength="240" rows="4" placeholder="Cuéntale algo a la comunidad…">${invEsc(bio)}</textarea><small>Máximo 240 caracteres. Evita incluir información privada.</small></div></div></section>
