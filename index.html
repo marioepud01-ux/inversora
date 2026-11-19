@@ -2323,7 +2323,7 @@ function renderGlossary(){let input=document.getElementById('glossSearch'),q=(in
 // Prototipo de cuenta local: no es autenticación de servidor.
 const USERS_KEY='inversora_local_users_v1',SESSION_KEY='inversora_local_session_v1',FAV_KEY='inversora_local_favorites_v1',LISTS_KEY='inversora_local_lists_v1',COMMUNITY_KEY='inversora_local_community_v1';
 let selectedFavoriteList='default';
-let authMode='register';
+let authMode='login';
 function getUsers(){try{return JSON.parse(localStorage.getItem(USERS_KEY)||'{}')}catch(e){return {}}}
 function getSession(){try{return JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null')}catch(e){return null}}
 function currentUser(){let ses=getSession();return ses?getUsers()[ses.email]||null:null}
@@ -2587,10 +2587,12 @@ function setAuthMode(mode){authMode=mode;renderAccount()}
 async function submitAuth(ev){
  ev.preventDefault();
  const form=ev.currentTarget,button=form.querySelector('button[type="submit"]'),fd=new FormData(form),email=String(fd.get('email')||'').trim().toLowerCase(),password=String(fd.get('password')||''),msg=document.getElementById('authMessage');
- if(button){button.disabled=true;button.dataset.originalText=button.textContent;button.textContent=authMode==='register'?'Creando tu cuenta…':'Iniciando sesión…';button.setAttribute('aria-busy','true')}
+ const isRegistration=!!form.querySelector('[name="first_name"], [name="last_name"], [name="name"], [name="confirm"], #authTerms');
+ authMode=isRegistration?'register':'login';
+ if(button){button.disabled=true;button.dataset.originalText=button.textContent;button.textContent=isRegistration?'Creando tu cuenta…':'Iniciando sesión…';button.setAttribute('aria-busy','true')}
  if(msg){msg.className='auth-message';msg.textContent='Estamos procesando tu solicitud. No cierres esta ventana…';msg.setAttribute('aria-live','polite')}
  try{
-  if(authMode==='register'){
+  if(isRegistration){
    const first_name=String(fd.get('first_name')||'').trim(),last_name=String(fd.get('last_name')||'').trim(),name=[first_name,last_name].filter(Boolean).join(' '),confirm=String(fd.get('confirm')||'');
    if(first_name.length<2)throw new Error('Introduce un nombre de al menos 2 caracteres.');
    if(last_name.length<2)throw new Error('Introduce tus apellidos.');
@@ -2616,7 +2618,7 @@ async function submitAuth(ev){
  }catch(e){
   const m=document.getElementById('authMessage');if(m){m.className='auth-message';m.textContent=e.message||'No se ha podido completar el acceso.'}
  }finally{
-  const b=document.querySelector('#authForm button[type="submit"]');if(b){b.disabled=false;b.removeAttribute('aria-busy');b.textContent=b.dataset.originalText|| (authMode==='register'?'Crear cuenta':'Iniciar sesión')}
+  const b=document.querySelector('#authForm button[type="submit"]');if(b){b.disabled=false;b.removeAttribute('aria-busy');b.textContent=b.dataset.originalText|| (isRegistration?'Crear cuenta':'Iniciar sesión')}
  }
 }
 async function resendConfirmationEmail(){
