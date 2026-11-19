@@ -3655,7 +3655,7 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
 <style id="inversora-unified-blue-card-edges-v2">
 /* Solo tarjetas y paneles blancos reales: mismo borde lateral que los resultados del simulador. */
 .view :is(
-  .home-block,.home-map-intro,.home-goal,.home-compare-card,.category-tile,.category-tile-v2,
+  .home-block,.home-map-intro,.home-goal,.home-compare-card,.category-tile,.category-tile-v2,.filters,.filters,
   .card,.term,.subtype-panel,
   .asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,
   .asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,
@@ -3669,6 +3669,7 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
   .auth-form,.social-auth,.auth-success-panel,.favorites-empty,.community-empty
 ){
   border-left:3px solid #b7d0ff!important;
+  box-shadow:0 5px 18px rgba(16,24,40,.04)!important;
   transition:border-color .2s ease,box-shadow .2s ease!important;
 }
 .view :is(
@@ -3685,7 +3686,7 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
   .account-panel,.account-card,.account-dashboard,.profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,
   .auth-form,.social-auth,.auth-success-panel,.favorites-empty,.community-empty
 ):is(:hover,:focus-within){
-  border-left-color:#155eef!important;
+  border-left:3px solid #155eef!important;
   box-shadow:0 7px 22px #155eef18!important;
 }
 /* Las cuatro tarjetas de categorías son la única excepción: acento azul arriba. */
