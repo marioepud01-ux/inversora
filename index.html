@@ -3651,6 +3651,65 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
 }
 </style>
 
+
+<style id="inversora-unified-blue-card-edges-v1">
+/* Lenguaje común: todos los paneles blancos usan el acento azul lateral del simulador. */
+.view :is(
+  .home-block,.home-map-intro,.section,.card,.detail,.subtype-panel,.filters,.form,.metric,.term,.empty,
+  .home-goal,.home-compare-card,.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,
+  .asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,
+  .asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.asset-costs,
+  .compare-picker,.compare-card,.compare-panel,.compare-table-wrap,.tool-card,.tool-hub-card,.sim-panel,
+  .sim-form,.sim-output,.sim-breakdown,.sim-report,.sim-report-item,.sim-selected-card,.disclaimer-card,
+  .glossary-enhanced,.gloss-search-wrap,.glossary,.community-compose,.community-post,.community-side-card,
+  .community-review,.community-review-form,.community-stat,.account-panel,.account-card,.account-dashboard,
+  .profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,.auth-form,.social-auth,
+  .auth-success-panel,.favorites-empty,.community-empty
+){
+  border-left:3px solid #8bb5f5!important;
+  transition:border-color .22s ease,box-shadow .22s ease,transform .22s ease,background-color .22s ease!important;
+}
+.view :is(
+  .home-block,.home-map-intro,.section,.card,.detail,.subtype-panel,.filters,.form,.metric,.term,.empty,
+  .home-goal,.home-compare-card,.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,
+  .asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,
+  .asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.asset-costs,
+  .compare-picker,.compare-card,.compare-panel,.compare-table-wrap,.tool-card,.tool-hub-card,.sim-panel,
+  .sim-form,.sim-output,.sim-breakdown,.sim-report,.sim-report-item,.sim-selected-card,.disclaimer-card,
+  .glossary-enhanced,.gloss-search-wrap,.glossary,.community-compose,.community-post,.community-side-card,
+  .community-review,.community-review-form,.community-stat,.account-panel,.account-card,.account-dashboard,
+  .profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,.auth-form,.social-auth,
+  .auth-success-panel,.favorites-empty,.community-empty
+):hover{
+  border-left-color:#155eef!important;
+  box-shadow:0 9px 24px rgba(21,94,239,.09)!important;
+}
+/* Las cuatro tarjetas de universos llevan el acento azul en el borde superior. */
+.view .taxonomy-map-universe{
+  border:1px solid #dce8f8!important;
+  border-top:4px solid #8bb5f5!important;
+  background:#fff!important;
+  transition:border-color .22s ease,box-shadow .22s ease,transform .22s ease!important;
+}
+.view .taxonomy-map-universe:before{
+  height:0!important;background:#155eef!important;
+}
+.view .taxonomy-map-universe:hover,
+.view .taxonomy-map-universe:focus-within{
+  border-top-color:#155eef!important;
+  border-color:#b5cff2!important;
+  box-shadow:0 10px 25px rgba(21,94,239,.10)!important;
+  transform:translateY(-2px);
+}
+.view .taxonomy-map-universe .taxonomy-map-symbol{
+  color:#155eef!important;background:#eef4ff!important;border-color:#d1e0ff!important;
+}
+.view .taxonomy-map-universe .taxonomy-map-universe-head strong{color:#183967!important}
+@media(prefers-reduced-motion:reduce){
+  .view :is(.home-block,.home-map-intro,.section,.card,.detail,.subtype-panel,.filters,.form,.metric,.term,.empty,.home-goal,.home-compare-card,.asset-section,.asset-standard-analysis,.asset-barrier-card,.asset-community,.asset-info-card,.asset-quick-card,.asset-explainer-card,.asset-pros-card,.asset-cons-card,.asset-tax-card,.asset-ratings-panel,.asset-overview-panel,.asset-mini-fact,.asset-barrier-factor,.asset-costs,.compare-picker,.compare-card,.compare-panel,.compare-table-wrap,.tool-card,.tool-hub-card,.sim-panel,.sim-form,.sim-output,.sim-breakdown,.sim-report,.sim-report-item,.sim-selected-card,.disclaimer-card,.glossary-enhanced,.gloss-search-wrap,.glossary,.community-compose,.community-post,.community-side-card,.community-review,.community-review-form,.community-stat,.account-panel,.account-card,.account-dashboard,.profile-card,.profile-editor,.profile-settings-section,.profile-shortcut,.auth-form,.social-auth,.auth-success-panel,.favorites-empty,.community-empty,.taxonomy-map-universe){transition:none!important}
+}
+</style>
+
 <script src="/simulator-engine.js"></script>
 <script src="/simulator-ui.js"></script>
 </body>
