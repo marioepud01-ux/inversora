@@ -2869,13 +2869,31 @@ async function invLoadAssetReviews(name){
  try{
   const {data,error}=await invDb.from('asset_reviews').select('*').eq('asset_key',name).eq('status','published').order('created_at',{ascending:false}).limit(200);
   if(error)throw error;
-  const reviews=data||[],ids=[...new Set(reviews.map(r=>r.user_id))];let profiles={};
-  if(ids.length){const {data:people,error:profileError}=await invDb.from('profiles').select('id,display_name,avatar_url').in('id',ids);if(profileError)console.warn('No se pudieron cargar los nombres de las reseñas:',profileError);(people||[]).forEach(p=>profiles[p.id]=p)}
+  const reviews=Array.isArray(data)?data:[],ids=[...new Set(reviews.map(r=>r.user_id).filter(Boolean))];let profiles={};
+  if(ids.length){
+   try{
+    const {data:people,error:profileError}=await invDb.from('profiles').select('id,display_name,avatar_url').in('id',ids);
+    if(profileError)console.warn('No se pudieron cargar los perfiles de las reseñas:',profileError);
+    (Array.isArray(people)?people:[]).forEach(p=>{if(p&&p.id)profiles[p.id]=p});
+   }catch(profileError){console.warn('No se pudieron cargar los perfiles de las reseñas:',profileError)}
+  }
   invAssetReviewCache[name]={reviews,profiles};
-  invRenderAssetReviews(name,reviews,profiles);
+  try{
+   invRenderAssetReviews(name,reviews,profiles);
+  }catch(renderError){
+   console.error('Error al pintar las reseñas de la comunidad:',renderError,renderError?.stack);
+   if(host){
+    const safe=typeof invEsc==='function'?invEsc:escapeHtml;
+    const rows=reviews.map(r=>{
+     const p=profiles[r.user_id]||{},author=String(p.display_name||'Miembro de Inversora'),score=invReviewWeightedScore(r)/2;
+     return '<article class="community-review"><div class="community-review-top"><b>'+safe(author)+'</b><span>'+score.toLocaleString('es-ES',{maximumFractionDigits:1})+'/5</span></div>'+(r.comment?'<p>'+safe(r.comment)+'</p>':'<p>Valoración por criterios, sin comentario escrito.</p>')+'</article>';
+    }).join('');
+    host.innerHTML='<section class="asset-community"><h2>Valoración de la comunidad</h2><p>'+reviews.length+' '+(reviews.length===1?'valoración':'valoraciones')+'</p><div class="community-review-list" style="display:block">'+(rows||'<div class="community-empty">Todavía no hay reseñas para este activo.</div>')+'</div><p class="community-empty">Las reseñas se han cargado, pero ha fallado un elemento secundario de la ficha.</p></section>';
+   }
+  }
  }catch(e){
-  console.error('Asset reviews:',e);
-  if(host)host.innerHTML='<div class="community-empty">No se han podido cargar las reseñas ahora mismo. Comprueba tu conexión y vuelve a intentarlo.</div>';
+  console.error('Asset reviews:',e,e?.stack);
+  if(host)host.innerHTML='<div class="community-empty">No se han podido cargar las reseñas. '+escapeHtml(e?.message||String(e))+'</div>';
  }
 }
 
