@@ -4037,5 +4037,56 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
 </script>
 
 
+<style id="inversora-mobile-profile-avatar-visible-v1">
+/* En móvil se mantiene el acceso al perfil con su fotografía, junto al menú lateral. */
+@media(max-width:800px){
+ .inv-header .header-actions{
+  gap:8px!important;
+  min-width:88px!important;
+ }
+ .inv-header .profile-menu-wrap{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 40px!important;
+  width:40px!important;
+  height:40px!important;
+  position:relative!important;
+  top:0!important;
+ }
+ .inv-header .profile-nav-btn{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:40px!important;
+  min-width:40px!important;
+  height:40px!important;
+  padding:4px!important;
+  gap:0!important;
+  border:0!important;
+  border-radius:50%!important;
+  background:transparent!important;
+ }
+ .inv-header .profile-nav-label{display:none!important}
+ .inv-header .profile-nav-avatar,
+ .inv-header .profile-nav-avatar-fallback{
+  display:block!important;
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+  min-height:34px!important;
+  flex:0 0 34px!important;
+  border-radius:50%!important;
+  object-fit:cover!important;
+ }
+ .inv-header .menu-toggle{
+  flex:0 0 40px!important;
+  width:40px!important;
+  min-width:40px!important;
+ }
+}
+</style>
+
+
 </body>
 </html>
