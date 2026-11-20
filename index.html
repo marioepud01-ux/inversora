@@ -1959,10 +1959,7 @@ function printComparisonSheet(){
  if(!win){invNotice('El navegador ha bloqueado la nueva pestaña. Permite las ventanas emergentes para Inversora.');return}
  const printCss='<style>html,body{background:#fff!important;color:#101828!important;margin:0!important;padding:0!important}.compare-page{display:block!important;max-width:none!important;width:100%!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}.compare-page button{display:none!important}.compare-table-wrap,.compare-card{break-inside:avoid;box-shadow:none!important}@page{size:A4 landscape;margin:10mm}</style>';
  win.document.open();
- win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparativa · Inversora</title>'+styles+printCss+'</head><body>'+page.outerHTML+'<script src="/simulator-engine.js"><\/script><script src="/simulator-ui.js"><\/script>
-
-
-</body></html>');
+ win.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Comparativa · Inversora</title>'+styles+printCss+'</head><body>'+page.outerHTML+'<script src="/simulator-engine.js"><\\/script><script src="/simulator-ui.js"><\\/script></body></html>');
  win.document.close();
  const doPrint=()=>setTimeout(()=>{try{win.focus();win.print()}catch(err){console.error('Print comparison:',err)}},450);
  if(win.document.readyState==='complete')doPrint();else win.addEventListener('load',doPrint,{once:true});
