@@ -3918,7 +3918,32 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
    if(!invDb?.auth?.signInWithPasskey){if(msg)msg.textContent='Actualiza la página para habilitar el acceso con llave de acceso.';return}
    if(button){button.disabled=true;button.textContent='Esperando huella o Face ID…'}
    if(msg){msg.className='auth-message pr-auth-message';msg.textContent='Confirma tu identidad en el dispositivo.'}
-   try{const {error}=await invDb.auth.signInWithPasskey();if(error)throw error}
+   try{
+    const {error}=await invDb.auth.signInWithPasskey();
+    if(error)throw error;
+    // En Safari/iOS el resultado de WebAuthn puede resolverse antes de que
+    // el listener global de Auth termine de hidratar el perfil. Sincronizarlo
+    // explícitamente evita que la cabecera móvil se quede con el avatar vacío.
+    if(window.matchMedia('(max-width: 800px)').matches){
+     let session=null;
+     for(let attempt=0;attempt<4&&!session;attempt++){
+      const {data,error:sessionError}=await invDb.auth.getSession();
+      if(sessionError)throw sessionError;
+      session=data?.session||null;
+      if(!session&&attempt<3)await new Promise(resolve=>setTimeout(resolve,180));
+     }
+     if(session?.user){
+      await invRefresh(session.user);
+      if(invUser?.id===session.user.id&&!invProfile?.avatar_url&&session.user.user_metadata?.avatar_url){
+       invProfile={...(invProfile||{}),avatar_url:session.user.user_metadata.avatar_url};
+      }
+      if(invUser?.id===session.user.id){
+       if(typeof window.refreshAccountNav==='function')window.refreshAccountNav();
+       if(typeof window.renderAccount==='function')window.renderAccount();
+      }
+     }
+    }
+   }
    catch(e){const m=String(e?.message||'');if(msg){msg.className='auth-message pr-auth-message';msg.textContent=/passkey_disabled/i.test(m)?'El acceso biométrico aún debe activarse en la configuración de autenticación de Inversora.':/cancel|abort/i.test(m)?'Has cancelado la autenticación.':'No se ha podido acceder con la llave de acceso. '+m}}
    finally{if(button){button.disabled=false;button.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a8 8 0 0 0-8 8"/><path d="M8 11a4 4 0 0 1 8 0c0 5-1 7-2 9"/><path d="M12 7a4 4 0 0 0-4 4c0 3-.4 5-1.5 7"/><path d="M16 11c0 3-.2 5.5-1 8"/><path d="M4 15c.2 1.5.7 2.8 1.4 4"/></svg>Entrar con huella o Face ID'}}
   };
