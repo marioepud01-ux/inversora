@@ -1438,6 +1438,16 @@ td,th{border-color:#e7eef8!important}
 @media(max-width:760px){.asset-accounts-detail{padding:13px!important}.asset-accounts-detail .asset-hero{grid-template-columns:1fr!important;padding:19px!important}.asset-accounts-detail .asset-rating-grid{grid-template-columns:1fr 1fr!important}.asset-accounts-detail .asset-hero-tags{grid-template-columns:1fr!important}.asset-accounts-detail .asset-jump-nav{position:static!important}.asset-accounts-detail .asset-section{padding-left:12px!important;margin-top:23px!important}.asset-accounts-detail .asset-overview-panel{grid-template-columns:1fr!important}.asset-accounts-detail .asset-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.asset-accounts-detail .asset-bottom-actions button{flex:1 1 100%!important}}
 @media(max-width:430px){.asset-accounts-detail .asset-rating-grid{grid-template-columns:1fr!important}.asset-accounts-detail .asset-section-head h2{font-size:17px!important}}
 @media print{.asset-accounts-detail .asset-jump-nav,.asset-accounts-detail .asset-bottom-actions,.asset-accounts-detail .asset-next-nav{display:none!important}}
+
+/* v3: reglas de aplicación reforzadas tras renderizar la ficha dinámica */
+#detail .asset-detail.asset-accounts-detail{background:#fff!important;border:1px solid #d8e4f5!important;border-radius:24px!important;padding:clamp(18px,3.2vw,38px)!important;box-shadow:0 18px 52px rgba(23,43,77,.09)!important}
+#detail .asset-detail.asset-accounts-detail .asset-hero{display:grid!important;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr)!important;gap:30px!important;padding:34px!important;border:1px solid #d7e5fb!important;border-left:7px solid #155eef!important;border-radius:20px!important;background:linear-gradient(125deg,#edf4ff 0%,#fff 72%)!important}
+#detail .asset-detail.asset-accounts-detail .asset-hero h1{font-size:clamp(34px,4.5vw,50px)!important;line-height:1.05!important;color:#10294e!important}
+#detail .asset-detail.asset-accounts-detail .asset-jump-nav{display:flex!important;flex-wrap:wrap!important;gap:7px!important;padding:12px!important;border:1px solid #dce6f4!important;border-radius:14px!important;background:#f8faff!important}
+#detail .asset-detail.asset-accounts-detail .asset-section{padding:0 0 0 18px!important;border-left:3px solid #c9dcff!important}
+#detail .asset-detail.asset-accounts-detail .asset-overview-panel{border:1px solid #d7e5fb!important;border-left:5px solid #155eef!important;border-radius:16px!important;background:#f5f9ff!important}
+#detail .asset-detail.asset-accounts-detail .asset-quick-card,#detail .asset-detail.asset-accounts-detail .asset-cost-card{border:1px solid #dce6f2!important;border-radius:14px!important;box-shadow:0 5px 16px rgba(16,42,82,.04)!important;background:#fff!important}
+@media(max-width:760px){#detail .asset-detail.asset-accounts-detail .asset-hero{grid-template-columns:1fr!important;padding:20px!important}#detail .asset-detail.asset-accounts-detail{padding:12px!important}}
 </style>
 </head>
 <body>
@@ -2162,7 +2172,13 @@ function openDetail(name){
 <nav class="asset-bottom-actions"><button class="detail-sim-btn" onclick="simulateAssetFromDetail(${safeName})">↗ Simular esta inversión</button><button class="detail-favorite ${isFavorite(i.name)?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${isFavorite(i.name)?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button><button type="button" class="asset-print-btn" onclick="printAssetSheet()">⎙ Imprimir ficha</button><button class="asset-rate-btn" onclick="invOpenCommunityModal(${safeName})">★ Valorar este activo</button></nav>
 <nav class="asset-next-nav" aria-label="Otras inversiones"><button onclick="openDetail(${JSON.stringify(previous.name).replace(/"/g,'&quot;')})"><span>← Anterior</span><b>${previous.name}</b></button><button onclick="openDetail(${JSON.stringify(next.name).replace(/"/g,'&quot;')})"><span>Siguiente →</span><b>${next.name}</b></button></nav>
   <footer class="asset-disclaimer"><span>ⓘ</span><p><b>Antes de decidir:</b> los datos y puntuaciones son orientativos y proceden del catálogo; no han sido verificados de forma independiente. Las rentabilidades potenciales no son promesas ni previsiones. Esta ficha es educativa y no constituye asesoramiento financiero o fiscal personalizado.</p></footer>
- </article></section>`;showView('detail')
+ </article></section>`;
+ const renderedAsset=document.querySelector('#detail .asset-detail');
+ if(renderedAsset&&i.name==='Cuentas remuneradas'){
+  renderedAsset.classList.add('asset-accounts-detail');
+  renderedAsset.setAttribute('data-asset-redesign','accounts-v3');
+ }
+ showView('detail')
 }
 let heroSuggestionItems=[],heroSuggestionActive=-1;
 function hideHeroSuggestions(){const box=document.getElementById('heroSearchSuggestions'),input=document.getElementById('heroSearch');if(box){box.hidden=true;box.innerHTML=''}if(input)input.setAttribute('aria-expanded','false');heroSuggestionItems=[];heroSuggestionActive=-1}
