@@ -2084,20 +2084,20 @@ function openDetail(name){
   <div class="asset-topline"><button class="back" onclick="showView('explore')">← Volver a explorar</button><span class="asset-top-note"><span class="asset-live-dot"></span> Guía de inversión</span></div>${printSheet}
   <header class="asset-hero">
    <div class="asset-hero-copy">
-    <div class="asset-breadcrumb"><span>\${i.cat}</span><span>›</span><span>\${subtypeFor(i)}</span><span>›</span><strong>Guía del activo</strong></div>
-    <div class="redesign-eyebrow"><span class="redesign-live"></span> GUÍA PRÁCTICA · \${i.cat}</div>
-    <h1>\${i.name}</h1><p class="asset-lead">\${i.desc}</p>
+    <div class="asset-breadcrumb"><span>${i.cat}</span><span>›</span><span>${subtypeFor(i)}</span><span>›</span><strong>Guía del activo</strong></div>
+    <div class="redesign-eyebrow"><span class="redesign-live"></span> GUÍA PRÁCTICA · ${i.cat}</div>
+    <h1>${i.name}</h1><p class="asset-lead">${i.desc}</p>
     <div class="redesign-hero-facts">
-     <div><span>Capital para empezar</span><strong>\${i.capital||'Según entidad'}</strong></div>
-     <div><span>Cuándo cobras</span><strong>\${i.income||'Según condiciones'}</strong></div>
-     <div><span>Tipo de rentabilidad</span><strong>\${returnMode}</strong></div>
+     <div><span>Capital para empezar</span><strong>${i.capital||'Según entidad'}</strong></div>
+     <div><span>Cuándo cobras</span><strong>${i.income||'Según condiciones'}</strong></div>
+     <div><span>Tipo de rentabilidad</span><strong>${returnMode}</strong></div>
     </div>
    </div>
    <div class="asset-rating-grid">
     <div class="asset-rating-card inversora-rating">
-     <div class="asset-rating-label">Valoración de Inversora <button type="button" class="score-help-btn" aria-label="Cómo se calcula la valoración de Inversora" title="Cómo se calcula la valoración de Inversora" onclick="showScoreBreakdown(\${safeName})">?</button></div>
-     <div class="asset-rating-stars">\${invStarsMarkup((Number(i.score)||0)/2)}</div>
-     <strong class="asset-rating-number">\${(Number(i.score||0)/2).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})}<small>/5</small></strong>
+     <div class="asset-rating-label">Valoración de Inversora <button type="button" class="score-help-btn" aria-label="Cómo se calcula la valoración de Inversora" title="Cómo se calcula la valoración de Inversora" onclick="showScoreBreakdown(${safeName})">?</button></div>
+     <div class="asset-rating-stars">${invStarsMarkup((Number(i.score)||0)/2)}</div>
+     <strong class="asset-rating-number">${(Number(i.score||0)/2).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})}<small>/5</small></strong>
      <small>Evaluación editorial de Inversora</small>
     </div>
     <div class="asset-rating-card community-rating">
@@ -2105,7 +2105,7 @@ function openDetail(name){
      <div class="asset-rating-stars" id="asset-community-rating-stars">☆☆☆☆☆</div>
      <strong class="asset-rating-number" id="asset-community-rating-value">—<small>/5</small></strong>
      <small id="asset-community-rating-count">Todavía no hay valoraciones</small>
-     <button type="button" class="asset-community-open" onclick="invOpenCommunityModal(\${safeName})">Valorar este activo <span>→</span></button>
+     <button type="button" class="asset-community-open" onclick="invOpenCommunityModal(${safeName})">Valorar este activo <span>→</span></button>
     </div>
    </div>
   </header>
