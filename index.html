@@ -2768,6 +2768,7 @@ async function startSocialAuth(provider){const m=document.getElementById('authMe
 // Keep the legacy screen transitions, but load cloud data before presenting account/favorites/community.
 const invOriginalShowView=showView;
 showView=function(id){invOriginalShowView(id);if(id==='favorites'&&invUser)invLoadLists().then(renderFavorites).catch(e=>console.error(e));if(id==='community')renderCommunity()};
+let invPendingReviewAsset=(()=>{try{return sessionStorage.getItem('invPendingReviewAsset')}catch(e){return null}})();
 invDb.auth.onAuthStateChange((event,session)=>{
   invUser=session?.user||null;
   setTimeout(async()=>{
@@ -2877,7 +2878,7 @@ async function invLoadAssetReviews(name){
   if(host)host.innerHTML='<div class="community-empty">No se han podido cargar las reseñas ahora mismo. Comprueba tu conexión y vuelve a intentarlo.</div>';
  }
 }
-let invPendingReviewAsset=(()=>{try{return sessionStorage.getItem('invPendingReviewAsset')}catch(e){return null}})();
+
 function invEnsureReviewModal(){
  let modal=document.getElementById('assetCommunityModal');
  if(!modal){modal=document.createElement('div');modal.id='assetCommunityModal';modal.className='asset-community-modal';modal.hidden=true;modal.innerHTML='<section class="asset-community-modal-card" role="dialog" aria-modal="true" aria-label="Valoración de la comunidad"><button type="button" class="asset-community-modal-close" aria-label="Cerrar" onclick="invCloseCommunityModal()">×</button><div id="asset-community-modal-content"></div></section>';modal.addEventListener('click',e=>{if(e.target===modal)invCloseCommunityModal()});document.body.appendChild(modal)}
