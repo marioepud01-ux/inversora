@@ -2410,7 +2410,7 @@ async function saveInversoraProfile(ev){
   if(invProfilePhotoRemoved)avatar_url=null;
   const payload={id:invUser.id,first_name,last_name,display_name,bio,avatar_url,updated_at:new Date().toISOString()};
   const {data,error}=await invDb.from('profiles').upsert(payload,{onConflict:'id'}).select().single();if(error)throw error;
-  const {error:metaError}=await invDb.auth.updateUser({data:{display_name,first_name,last_name}});if(metaError)throw metaError;
+  const {error:metaError}=await invDb.auth.updateUser({data:{display_name,first_name,last_name,avatar_url}});if(metaError)throw metaError;
   invProfile=data;invUser={...invUser,user_metadata:{...(invUser.user_metadata||{}),display_name,first_name,last_name}};
   invProfilePhotoRemoved=false;invProfileEditorOpen=false;invClearPendingAvatar();refreshAccountNav();await renderAccount();invNotice('Tu perfil se ha actualizado.');
  }catch(e){if(msg){msg.className='auth-message';msg.textContent=e.message||'No se han podido guardar los cambios.'}}
@@ -2429,7 +2429,7 @@ async function saveInversoraProfile(ev){
   if(invProfilePhotoRemoved)avatar_url=null;
   const payload={id:invUser.id,first_name,last_name,display_name,bio,avatar_url,updated_at:new Date().toISOString()};
   const {data,error}=await invDb.from('profiles').upsert(payload,{onConflict:'id'}).select().single();if(error)throw error;
-  const {error:metaError}=await invDb.auth.updateUser({data:{display_name,first_name,last_name}});if(metaError)throw metaError;
+  const {error:metaError}=await invDb.auth.updateUser({data:{display_name,first_name,last_name,avatar_url}});if(metaError)throw metaError;
   invProfile=data;invUser={...invUser,user_metadata:{...(invUser.user_metadata||{}),display_name,first_name,last_name}};invProfilePhotoRemoved=false;invProfileEditorOpen=false;refreshAccountNav();renderAccount();if(msg){msg.className='auth-message ok';msg.textContent='Perfil actualizado correctamente.'}invNotice('Tu perfil se ha actualizado.');
  }catch(e){if(msg){msg.className='auth-message';msg.textContent=e.message||'No se han podido guardar los cambios.'}}
  finally{const b=document.querySelector('#profileEditForm button[type="submit"]');if(b){b.disabled=false;b.textContent='Guardar perfil'}}
@@ -3979,7 +3979,7 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
    const payload={id:invUser.id,first_name,last_name,display_name,bio,avatar_url,updated_at:new Date().toISOString()};
    const {data,error}=await invDb.from('profiles').upsert(payload,{onConflict:'id'}).select().single();
    if(error)throw error;
-   const {error:metaError}=await invDb.auth.updateUser({data:{display_name,first_name,last_name}});
+   const {error:metaError}=await invDb.auth.updateUser({data:{display_name,first_name,last_name,avatar_url}});
    if(metaError)throw metaError;
    invProfile=data;invUser={...invUser,user_metadata:{...(invUser.user_metadata||{}),display_name,first_name,last_name}};
    invProfilePhotoRemoved=false;invProfileEditorOpen=false;
@@ -3996,6 +3996,43 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
 
  // Sincroniza avatar en el menú sin reconstruirlo en cada refresco ni provocar parpadeos.
  setNav();
+})();
+</script>
+
+
+<script id="inv-avatar-hydration-fix-2026-11-20">
+(function(){
+ let started=false;
+ async function restoreProfileAfterLoad(){
+  if(started)return;
+  started=true;
+  try{
+   // Releer la sesión fuera del callback de Auth y después de cargar todos los scripts.
+   const {data,error}=await invDb.auth.getSession();
+   if(error)throw error;
+   const user=data?.session?.user||null;
+   if(!user){
+    if(!invUser){invProfile=null;if(typeof window.refreshAccountNav==='function')window.refreshAccountNav()}
+    return;
+   }
+   invUser=user;
+   await invLoadProfile();
+   if(invUser?.id!==user.id)return;
+   // Respaldo para futuras sesiones si la consulta del perfil tarda o falla.
+   if(!invProfile?.avatar_url&&user.user_metadata?.avatar_url){
+    invProfile={...(invProfile||{}),avatar_url:user.user_metadata.avatar_url};
+   }
+   if(typeof window.refreshAccountNav==='function')window.refreshAccountNav();
+   const account=document.getElementById('account');
+   if(account&&!account.classList.contains('hidden')&&typeof window.renderAccount==='function'){
+    window.renderAccount();
+   }
+  }catch(error){
+   console.error('Inversora: error al restaurar el perfil tras cargar la página:',error);
+  }
+ }
+ if(document.readyState==='complete')setTimeout(restoreProfileAfterLoad,0);
+ else window.addEventListener('load',restoreProfileAfterLoad,{once:true});
 })();
 </script>
 
