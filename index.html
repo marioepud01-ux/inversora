@@ -2149,8 +2149,22 @@ function openRemuneratedAccountDetail(i){
  <nav class="ra-next-nav" aria-label="Navegar entre activos"><button type="button" class="ra-prev-asset" onclick="openDetail(${JSON.stringify(investments[(investments.findIndex(x=>x.name===i.name)-1+investments.length)%investments.length].name).replace(/"/g,'&quot;')})"><span>← Activo anterior</span><b>${investments[(investments.findIndex(x=>x.name===i.name)-1+investments.length)%investments.length].name}</b></button><button type="button" class="ra-next-asset" onclick="openDetail(${JSON.stringify(investments[(investments.findIndex(x=>x.name===i.name)+1)%investments.length].name).replace(/"/g,'&quot;')})"><span>Siguiente activo →</span><b>${investments[(investments.findIndex(x=>x.name===i.name)+1)%investments.length].name}</b></button></nav>
  </article></section>`;
  showView('detail');
- // Cargar la media de la comunidad una vez montada la ficha específica.
- // Los dos accesos para valorar usan el mismo modal de la comunidad.
+ // Conectar los controles directamente sobre los botones ya renderizados.
+ // No depende de onclick inline ni de delegación global: cada nueva renderización
+ // de la ficha vuelve a enlazar los dos botones reales del DOM.
+ document.querySelectorAll('#detail [data-open-community-review]').forEach(button=>{
+  button.addEventListener('click',event=>{
+   event.preventDefault();
+   event.stopPropagation();
+   try{
+    invOpenCommunityModal(i.name);
+   }catch(error){
+    console.error('No se pudo abrir la valoración de la comunidad:',error);
+    invNotice('No se ha podido abrir la valoración. Recarga la ficha e inténtalo de nuevo.');
+   }
+  });
+ });
+ // Actualizar la media mostrada en la ficha.
  Promise.resolve().then(()=>invLoadAssetReviews(i.name));
 }
 
@@ -2881,22 +2895,8 @@ function invOpenCommunityModal(name){
  invLoadAssetReviews(name);
 }
 window.invOpenCommunityModal=invOpenCommunityModal;
-// Captura el clic antes que otros listeners de la página y de los elementos internos.
-// Así ambos accesos de la ficha usan exactamente el mismo flujo, sin depender de onclick.
-if(!window.invCommunityReviewCaptureBound){
- window.invCommunityReviewCaptureBound=true;
- document.addEventListener('click',event=>{
-  const target=event.target;
-  const trigger=target&&typeof target.closest==='function'?target.closest('[data-open-community-review]'):null;
-  if(!trigger)return;
-  event.preventDefault();
-  event.stopPropagation();
-  event.stopImmediatePropagation();
-  const assetName=trigger.getAttribute('data-review-asset')||'Cuentas remuneradas';
-  if(typeof window.invOpenCommunityModal==='function')window.invOpenCommunityModal(assetName);
-  else console.error('No está disponible el panel de valoraciones de la comunidad.');
- },true);
-}
+// Los botones de la ficha se enlazan directamente al renderizar openRemuneratedAccountDetail.
+// Evitamos interceptores globales que pueden quedar fuera del ciclo de vida de la ficha.
 function invCloseCommunityModal(){
  const modal=document.getElementById('assetCommunityModal');
  if(modal){modal.hidden=true;modal.style.display='none';modal.setAttribute('aria-hidden','true')}
