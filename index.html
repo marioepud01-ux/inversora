@@ -2157,10 +2157,12 @@ function openRemuneratedAccountDetail(i){
    event.preventDefault();
    event.stopPropagation();
    try{
-    invOpenCommunityModal(i.name);
+    const openReview=window.invOpenCommunityModal;
+    if(typeof openReview!=='function') throw new Error('El módulo de valoraciones no está disponible en esta página.');
+    openReview(i.name);
    }catch(error){
     console.error('No se pudo abrir la valoración de la comunidad:',error);
-    invNotice('No se ha podido abrir la valoración. Recarga la ficha e inténtalo de nuevo.');
+    invNotice('No se ha podido abrir la valoración: '+(error?.message||String(error)));
    }
   });
  });
