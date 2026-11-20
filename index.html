@@ -2101,7 +2101,7 @@ function openRemuneratedAccountDetail(i){
  document.getElementById('detail').innerHTML=`<section class="section ra-page"><article class="detail asset-detail ra-detail">
  <div class="ra-topbar"><button class="back" onclick="showView('explore')">← Explorar activos</button><div class="ra-topbar-actions"><button type="button" class="ra-top-fav ${fav?'is-favorite':''}" aria-label="${fav?'Quitar de favoritos':'Añadir a favoritos'}" aria-pressed="${fav?'true':'false'}" title="${fav?'Quitar de favoritos':'Añadir a favoritos'}" onclick="toggleFavorite(${safeName},true)">${fav?'♥':'♡'}</button><span class="ra-guide-label"><i></i> Guía de inversión · Liquidez y ahorro</span></div></div>
  <header class="ra-hero"><div class="ra-hero-copy"><div class="ra-breadcrumb">MERCADOS FINANCIEROS <span>›</span> LIQUIDEZ Y AHORRO BANCARIO</div><div class="ra-title-row"><span class="ra-symbol">€</span><span class="ra-category-pill">AHORRO BANCARIO</span></div><h1>Cuentas remuneradas</h1><p class="ra-lead">Haz que el dinero que mantienes disponible genere intereses, sin renunciar a la flexibilidad de una cuenta bancaria.</p><div class="ra-hero-tags"><span>◷ Disponibilidad habitual inmediata</span><span>⌑ Riesgo bajo</span><span>↗ Intereses periódicos</span></div></div>
- <aside class="ra-rate-card"><span class="ra-rate-eyebrow">RENTABILIDAD ORIENTATIVA</span><strong>${esc(i.ret||'Variable')}</strong><span class="ra-rate-caption">Rango indicativo del catálogo; no es una oferta vigente ni una rentabilidad garantizada.</span><div class="ra-rate-divider"></div><div class="ra-rating-pair"><div class="ra-rating-item"><span class="ra-rating-label">Valoración Inversora <button type="button" class="score-help-btn ra-score-help" aria-label="Cómo se calcula la valoración de Inversora" title="Ver cómo se calcula la valoración de Inversora" onclick="event.stopPropagation();showScoreBreakdown(${safeName})">?</button></span><div class="ra-rating-line"><span class="ra-stars" aria-label="${score.toLocaleString('es-ES',{maximumFractionDigits:1})} de 5 estrellas">${'★'.repeat(Math.round(score))}${'☆'.repeat(5-Math.round(score))}</span><b>${score.toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})}<small>/5</small></b></div><small class="ra-rating-caption">Criterio editorial de Inversora</small></div><button type="button" class="ra-rating-item ra-community-rating ra-community-rating-trigger" data-open-community-review data-review-asset="${esc(i.name)}" onclick="window.invOpenCommunityModal(${safeName}); return false" aria-label="Abrir y añadir tu valoración de la comunidad" title="Pulsa para valorar esta inversión"><span class="ra-rating-label">Valoración de la comunidad <small class="ra-community-cta">· Valorar</small></span><span class="ra-rating-line"><span class="ra-stars" id="ra-community-stars" aria-label="Aún sin valoraciones">☆☆☆☆☆</span><b id="ra-community-score">—<small>/5</small></b></span><small class="ra-rating-caption" id="ra-community-count">Aún sin valoraciones</small></button></div></aside></header>
+ <aside class="ra-rate-card"><span class="ra-rate-eyebrow">RENTABILIDAD ORIENTATIVA</span><strong>${esc(i.ret||'Variable')}</strong><span class="ra-rate-caption">Rango indicativo del catálogo; no es una oferta vigente ni una rentabilidad garantizada.</span><div class="ra-rate-divider"></div><div class="ra-rating-pair"><div class="ra-rating-item"><span class="ra-rating-label">Valoración Inversora <button type="button" class="score-help-btn ra-score-help" aria-label="Cómo se calcula la valoración de Inversora" title="Ver cómo se calcula la valoración de Inversora" onclick="event.stopPropagation();showScoreBreakdown(${safeName})">?</button></span><div class="ra-rating-line"><span class="ra-stars" aria-label="${score.toLocaleString('es-ES',{maximumFractionDigits:1})} de 5 estrellas">${'★'.repeat(Math.round(score))}${'☆'.repeat(5-Math.round(score))}</span><b>${score.toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})}<small>/5</small></b></div><small class="ra-rating-caption">Criterio editorial de Inversora</small></div><button type="button" class="ra-rating-item ra-community-rating ra-community-rating-trigger" data-open-community-review data-review-asset="${esc(i.name)}" aria-label="Abrir y añadir tu valoración de la comunidad" title="Pulsa para valorar esta inversión"><span class="ra-rating-label">Valoración de la comunidad <small class="ra-community-cta">· Valorar</small></span><span class="ra-rating-line"><span class="ra-stars" id="ra-community-stars" aria-label="Aún sin valoraciones">☆☆☆☆☆</span><b id="ra-community-score">—<small>/5</small></b></span><small class="ra-rating-caption" id="ra-community-count">Aún sin valoraciones</small></button></div></aside></header>
  <nav class="ra-nav" aria-label="Secciones de la ficha"><a href="#ra-at-glance">Resumen</a><a href="#ra-how">Cómo funciona</a><a href="#ra-conditions">Qué comparar</a><a href="#ra-pros-cons">Ventajas y límites</a><a href="#ra-costs">Costes e impuestos</a><a href="#ra-risk">Riesgos</a></nav>
  <section class="ra-overview ra-section" id="ra-at-glance"><div class="ra-section-head"><span class="ra-section-number">01</span><span class="ra-section-icon">€</span><div class="ra-section-heading-copy"><h2>Resumen de la inversión</h2><p>Lo esencial que debes conocer sobre las cuentas remuneradas.</p></div></div><p class="ra-overview-lead">${esc(assetDefinition(i))}</p><div class="ra-metrics">
  ${metric('↗','Rentabilidad indicada',esc(i.ret||'Variable'),'Depende del banco y sus condiciones','blue')}
@@ -2114,7 +2114,7 @@ function openRemuneratedAccountDetail(i){
  ${section('ra-pros-cons','04','Ventajas y limitaciones','Dónde encaja bien este producto y qué no debes esperar de él.','⚖',`<div class="ra-pros-cons"><article class="ra-pros"><div><span>✓</span><h3>Ventajas</h3></div><ul>${(i.pros||[]).map(x=>'<li>'+esc(x)+'</li>').join('')}<li>Permite mantener un colchón de liquidez sin asumir la volatilidad de la renta variable.</li><li>Es sencilla de entender y gestionar.</li></ul></article><article class="ra-cons"><div><span>!</span><h3>Limitaciones</h3></div><ul>${(i.cons||[]).map(x=>'<li>'+esc(x)+'</li>').join('')}<li>La rentabilidad puede quedarse por debajo de la inflación.</li><li>Las mejores condiciones pueden ser temporales o exigir requisitos.</li></ul></article></div><div class="ra-fit"><span>¿PARA QUÉ OBJETIVO ENCAJA?</span><b>Principalmente para mantener liquidez y organizar el ahorro a corto plazo.</b><small>No suele ser la herramienta principal para hacer crecer el patrimonio a largo plazo.</small></div>`)}
  ${section('ra-costs','05','Costes, fiscalidad y protección','Los detalles que afectan al rendimiento neto y a la seguridad del saldo.','€',`<div class="ra-cost-grid"><article><span>COMISIONES</span><b>${esc(i.costs||'Consulta las tarifas de la entidad')}</b><p>Comprueba mantenimiento, transferencias y servicios asociados.</p></article><article><span>CONDICIONES EXTRA</span><b>${esc(i.costsextra||'Cambios de condiciones')}</b><p>Atención a requisitos que puedan hacerte perder la remuneración.</p></article><article><span>FISCALIDAD EN ESPAÑA</span><b>Intereses: base del ahorro del IRPF</b><p>Los intereses tributan como rendimientos del capital mobiliario. Las entidades españolas suelen practicar retención a cuenta.</p></article><article><span>GARANTÍA DE DEPÓSITOS</span><b>Hasta 100.000 € por titular y entidad</b><p>En entidades adheridas al sistema de garantía correspondiente y para depósitos elegibles. Comprueba el país y el fondo aplicable.</p></article></div><details class="ra-tax-detail"><summary>Ver notas fiscales y de costes de la ficha</summary><p>${esc(i.taxdetail||i.tax||'Consulta las condiciones contractuales y la normativa fiscal aplicable.')}</p></details><p class="ra-footnote">La cobertura de depósitos no elimina el riesgo de cualquier producto ni garantiza una rentabilidad concreta. Verifica la entidad depositaria y el sistema de garantía aplicable.</p>`)}
  ${section('ra-risk','06','Riesgos y características','Una valoración orientativa para entender el papel de este activo en una cartera.','⌑',`<div class="ra-risk-grid"><article><div class="ra-risk-top"><span>Riesgo</span><b>${risk.toLocaleString('es-ES',{maximumFractionDigits:1})}/5</b></div><div class="ra-track"><i style="width:${Math.min(100,risk*20)}%"></i></div><small>Riesgo bancario y de pérdida de poder adquisitivo por inflación.</small></article><article><div class="ra-risk-top"><span>Liquidez</span><b>${liq.toLocaleString('es-ES',{maximumFractionDigits:1})}/5</b></div><div class="ra-track teal"><i style="width:${Math.min(100,liq*20)}%"></i></div><small>Habitualmente alta; revisa límites de transferencias y condiciones de retirada.</small></article><article><div class="ra-risk-top"><span>Ingresos periódicos</span><b>${(Number(i.cash||0)/2).toLocaleString('es-ES',{maximumFractionDigits:1})}/5</b></div><div class="ra-track violet"><i style="width:${Math.min(100,Number(i.cash||0)*10)}%"></i></div><small>Intereses abonados según el calendario del banco.</small></article></div><div class="ra-risk-note"><b>Recuerda:</b> el tipo de interés de una cuenta a la vista puede cambiar. No confundas la garantía del depósito con una garantía de rentabilidad real frente a la inflación.</div>`)}
- <nav class="ra-actions" aria-label="Acciones de la ficha"><button type="button" class="ra-primary-action" onclick="simulateInvestment(${safeName})">↗ Simular mis intereses</button><button type="button" class="detail-favorite ${fav?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${fav?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button><button type="button" class="asset-rate-btn" data-open-community-review data-review-asset="${esc(i.name)}" onclick="window.invOpenCommunityModal(${safeName}); return false">★ Valorar esta inversión</button><button type="button" class="asset-print-btn" onclick="printRemuneratedAccountSheet()">⎙ Imprimir ficha</button></nav>
+ <nav class="ra-actions" aria-label="Acciones de la ficha"><button type="button" class="ra-primary-action" onclick="simulateInvestment(${safeName})">↗ Simular mis intereses</button><button type="button" class="detail-favorite ${fav?'is-favorite':''}" onclick="toggleFavorite(${safeName},true)">${fav?'♥ Guardada en favoritos':'♡ Añadir a favoritos'}</button><button type="button" class="asset-rate-btn" data-open-community-review data-review-asset="${esc(i.name)}">★ Valorar esta inversión</button><button type="button" class="asset-print-btn" onclick="printRemuneratedAccountSheet()">⎙ Imprimir ficha</button></nav>
  <footer class="ra-disclaimer"><span>ⓘ</span><p>Contenido educativo y orientativo. Los tipos, requisitos y límites cambian entre entidades y en el tiempo. Consulta las condiciones oficiales antes de contratar. Esta ficha no constituye asesoramiento financiero ni fiscal personalizado.</p></footer>
  <nav class="ra-next-nav" aria-label="Navegar entre activos"><button type="button" class="ra-prev-asset" onclick="openDetail(${JSON.stringify(investments[(investments.findIndex(x=>x.name===i.name)-1+investments.length)%investments.length].name).replace(/"/g,'&quot;')})"><span>← Activo anterior</span><b>${investments[(investments.findIndex(x=>x.name===i.name)-1+investments.length)%investments.length].name}</b></button><button type="button" class="ra-next-asset" onclick="openDetail(${JSON.stringify(investments[(investments.findIndex(x=>x.name===i.name)+1)%investments.length].name).replace(/"/g,'&quot;')})"><span>Siguiente activo →</span><b>${investments[(investments.findIndex(x=>x.name===i.name)+1)%investments.length].name}</b></button></nav>
  </article></section>`;
@@ -2361,7 +2361,37 @@ function openInvestmentReport(){
 
 /* El informe de simulación debe permanecer visible al imprimir. */
 @media print{html,body,.page,.page *{visibility:visible!important}.page{display:block!important}.page *{color-adjust:exact;-webkit-print-color-adjust:exact}}
-</style></head><body><main class="page"><div class="top"><div class="brand">Invers<span>ora</span></div><div class="actions"><button class="secondary" onclick="window.close()">Cerrar informe</button><button type="button" onclick="window.print()">Imprimir / Guardar PDF</button></div></div><section class="cover"><div class="eyebrow">Informe personalizado · ${esc(date)}</div><h1>${esc(title)}</h1><p>${esc(selected)} · Calculado con los datos introducidos en Inversora.</p></section><div class="summary"><div><span>Resultado final estimado</span><b>${esc(document.getElementById('final')?.textContent||'—')}</b></div><div><span>Dinero aportado / desembolso</span><b>${esc(document.getElementById('contributed')?.textContent||'—')}</b></div><div><span>Beneficio o crecimiento estimado</span><b>${esc(document.getElementById('growth')?.textContent||'—')}</b></div></div><section class="section"><h2>Tu escenario</h2><table class="data"><tbody>${data}</tbody></table></section>${assetInsight}<section class="section"><h2>Resultados y desglose</h2><div class="sim-report">${results}</div></section><section class="section"><h2>Evolución visual estimada</h2><div class="chart">${bars}</div><p class="note">El gráfico es orientativo y representa el escenario calculado, no una predicción de resultados futuros.</p></section><p class="note">Este documento recoge los datos y resultados de la simulación en la fecha indicada. Los cálculos se basan en hipótesis editables, pueden omitir costes o circunstancias particulares y no constituyen asesoramiento financiero, legal ni fiscal. La fiscalidad real depende del producto, la normativa vigente y la situación personal.</p><div class="footer">Inversora · Entiende · Compara · Simula</div></main></body></html>`);win.document.close();
+</style><style id="inv-remunerated-account-readable-type-2026-11">
+/* Mejor legibilidad para la ficha de Cuentas remuneradas */
+#detail .ra-detail{font-size:16px;line-height:1.7}
+#detail .ra-detail p,#detail .ra-detail li{font-size:15.5px;line-height:1.75}
+#detail .ra-detail .ra-lead{font-size:17px;line-height:1.8}
+#detail .ra-detail .ra-overview-lead{font-size:17px;line-height:1.8}
+#detail .ra-detail .ra-section-heading-copy p{font-size:14px;line-height:1.65}
+#detail .ra-detail .ra-section h2,#detail .ra-detail .ra-overview h2{font-size:22px;line-height:1.3}
+#detail .ra-detail .ra-metric-label,#detail .ra-detail .ra-metric small,
+#detail .ra-detail .ra-steps p,#detail .ra-detail .ra-check-grid p,
+#detail .ra-detail .ra-pros-cons li,#detail .ra-detail .ra-cost-grid p,
+#detail .ra-detail .ra-risk-grid small,#detail .ra-detail .ra-footnote,
+#detail .ra-detail .ra-disclaimer p{font-size:14.5px;line-height:1.7}
+#detail .ra-detail .ra-metric strong,#detail .ra-detail .ra-steps article b,
+#detail .ra-detail .ra-check-grid article b,#detail .ra-detail .ra-cost-grid article b{font-size:17px;line-height:1.45}
+#detail .ra-detail .ra-breadcrumb,#detail .ra-detail .ra-category-pill,
+#detail .ra-detail .ra-hero-tags span,#detail .ra-detail .ra-rate-eyebrow,
+#detail .ra-detail .ra-rate-caption,#detail .ra-detail .ra-rating-caption,
+#detail .ra-detail .ra-guide-label{font-size:12px;line-height:1.5}
+#detail .ra-detail .ra-nav a{font-size:13px}
+#detail .ra-detail .ra-actions button{font-size:15px;min-height:54px}
+#detail .ra-detail .ra-next-nav button{font-size:14px}
+#detail .ra-detail .ra-next-nav button span{font-size:12px}
+@media(max-width:760px){
+ #detail .ra-detail p,#detail .ra-detail li{font-size:15px}
+ #detail .ra-detail .ra-lead,#detail .ra-detail .ra-overview-lead{font-size:16px}
+ #detail .ra-detail .ra-section h2,#detail .ra-detail .ra-overview h2{font-size:20px}
+ #detail .ra-detail .ra-actions button{font-size:14px}
+}
+</style>
+</head><body><main class="page"><div class="top"><div class="brand">Invers<span>ora</span></div><div class="actions"><button class="secondary" onclick="window.close()">Cerrar informe</button><button type="button" onclick="window.print()">Imprimir / Guardar PDF</button></div></div><section class="cover"><div class="eyebrow">Informe personalizado · ${esc(date)}</div><h1>${esc(title)}</h1><p>${esc(selected)} · Calculado con los datos introducidos en Inversora.</p></section><div class="summary"><div><span>Resultado final estimado</span><b>${esc(document.getElementById('final')?.textContent||'—')}</b></div><div><span>Dinero aportado / desembolso</span><b>${esc(document.getElementById('contributed')?.textContent||'—')}</b></div><div><span>Beneficio o crecimiento estimado</span><b>${esc(document.getElementById('growth')?.textContent||'—')}</b></div></div><section class="section"><h2>Tu escenario</h2><table class="data"><tbody>${data}</tbody></table></section>${assetInsight}<section class="section"><h2>Resultados y desglose</h2><div class="sim-report">${results}</div></section><section class="section"><h2>Evolución visual estimada</h2><div class="chart">${bars}</div><p class="note">El gráfico es orientativo y representa el escenario calculado, no una predicción de resultados futuros.</p></section><p class="note">Este documento recoge los datos y resultados de la simulación en la fecha indicada. Los cálculos se basan en hipótesis editables, pueden omitir costes o circunstancias particulares y no constituyen asesoramiento financiero, legal ni fiscal. La fiscalidad real depende del producto, la normativa vigente y la situación personal.</p><div class="footer">Inversora · Entiende · Compara · Simula</div></main></body></html>`);win.document.close();
 }
 function invSimulationComment(type,rate,years,assetName){
  let title='Escenario moderado',body='El resultado permite visualizar cómo evolucionaría el capital con la hipótesis introducida. La rentabilidad no está garantizada y puede variar de forma importante.';
@@ -2724,8 +2754,8 @@ showView=function(id){invOriginalShowView(id);if(id==='favorites'&&invUser)invLo
 invDb.auth.onAuthStateChange((event,session)=>{
   invUser=session?.user||null;
   setTimeout(async()=>{
-    if(session&&invPendingReviewAsset)invMaybeOpenPendingReview();
     await invRefresh(session?.user||null);
+    if(session&&invPendingReviewAsset)invMaybeOpenPendingReview();
     const params=new URLSearchParams(window.location.search);
     const authError=params.get('error_description')||params.get('error');
     if(authError){
@@ -2735,7 +2765,7 @@ invDb.auth.onAuthStateChange((event,session)=>{
       return;
     }
     if(params.get('auth')==='confirmed'&&session){
-      showView('account');
+      if(!invPendingReviewAsset)showView('account');
       invNotice('Correo confirmado correctamente. Tu cuenta de Inversora ya está activa.');
       window.history.replaceState({},document.title,window.location.pathname);
     } else if(event==='PASSWORD_RECOVERY'){
@@ -2830,7 +2860,7 @@ async function invLoadAssetReviews(name){
   if(host)host.innerHTML='<div class="community-empty">No se han podido cargar las reseñas ahora mismo. Comprueba tu conexión y vuelve a intentarlo.</div>';
  }
 }
-let invPendingReviewAsset=null;
+let invPendingReviewAsset=(()=>{try{return sessionStorage.getItem('invPendingReviewAsset')}catch(e){return null}})();
 function invEnsureReviewModal(){
  let modal=document.getElementById('assetCommunityModal');
  if(!modal){modal=document.createElement('div');modal.id='assetCommunityModal';modal.className='asset-community-modal';modal.hidden=true;modal.innerHTML='<section class="asset-community-modal-card" role="dialog" aria-modal="true" aria-label="Valoración de la comunidad"><button type="button" class="asset-community-modal-close" aria-label="Cerrar" onclick="invCloseCommunityModal()">×</button><div id="asset-community-modal-content"></div></section>';modal.addEventListener('click',e=>{if(e.target===modal)invCloseCommunityModal()});document.body.appendChild(modal)}
@@ -2839,26 +2869,36 @@ function invEnsureReviewModal(){
 function invOpenCommunityModal(name){
  if(!name){console.error('No se ha identificado el activo que se quiere valorar.');return}
  invPendingReviewAsset=name;
+ try{sessionStorage.setItem('invPendingReviewAsset',name)}catch(e){}
  const modal=invEnsureReviewModal();
  modal.hidden=false;
+ modal.style.display='flex';
+ modal.setAttribute('aria-hidden','false');
  document.body.style.overflow='hidden';
+ const host=document.getElementById('asset-community-modal-content');
+ if(host)host.innerHTML='<div class="community-empty">Cargando valoraciones de la comunidad…</div>';
  invLoadAssetReviews(name);
 }
 window.invOpenCommunityModal=invOpenCommunityModal;
-if(!window.invCommunityReviewClickBound){
- window.invCommunityReviewClickBound=true;
+// Captura el clic antes que otros listeners de la página y de los elementos internos.
+// Así ambos accesos de la ficha usan exactamente el mismo flujo, sin depender de onclick.
+if(!window.invCommunityReviewCaptureBound){
+ window.invCommunityReviewCaptureBound=true;
  document.addEventListener('click',event=>{
-  const trigger=event.target.closest('[data-open-community-review]');
+  const target=event.target;
+  const trigger=target&&typeof target.closest==='function'?target.closest('[data-open-community-review]'):null;
   if(!trigger)return;
   event.preventDefault();
   event.stopPropagation();
-  const assetName=trigger.getAttribute('data-review-asset');
+  event.stopImmediatePropagation();
+  const assetName=trigger.getAttribute('data-review-asset')||'Cuentas remuneradas';
   if(typeof window.invOpenCommunityModal==='function')window.invOpenCommunityModal(assetName);
   else console.error('No está disponible el panel de valoraciones de la comunidad.');
- });
+ },true);
 }
 function invCloseCommunityModal(){
- const modal=document.getElementById('assetCommunityModal');if(modal)modal.hidden=true;
+ const modal=document.getElementById('assetCommunityModal');
+ if(modal){modal.hidden=true;modal.style.display='none';modal.setAttribute('aria-hidden','true')}
  document.body.style.overflow='';
 }
 function invStartReviewAuth(){
@@ -2868,10 +2908,16 @@ function invStartReviewAuth(){
  if(typeof setAuthMode==='function')setAuthMode('register');
 }
 function invMaybeOpenPendingReview(){
- if(invPendingReviewAsset&&invUser){
-  const name=invPendingReviewAsset;
-  if(document.getElementById('detail')&&!document.getElementById('detail').classList.contains('hidden'))invOpenCommunityModal(name);
- }
+ if(!invPendingReviewAsset||!invUser)return;
+ const name=invPendingReviewAsset;
+ // Tras autenticarse hay que volver primero a la ficha: la pantalla actual es Cuenta.
+ openDetail(name);
+ requestAnimationFrame(()=>{
+  if(invUser&&invPendingReviewAsset===name){
+   try{sessionStorage.removeItem('invPendingReviewAsset')}catch(e){}
+   invOpenCommunityModal(name);
+  }
+ });
 }
 async function submitAssetReview(event,name){
  event.preventDefault();
