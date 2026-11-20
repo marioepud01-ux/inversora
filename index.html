@@ -1379,6 +1379,66 @@ td,th{border-color:#e7eef8!important}
 </style>
 
 <link rel="stylesheet" href="/simulator-net.css">
+<style id="inversora-remunerated-accounts-redesign-v2">
+/* Rediseño aislado: solo se activa en la ficha de Cuentas remuneradas. */
+.asset-accounts-detail{--account-blue:#155eef;background:#fff!important;border:1px solid #dfe7f2!important;border-radius:24px!important;padding:clamp(18px,3.2vw,38px)!important;box-shadow:0 16px 48px rgba(23,43,77,.075)!important}
+.asset-accounts-detail .asset-topline{align-items:center!important;margin-bottom:22px!important}
+.asset-accounts-detail .asset-hero{position:relative!important;display:grid!important;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr)!important;align-items:stretch!important;gap:clamp(20px,3vw,34px)!important;padding:clamp(22px,3.5vw,38px)!important;border:1px solid #dce7fb!important;border-left:6px solid var(--account-blue)!important;border-radius:18px!important;background:linear-gradient(120deg,#f3f7ff 0%,#fff 78%)!important;box-shadow:0 8px 24px rgba(21,94,239,.055)!important}
+.asset-accounts-detail .asset-hero-copy{align-self:center!important;max-width:none!important}
+.asset-accounts-detail .asset-breadcrumb{display:flex!important;flex-wrap:wrap!important;gap:7px!important;line-height:1.5!important}
+.asset-accounts-detail .asset-hero h1{font-size:clamp(30px,4.2vw,46px)!important;letter-spacing:-1.6px!important;margin:18px 0 12px!important;color:#172b4d!important}
+.asset-accounts-detail .asset-lead{font-size:15px!important;line-height:1.8!important;color:#53647c!important;max-width:650px!important}
+.asset-accounts-detail .asset-hero-tags{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+.asset-accounts-detail .asset-hero-tags span{display:flex!important;align-items:center!important;min-height:42px!important;padding:9px 11px!important;border-radius:10px!important;background:#fff!important;border:1px solid #e1e9f5!important;font-size:11px!important;line-height:1.45!important}
+.asset-accounts-detail .asset-rating-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;align-content:center!important}
+.asset-accounts-detail .asset-rating-card{min-width:0!important;padding:15px 17px!important;border:1px solid #e0e8f4!important;border-radius:14px!important;background:#fff!important;box-shadow:0 5px 16px rgba(23,43,77,.045)!important}
+.asset-accounts-detail .asset-rating-card.inversora-rating{border-left:4px solid #155eef!important}
+.asset-accounts-detail .asset-rating-card.community-rating{border-left:4px solid #98a9c2!important}
+.asset-accounts-detail .asset-rating-label{font-size:11px!important;color:#64748b!important}
+.asset-accounts-detail .asset-rating-number{font-size:25px!important;color:#17345f!important}
+.asset-accounts-detail .asset-jump-nav{position:sticky!important;top:12px!important;z-index:8!important;display:flex!important;gap:5px!important;padding:10px!important;margin:18px 0 22px!important;border:1px solid #e5ebf4!important;border-radius:13px!important;background:rgba(255,255,255,.96)!important;box-shadow:0 5px 18px rgba(23,43,77,.055)!important;backdrop-filter:blur(12px)!important}
+.asset-accounts-detail .asset-jump-nav a{flex:0 0 auto!important;padding:8px 10px!important;border-radius:8px!important;font-size:11px!important;font-weight:750!important;color:#53647c!important}
+.asset-accounts-detail .asset-jump-nav a:hover{background:#edf4ff!important;color:#155eef!important}
+.asset-accounts-detail .asset-section{position:relative!important;margin-top:28px!important;padding:0 0 0 18px!important;border-left:3px solid #d8e6ff!important}
+.asset-accounts-detail .asset-section-head{margin:0 0 15px!important;padding:2px 0!important}
+.asset-accounts-detail .asset-section-head h2{font-size:19px!important;letter-spacing:-.45px!important;color:#172b4d!important}
+.asset-accounts-detail .asset-section-head p{font-size:12px!important;color:#738198!important}
+.asset-accounts-detail .asset-section-icon{width:32px!important;height:32px!important;flex-basis:32px!important;border-radius:9px!important;background:#eaf2ff!important;color:#155eef!important}
+.asset-accounts-detail .asset-overview-panel{grid-template-columns:minmax(0,1fr) minmax(190px,.42fr)!important;gap:14px!important;padding:21px!important;border:1px solid #dce7f6!important;border-left:4px solid #155eef!important;border-radius:14px!important;background:#f7faff!important}
+.asset-accounts-detail .asset-overview-copy>p{font-size:14px!important;line-height:1.8!important;color:#34445c!important}
+.asset-accounts-detail .asset-overview-return{padding:17px!important;border:1px solid #dce7f6!important;border-radius:12px!important;background:#fff!important}
+.asset-accounts-detail .asset-overview-return>strong{font-size:27px!important;color:#155eef!important;letter-spacing:-.8px!important}
+.asset-accounts-detail .asset-overview-tags{gap:7px!important}
+.asset-accounts-detail .asset-overview-tags span{font-size:11px!important}
+.asset-accounts-detail .asset-quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important}
+.asset-accounts-detail .asset-quick-card{position:relative!important;overflow:hidden!important;padding:15px!important;border:1px solid #e3eaf4!important;border-radius:12px!important;background:#fff!important;box-shadow:none!important}
+.asset-accounts-detail .asset-quick-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#b9d0ff}
+.asset-accounts-detail .asset-quick-value{font-size:20px!important;color:#18345c!important}
+.asset-accounts-detail .asset-explainer-grid,.asset-accounts-detail .asset-pros-cons{gap:11px!important}
+.asset-accounts-detail .asset-explainer-card,.asset-accounts-detail .asset-pros-card,.asset-accounts-detail .asset-cons-card{padding:18px!important;border:1px solid #e3eaf4!important;border-radius:13px!important;background:#fff!important;box-shadow:none!important}
+.asset-accounts-detail .asset-explainer-card:first-child{border-left:4px solid #155eef!important}
+.asset-accounts-detail .asset-explainer-card p,.asset-accounts-detail .asset-list li{font-size:12px!important;line-height:1.75!important;color:#53647c!important}
+.asset-accounts-detail .asset-cost-dashboard{gap:10px!important}
+.asset-accounts-detail .asset-cost-card{padding:17px!important;border:1px solid #e2eaf5!important;border-radius:13px!important;background:#fff!important;box-shadow:none!important}
+.asset-accounts-detail .asset-cost-card.asset-capital-card{border-left:4px solid #155eef!important;background:#f8faff!important}
+.asset-accounts-detail .asset-cost-card.asset-tax-card{border-left:4px solid #8b9bb2!important}
+.asset-accounts-detail .asset-cost-card h3{font-size:14px!important;color:#203858!important}
+.asset-accounts-detail .asset-cost-card p{font-size:12px!important;line-height:1.7!important;color:#586a82!important}
+.asset-accounts-detail .asset-ratings-panel{padding:16px 19px!important;border:1px solid #e2eaf5!important;border-radius:13px!important;background:#fff!important}
+.asset-accounts-detail .asset-meter{padding:10px 0!important}
+.asset-accounts-detail .asset-meter-track{height:7px!important;background:#edf2f8!important}
+.asset-accounts-detail .asset-meter-track i{background:#3977e8!important}
+.asset-accounts-detail .entry-level,.asset-accounts-detail .entry-capital,.asset-accounts-detail .entry-factor{border:1px solid #e2eaf5!important;border-radius:12px!important;background:#fff!important;box-shadow:none!important}
+.asset-accounts-detail .entry-takeaway{border:1px solid #dce7fb!important;border-left:4px solid #155eef!important;border-radius:11px!important;background:#f4f8ff!important}
+.asset-accounts-detail .asset-outlook-grid article{padding:17px!important;border:1px solid #e2eaf5!important;border-radius:12px!important;background:#fff!important}
+.asset-accounts-detail .asset-bottom-actions{display:flex!important;flex-wrap:wrap!important;gap:9px!important;padding:17px!important;border:1px solid #e2eaf5!important;border-radius:14px!important;background:#f8faff!important}
+.asset-accounts-detail .asset-bottom-actions button{min-height:42px!important;border-radius:9px!important;padding:10px 14px!important;font-weight:750!important}
+.asset-accounts-detail .asset-next-nav{gap:10px!important}
+.asset-accounts-detail .asset-next-nav button{border:1px solid #e2eaf5!important;border-radius:12px!important;background:#fff!important}
+@media(max-width:760px){.asset-accounts-detail{padding:13px!important}.asset-accounts-detail .asset-hero{grid-template-columns:1fr!important;padding:19px!important}.asset-accounts-detail .asset-rating-grid{grid-template-columns:1fr 1fr!important}.asset-accounts-detail .asset-hero-tags{grid-template-columns:1fr!important}.asset-accounts-detail .asset-jump-nav{position:static!important}.asset-accounts-detail .asset-section{padding-left:12px!important;margin-top:23px!important}.asset-accounts-detail .asset-overview-panel{grid-template-columns:1fr!important}.asset-accounts-detail .asset-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.asset-accounts-detail .asset-bottom-actions button{flex:1 1 100%!important}}
+@media(max-width:430px){.asset-accounts-detail .asset-rating-grid{grid-template-columns:1fr!important}.asset-accounts-detail .asset-section-head h2{font-size:17px!important}}
+@media print{.asset-accounts-detail .asset-jump-nav,.asset-accounts-detail .asset-bottom-actions,.asset-accounts-detail .asset-next-nav{display:none!important}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2080,7 +2140,7 @@ function openDetail(name){
  const assetNav=`<nav class="asset-jump-nav" aria-label="Navegar por la ficha"><a href="#asset-summary">01 · Resumen</a><a href="#asset-how">02 · Funcionamiento</a><a href="#asset-pros-cons">03 · Ventajas y desventajas</a><a href="#asset-costs">04 · Capital, costes y fiscalidad</a><a href="#asset-features">05 · Riesgos y características</a><a href="#asset-barriers">06 · Barreras de entrada</a><a href="#asset-outlook">07 · Horizonte y liquidez</a></nav>`;
  const printSheet='<section class="asset-print-sheet" aria-label="Ficha ejecutiva imprimible"><header class="asset-print-head"><div class="asset-print-brand">Invers<span>ora</span></div><span>FICHA DE INVERSIÓN · '+invEsc(i.cat)+'</span></header><h1>'+invEsc(i.name)+'</h1><p class="asset-print-lead">'+invEsc(i.desc||'')+'</p><div class="asset-print-metrics"><div><small>Rentabilidad indicada</small><b>'+invEsc(i.ret||'No especificada')+'</b></div><div><small>Riesgo</small><b>'+(Number(i.risk)/2).toLocaleString('es-ES',{maximumFractionDigits:1})+'/5</b></div><div><small>Liquidez</small><b>'+(Number(i.liq)/2).toLocaleString('es-ES',{maximumFractionDigits:1})+'/5</b></div><div><small>Capital inicial</small><b>'+invEsc(i.capital||'Variable')+'</b></div></div><div class="asset-print-grid"><section><h2>Cómo funciona</h2><p>'+invEsc(i.how||i.desc||'')+'</p><p><b>Ingresos:</b> '+invEsc(i.income||'Dependen de la operación')+'</p><p><b>Horizonte:</b> '+invEsc(i.profile||'Depende del objetivo y del activo')+'</p><p><b>Gestión:</b> '+invEsc(managementLabel)+'</p></section><section><h2>Costes a considerar</h2><p><b>Recurrentes:</b> '+invEsc(i.costs||'Consultar proveedor')+'</p><p><b>Extraordinarios:</b> '+invEsc(i.costsextra||'Dependen de la operación')+'</p><p><b>Entrada y salida:</b> '+invEsc(i.entrycosts||'Revisar contrato y tarifas')+'</p></section><section><h2>Fiscalidad en España</h2><p>'+invEsc(i.tax||'Depende del vehículo, la operación y la residencia fiscal.')+'</p><p class="asset-print-small">'+invEsc(i.taxdetail||'Verificar el tratamiento aplicable con normativa y fuentes oficiales.')+'</p></section><section><h2>Ventajas y riesgos</h2><div class="asset-print-columns"><div><b>Ventajas</b><ul>'+(i.pros||[]).slice(0,2).map(x=>'<li>'+invEsc(x)+'</li>').join('')+'</ul></div><div><b>Riesgos</b><ul>'+(i.cons||[]).slice(0,2).map(x=>'<li>'+invEsc(x)+'</li>').join('')+'</ul></div></div></section></div><footer>Inversora · Entiende · Compara · Simula <span>Ficha educativa · Datos orientativos, no asesoramiento financiero ni fiscal</span></footer></section>';
 
- document.getElementById('detail').innerHTML=`<section class="section"><article class="detail asset-detail" style="--asset-accent:${categoryAccent}">
+ document.getElementById('detail').innerHTML=`<section class="section"><article class="detail asset-detail ${i.name==='Cuentas remuneradas'?'asset-accounts-detail':''}" style="--asset-accent:${categoryAccent}">
   <div class="asset-topline"><button class="back" onclick="showView('explore')">← Volver a explorar</button><span class="asset-top-note"><span class="asset-live-dot"></span> Guía de inversión</span></div>${printSheet}
   <header class="asset-hero"><div class="asset-hero-copy"><div class="asset-breadcrumb"><span class="asset-crumb">${i.cat}</span><span>›</span><span class="asset-crumb">${subtypeFor(i)}</span><span>›</span><strong>${i.name}</strong></div><h1>${i.name}</h1><p class="asset-lead">${i.desc}</p><div class="asset-hero-tags"><span>Capital: ${i.capital||'Depende de la operación'}</span><span>Ingresos: ${i.income||'Variables'}</span></div></div><div class="asset-rating-grid"><div class="asset-rating-card inversora-rating"><div class="asset-rating-label">Valoración de Inversora <button type="button" class="score-help-btn" aria-label="Cómo se calcula la valoración de Inversora" title="Cómo se calcula la valoración de Inversora" onclick="showScoreBreakdown(${safeName})">?</button></div><div class="asset-rating-stars">${invStarsMarkup((Number(i.score)||0)/2)}</div><strong class="asset-rating-number">${(Number(i.score||0)/2).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})}<small>/5</small></strong><small>Valoración editorial independiente</small></div><div class="asset-rating-card community-rating"><div class="asset-rating-label">Valoración de la comunidad</div><div class="asset-rating-stars" id="asset-community-rating-stars">☆☆☆☆☆</div><strong class="asset-rating-number" id="asset-community-rating-value">—<small>/5</small></strong><small id="asset-community-rating-count">Aún sin valoraciones</small><button type="button" class="asset-community-open" onclick="invOpenCommunityModal(${safeName})">Valorar este activo <span>→</span></button></div></div></header>
   ${assetNav}
