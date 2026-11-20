@@ -571,5 +571,10 @@ if(typeof originalReviews==='function'){
  };
 }
 const original=window.openDetail;
-window.openDetail=function(name){if(investments.some(x=>x.name===name)){render(name);return}return original(name)};
+window.openDetail=function(name){
+ // Cuentas remuneradas tiene una ficha propia en index.html. No debe pasar por la plantilla genérica.
+ if(name==='Cuentas remuneradas')return typeof original==='function'?original(name):undefined;
+ if(investments.some(x=>x.name===name)){render(name);return}
+ return typeof original==='function'?original(name):undefined;
+};
 })();
