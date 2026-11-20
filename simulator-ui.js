@@ -615,6 +615,120 @@ function saveLocal(){
  const state={...window.invSimulationState,savedAt:new Date().toISOString(),inflation:num('netInflation'),entryFee:0,entryFixed:num('netEntryFee'),annualFee:0,annualFixed:num('netAnnualFee'),exitFee:0,exitFixed:num('netExitFee'),taxSettings:Object.fromEntries(['netTaxSubject','netIncomeTaxEnabled','netIncomeTaxBase','netIncomeTaxRate','netIbiEnabled','netIbiAnnual','netAcquisitionTaxEnabled','netAcquisitionTaxType','netAcquisitionTaxRate','netAjdEnabled','netAjdRate','netMunicipalEnabled','netMunicipalExitTax','netOtherTaxEnabled','netOtherEntryTax','netOtherAnnualTax'].map(id=>{const el=$(id);return [id,el.type==='checkbox'?el.checked:el.value]}))};
  items.unshift(state);localStorage.setItem(key,JSON.stringify(items.slice(0,20)));toast('Simulación guardada en este dispositivo.');
 }
+
+async function saveSimulationToAccount(){
+ if(!invUser){if(typeof showView==='function')showView('account');if(typeof invNotice==='function')invNotice('Inicia sesión para guardar simulaciones en tu cuenta.');return;}
+ if(!window.invSimulationState||!currentResult){toast('Primero realiza una simulación válida.');return;}
+ const title=prompt('Pon un nombre a esta simulación:',(currentAsset?.name||'Simulación')+' · '+new Date().toLocaleDateString('es-ES'));
+ if(title===null)return;
+ const cleanTitle=String(title).trim().slice(0,100);
+ if(!cleanTitle){toast('Escribe un nombre para guardar la simulación.');return;}
+ const form={};
+ document.querySelectorAll('#netModeOne input[id],#netModeOne select[id],#netModeOne textarea[id]').forEach(el=>{
+  form[el.id]=el.type==='checkbox'?el.checked:el.value;
+ });
+ const snapshot={version:1,scenario:selectedScenario,assetName:$('netAsset').value,form};
+ const summary={
+  final:Number(currentResult.realFinal||0),
+  contributed:Number(currentResult.contributedNominal||0),
+  profit:Number(currentResult.realGain||0),
+  rate:Number(currentResult.assumptions?.rate||0),
+  years:Number(currentResult.assumptions?.years||0),
+  costs:Number(currentResult.costs?.total||0),
+  taxes:Number(currentResult.taxes||0)
+ };
+ const button=$('netSaveAccount');if(button){button.disabled=true;button.textContent='Guardando…';}
+ try{
+  const {data,error}=await invDb.from('saved_simulations').insert({
+   user_id:invUser.id,title:cleanTitle,asset_name:window.invSimulationState.assetName||'Rentabilidad manual',
+   snapshot,summary
+  }).select('id,title,asset_name,snapshot,summary,created_at').single();
+  if(error)throw error;
+  if(savedSimulationsUserId!==invUser.id){savedSimulationsCache=[];savedSimulationsUserId=invUser.id;}
+  savedSimulationsCache=[data,...(savedSimulationsCache||[])];
+  toast('Simulación guardada en tu cuenta.');
+  renderSavedSimulationsPanel();
+ }catch(error){
+  console.error('Inversora: error guardando simulación:',error);
+  toast('No se ha podido guardar. Inténtalo de nuevo.');
+  if(typeof invNotice==='function')invNotice('No se ha podido guardar la simulación: '+(error.message||'Error de conexión.'));
+ }finally{if(button){button.disabled=false;button.textContent='Guardar en mi cuenta';}}
+}
+let savedSimulationsCache=null,savedSimulationsUserId=null;
+async function loadSavedSimulations(){
+ if(!invUser){savedSimulationsCache=[];savedSimulationsUserId=null;return [];}
+ if(savedSimulationsUserId===invUser.id&&Array.isArray(savedSimulationsCache))return savedSimulationsCache;
+ const uid=invUser.id;
+ const {data,error}=await invDb.from('saved_simulations').select('id,title,asset_name,snapshot,summary,created_at').eq('user_id',uid).order('created_at',{ascending:false});
+ if(error)throw error;
+ if(invUser?.id!==uid)return [];
+ savedSimulationsUserId=uid;savedSimulationsCache=data||[];
+ return savedSimulationsCache;
+}
+function renderSavedSimulationsPanel(){
+ const host=document.getElementById('favoritesWorkspace');if(!host)return;
+ host.querySelector('#savedSimulationsSection')?.remove();
+ if(!invUser)return;
+ const section=document.createElement('section');section.id='savedSimulationsSection';section.className='saved-simulations-section';
+ section.innerHTML='<div class="section-head"><div><h2>Mis simulaciones guardadas</h2><small>Guarda tus cálculos y recupéralos cuando quieras, también desde otros dispositivos.</small></div><span class="soft-badge" id="savedSimulationsCount">—</span></div><div id="savedSimulationsGrid" class="saved-simulations-grid"><p class="net-sim-note">Cargando tus simulaciones…</p></div>';
+ host.appendChild(section);
+ loadSavedSimulations().then(items=>{
+  if(!section.isConnected)return;
+  const count=section.querySelector('#savedSimulationsCount'),grid=section.querySelector('#savedSimulationsGrid');
+  if(count)count.textContent=items.length+' guardadas';
+  if(!items.length){grid.innerHTML='<div class="favorites-empty"><div class="big-heart">▤</div><h3>Aún no has guardado simulaciones</h3><p>Cuando hagas un cálculo en el simulador, pulsa «Guardar en mi cuenta» para conservar todos sus datos.</p><button class="apply-filters" onclick="showView(\'sim\')">Ir al simulador</button></div>';return;}
+  grid.innerHTML=items.map(item=>{
+   const summary=item.summary||{},date=item.created_at?new Date(item.created_at).toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'}):'';
+   return '<article class="saved-simulation-card"><div class="saved-simulation-top"><span class="saved-simulation-icon">▤</span><span class="saved-simulation-date">'+esc(date)+'</span></div><h3>'+esc(item.title)+'</h3><p>'+esc(item.asset_name||'Rentabilidad manual')+'</p><div class="saved-simulation-metrics"><div><small>Capital neto real</small><b>'+euro(summary.final||0)+'</b></div><div><small>Plazo</small><b>'+fmt(summary.years||0)+' años</b></div><div><small>Rentabilidad</small><b>'+pct(summary.rate||0)+'</b></div></div><div class="saved-simulation-actions"><button type="button" class="primary" onclick="restoreSavedSimulation(\''+item.id+'\')">Abrir simulación</button><button type="button" class="saved-simulation-delete" onclick="deleteSavedSimulation(\''+item.id+'\')">Eliminar</button></div></article>';
+  }).join('');
+ }).catch(error=>{
+  console.error('Inversora: no se pudieron cargar las simulaciones guardadas:',error);
+  const grid=section.querySelector('#savedSimulationsGrid');if(grid)grid.innerHTML='<p class="net-sim-note">No se han podido cargar tus simulaciones. Recarga la página e inténtalo de nuevo.</p>';
+ });
+}
+window.restoreSavedSimulation=async function(id){
+ try{
+  const items=await loadSavedSimulations(),item=items.find(x=>x.id===id);if(!item)return;
+  const snapshot=item.snapshot||{};
+  if(typeof showView==='function')showView('sim');
+  renderMode('one');
+  const assetName=snapshot.assetName||'__manual__';
+  $('netAsset').value=assetName;
+  loadAssetDefaults(findAsset(assetName));
+  Object.entries(snapshot.form||{}).forEach(([id,value])=>{
+   const el=$(id);if(!el)return;
+   if(el.type==='checkbox')el.checked=!!value;else el.value=value;
+  });
+  selectedScenario=snapshot.scenario||'base';
+  document.querySelectorAll('[data-net-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.netScenario===selectedScenario)));
+  $('netAssetSearch').value=$('netAsset').value==='__manual__'?'Rentabilidad manual':$('netAsset').value;
+  renderAssetPicker('',false);updateCostControls();updateTaxFieldControls();updateTaxControls();runNetSimulation();
+  toast('Simulación recuperada.');
+ }catch(error){console.error('Inversora: no se pudo recuperar la simulación:',error);toast('No se ha podido abrir la simulación.');}
+};
+window.deleteSavedSimulation=async function(id){
+ if(!confirm('¿Quieres eliminar esta simulación guardada?'))return;
+ try{
+  const {error}=await invDb.from('saved_simulations').delete().eq('id',id).eq('user_id',invUser.id);
+  if(error)throw error;
+  savedSimulationsCache=(savedSimulationsCache||[]).filter(item=>item.id!==id);
+  renderSavedSimulationsPanel();toast('Simulación eliminada.');
+ }catch(error){console.error('Inversora: no se pudo eliminar la simulación:',error);toast('No se ha podido eliminar.');}
+};
+function installSavedSimulationsUI(){
+ const actions=$('netSave')?.parentElement;
+ if(actions&&!$('netSaveAccount')){
+  const button=document.createElement('button');button.type='button';button.id='netSaveAccount';button.className='primary';button.textContent='Guardar en mi cuenta';
+  actions.insertBefore(button,actions.firstChild);button.addEventListener('click',saveSimulationToAccount);
+ }
+ if(typeof window.renderFavorites==='function'&&!window.renderFavorites.__savedSimulationsWrapped){
+  const original=window.renderFavorites;
+  const wrapped=function(){original.apply(this,arguments);renderSavedSimulationsPanel();};
+  wrapped.__savedSimulationsWrapped=true;window.renderFavorites=wrapped;
+ }
+ if(document.getElementById('favoritesWorkspace')&&invUser)renderSavedSimulationsPanel();
+}
+
 function printShell(title,content,extraCss=''){
  // Informe autónomo: no copiar reglas globales @media print que ocultan el documento.
  const logo=document.querySelector('.inv-header .logo');
@@ -704,6 +818,7 @@ function openSimulationPrint(){
  Promise.race([Promise.all([...sheetReady,fontsReady]),new Promise(resolve=>popup.setTimeout(resolve,8000))]).then(()=>popup.setTimeout(printNow,120));
 }
 function init(){
+ installSavedSimulationsUI();
  $('netTaxProfileHint')?.remove();$('netAssetTaxAdvice')?.remove();
  // Los desplegables avanzados siempre comienzan cerrados, incluso si el navegador restaura su estado anterior.
  document.querySelectorAll('#netAdvanced, #netAdvanced > details').forEach(section=>{section.open=false;});
