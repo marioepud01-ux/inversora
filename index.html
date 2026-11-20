@@ -2080,9 +2080,35 @@ function openDetail(name){
  const assetNav=`<nav class="asset-jump-nav" aria-label="Navegar por la ficha"><a href="#asset-summary">01 · Resumen</a><a href="#asset-how">02 · Funcionamiento</a><a href="#asset-pros-cons">03 · Ventajas y desventajas</a><a href="#asset-costs">04 · Capital, costes y fiscalidad</a><a href="#asset-features">05 · Riesgos y características</a><a href="#asset-barriers">06 · Barreras de entrada</a><a href="#asset-outlook">07 · Horizonte y liquidez</a></nav>`;
  const printSheet='<section class="asset-print-sheet" aria-label="Ficha ejecutiva imprimible"><header class="asset-print-head"><div class="asset-print-brand">Invers<span>ora</span></div><span>FICHA DE INVERSIÓN · '+invEsc(i.cat)+'</span></header><h1>'+invEsc(i.name)+'</h1><p class="asset-print-lead">'+invEsc(i.desc||'')+'</p><div class="asset-print-metrics"><div><small>Rentabilidad indicada</small><b>'+invEsc(i.ret||'No especificada')+'</b></div><div><small>Riesgo</small><b>'+(Number(i.risk)/2).toLocaleString('es-ES',{maximumFractionDigits:1})+'/5</b></div><div><small>Liquidez</small><b>'+(Number(i.liq)/2).toLocaleString('es-ES',{maximumFractionDigits:1})+'/5</b></div><div><small>Capital inicial</small><b>'+invEsc(i.capital||'Variable')+'</b></div></div><div class="asset-print-grid"><section><h2>Cómo funciona</h2><p>'+invEsc(i.how||i.desc||'')+'</p><p><b>Ingresos:</b> '+invEsc(i.income||'Dependen de la operación')+'</p><p><b>Horizonte:</b> '+invEsc(i.profile||'Depende del objetivo y del activo')+'</p><p><b>Gestión:</b> '+invEsc(managementLabel)+'</p></section><section><h2>Costes a considerar</h2><p><b>Recurrentes:</b> '+invEsc(i.costs||'Consultar proveedor')+'</p><p><b>Extraordinarios:</b> '+invEsc(i.costsextra||'Dependen de la operación')+'</p><p><b>Entrada y salida:</b> '+invEsc(i.entrycosts||'Revisar contrato y tarifas')+'</p></section><section><h2>Fiscalidad en España</h2><p>'+invEsc(i.tax||'Depende del vehículo, la operación y la residencia fiscal.')+'</p><p class="asset-print-small">'+invEsc(i.taxdetail||'Verificar el tratamiento aplicable con normativa y fuentes oficiales.')+'</p></section><section><h2>Ventajas y riesgos</h2><div class="asset-print-columns"><div><b>Ventajas</b><ul>'+(i.pros||[]).slice(0,2).map(x=>'<li>'+invEsc(x)+'</li>').join('')+'</ul></div><div><b>Riesgos</b><ul>'+(i.cons||[]).slice(0,2).map(x=>'<li>'+invEsc(x)+'</li>').join('')+'</ul></div></div></section></div><footer>Inversora · Entiende · Compara · Simula <span>Ficha educativa · Datos orientativos, no asesoramiento financiero ni fiscal</span></footer></section>';
 
- document.getElementById('detail').innerHTML=`<section class="section"><article class="detail asset-detail" style="--asset-accent:${categoryAccent}">
+ document.getElementById('detail').innerHTML=`<section class="section"><article class="detail asset-detail ${i.name==='Cuentas remuneradas'?'asset-redesign':''}" style="--asset-accent:${categoryAccent}">
   <div class="asset-topline"><button class="back" onclick="showView('explore')">← Volver a explorar</button><span class="asset-top-note"><span class="asset-live-dot"></span> Guía de inversión</span></div>${printSheet}
-  <header class="asset-hero"><div class="asset-hero-copy"><div class="asset-breadcrumb"><span class="asset-crumb">${i.cat}</span><span>›</span><span class="asset-crumb">${subtypeFor(i)}</span><span>›</span><strong>${i.name}</strong></div><h1>${i.name}</h1><p class="asset-lead">${i.desc}</p><div class="asset-hero-tags"><span>Capital: ${i.capital||'Depende de la operación'}</span><span>Ingresos: ${i.income||'Variables'}</span></div></div><div class="asset-rating-grid"><div class="asset-rating-card inversora-rating"><div class="asset-rating-label">Valoración de Inversora <button type="button" class="score-help-btn" aria-label="Cómo se calcula la valoración de Inversora" title="Cómo se calcula la valoración de Inversora" onclick="showScoreBreakdown(${safeName})">?</button></div><div class="asset-rating-stars">${invStarsMarkup((Number(i.score)||0)/2)}</div><strong class="asset-rating-number">${(Number(i.score||0)/2).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})}<small>/5</small></strong><small>Valoración editorial independiente</small></div><div class="asset-rating-card community-rating"><div class="asset-rating-label">Valoración de la comunidad</div><div class="asset-rating-stars" id="asset-community-rating-stars">☆☆☆☆☆</div><strong class="asset-rating-number" id="asset-community-rating-value">—<small>/5</small></strong><small id="asset-community-rating-count">Aún sin valoraciones</small><button type="button" class="asset-community-open" onclick="invOpenCommunityModal(${safeName})">Valorar este activo <span>→</span></button></div></div></header>
+  <header class="asset-hero">
+   <div class="asset-hero-copy">
+    <div class="asset-breadcrumb"><span>${i.cat}</span><span>›</span><span>${subtypeFor(i)}</span><span>›</span><strong>Guía del activo</strong></div>
+    <div class="redesign-eyebrow"><span class="redesign-live"></span> GUÍA PRÁCTICA · ${i.cat}</div>
+    <h1>${i.name}</h1><p class="asset-lead">${i.desc}</p>
+    <div class="redesign-hero-facts">
+     <div><span>Capital para empezar</span><strong>${i.capital||'Según entidad'}</strong></div>
+     <div><span>Cuándo cobras</span><strong>${i.income||'Según condiciones'}</strong></div>
+     <div><span>Tipo de rentabilidad</span><strong>${returnMode}</strong></div>
+    </div>
+   </div>
+   <div class="asset-rating-grid">
+    <div class="asset-rating-card inversora-rating">
+     <div class="asset-rating-label">Valoración de Inversora <button type="button" class="score-help-btn" aria-label="Cómo se calcula la valoración de Inversora" title="Cómo se calcula la valoración de Inversora" onclick="showScoreBreakdown(${safeName})">?</button></div>
+     <div class="asset-rating-stars">${invStarsMarkup((Number(i.score)||0)/2)}</div>
+     <strong class="asset-rating-number">${(Number(i.score||0)/2).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})}<small>/5</small></strong>
+     <small>Evaluación editorial de Inversora</small>
+    </div>
+    <div class="asset-rating-card community-rating">
+     <div class="asset-rating-label">Opinión de la comunidad</div>
+     <div class="asset-rating-stars" id="asset-community-rating-stars">☆☆☆☆☆</div>
+     <strong class="asset-rating-number" id="asset-community-rating-value">—<small>/5</small></strong>
+     <small id="asset-community-rating-count">Todavía no hay valoraciones</small>
+     <button type="button" class="asset-community-open" onclick="invOpenCommunityModal(${safeName})">Valorar este activo <span>→</span></button>
+    </div>
+   </div>
+  </header>
   ${assetNav}
   <section class="asset-section asset-overview" id="asset-summary">
 <div class="asset-section-head"><span class="asset-section-icon">◈</span><div><h2>01 · Resumen de la inversión</h2><p>Lo importante para entenderla de un vistazo.</p></div></div>
@@ -4161,6 +4187,51 @@ html,body{background:#e7edf7!important;background-color:#e7edf7!important}
 .community-list-asset.is-unavailable .community-list-asset-icon{background:#f2f4f7;color:#667085}
 .community-list-empty{grid-column:1/-1;margin:0;color:#667085;font-size:12px}
 @media(max-width:620px){.community-list-visual{padding:13px}.community-list-assets{grid-template-columns:1fr}.community-list-asset{padding:11px}.community-list-asset-open{font-size:9px}}
+
+/* Rediseño piloto · Cuentas remuneradas */
+.asset-detail.asset-redesign{--asset-blue:#2463eb;--asset-blue-soft:#eff5ff;max-width:1180px;padding:clamp(16px,3vw,34px);border:1px solid #e5eaf2;border-radius:28px;background:#fff;box-shadow:0 22px 60px #152b4a0c}
+.asset-redesign .asset-topline{margin-bottom:22px}
+.asset-redesign .asset-hero{grid-template-columns:minmax(0,1.35fr) minmax(290px,.85fr);gap:28px;padding:clamp(24px,4vw,42px);border:1px solid #dce7fb;border-left:5px solid var(--asset-blue);border-radius:22px;background:radial-gradient(circle at 2% 0%,#eaf1ff 0,transparent 42%),linear-gradient(135deg,#f8fbff 0%,#fff 70%);color:#101828;box-shadow:0 12px 34px #1d4ed80a}
+.asset-redesign .asset-hero:after{display:none}
+.asset-redesign .asset-breadcrumb{font-size:11px;color:#667085}
+.asset-redesign .asset-breadcrumb span{font-size:15px;color:var(--asset-blue)}
+.asset-redesign .redesign-eyebrow{display:flex;align-items:center;gap:8px;margin:24px 0 10px;color:#315b9b;font-size:10px;font-weight:850;letter-spacing:.13em}
+.asset-redesign .redesign-live{width:8px;height:8px;border-radius:50%;background:#16a36a;box-shadow:0 0 0 4px #e5f7ed}
+.asset-redesign .asset-hero h1{margin:0 0 12px;color:#101828;font-size:clamp(34px,5vw,54px);letter-spacing:-1.8px;line-height:1.04}
+.asset-redesign .asset-lead{max-width:620px;color:#475467;font-size:16px;line-height:1.75}
+.asset-redesign .redesign-hero-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:26px}
+.asset-redesign .redesign-hero-facts>div{min-width:0;padding:13px 14px;border:1px solid #dce7fb;border-left:3px solid #7da5f8;border-radius:12px;background:#fff}
+.asset-redesign .redesign-hero-facts span{display:block;margin-bottom:6px;color:#667085;font-size:10px;font-weight:750;line-height:1.4}
+.asset-redesign .redesign-hero-facts strong{display:block;color:#172b4d;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+.asset-redesign .asset-rating-grid{grid-template-columns:1fr;align-content:center;gap:12px}
+.asset-redesign .asset-rating-card{padding:18px 19px;border:1px solid #e0e8f5;border-left:4px solid var(--asset-blue);border-radius:16px;box-shadow:0 8px 22px #152b4a08}
+.asset-redesign .asset-rating-label{min-height:0;font-size:12px}
+.asset-redesign .asset-rating-stars{margin:12px 0 4px;font-size:23px}
+.asset-redesign .asset-rating-number{font-size:30px}
+.asset-redesign .asset-rating-card>small{min-height:0;font-size:11px}
+.asset-redesign .asset-jump-nav{top:76px;padding:13px 0 16px;margin:0;background:#ffffffed}
+.asset-redesign .asset-jump-nav a{padding:9px 14px;font-size:11px;transition:all .18s}
+.asset-redesign .asset-section{margin-top:42px;padding:24px;border:1px solid #e6ebf3;border-left:4px solid #8eaff4;border-radius:18px;background:#fff;box-shadow:0 8px 24px #152b4a06;scroll-margin-top:150px}
+.asset-redesign .asset-section-head{align-items:center;margin-bottom:22px}
+.asset-redesign .asset-section-icon{flex-basis:42px;width:42px;height:42px;border-radius:13px;background:#eff5ff;color:#245bd7}
+.asset-redesign .asset-section-head h2{font-size:clamp(19px,2.5vw,23px)!important;letter-spacing:-.55px}
+.asset-redesign .asset-section-head p{font-size:12px}
+.asset-redesign .asset-overview-panel{border:1px solid #dce7fb;border-left:4px solid var(--asset-blue);border-radius:16px;background:linear-gradient(120deg,#f5f8ff,#fff 78%)}
+.asset-redesign .asset-quick-card,.asset-redesign .asset-explainer-card,.asset-redesign .asset-pros-card,.asset-redesign .asset-cons-card,.asset-redesign .asset-cost-card,.asset-redesign .asset-outlook-grid article,.asset-redesign .entry-factor{border:1px solid #e3eaf5;border-left:3px solid #9bb8f5;border-radius:14px;box-shadow:0 5px 16px #152b4a05}
+.asset-redesign .asset-quick-card{padding:17px}
+.asset-redesign .asset-quick-card:hover{border-color:#b7ccf6;box-shadow:0 10px 24px #245bd710}
+.asset-redesign .asset-return-mode{border:1px solid #dce7fb;border-left:4px solid var(--asset-blue);border-radius:14px;background:#f5f8ff}
+.asset-redesign .asset-meter{padding:15px;border:1px solid #e3eaf5;border-left:3px solid #9bb8f5;border-radius:13px;background:#fff}
+.asset-redesign .asset-ratings-panel{gap:12px}
+.asset-redesign .asset-cost-dashboard{gap:13px}
+.asset-redesign .asset-cost-card.asset-tax-card{border-left-color:#2463eb;background:#f8faff}
+.asset-redesign .entry-overview,.asset-redesign .entry-takeaway{border:1px solid #dce7fb;border-left:4px solid var(--asset-blue);border-radius:14px;background:#f7faff}
+.asset-redesign .asset-bottom-actions{margin-top:30px;padding:22px 18px;border:1px solid #e2eaf7;border-left:4px solid var(--asset-blue);border-radius:16px;background:#fbfcff}
+.asset-redesign .asset-next-nav button{border:1px solid #dce7fb;border-left:3px solid #8eaff4;border-radius:13px}
+.asset-redesign .asset-disclaimer{border:1px solid #dce7fb;border-left:4px solid #8eaff4;border-radius:14px}
+.asset-redesign .asset-community-open{cursor:pointer}
+@media(max-width:820px){.asset-redesign .asset-hero{grid-template-columns:1fr}.asset-redesign .asset-rating-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.asset-redesign .asset-section{padding:17px;margin-top:25px}.asset-redesign .redesign-hero-facts{grid-template-columns:1fr}.asset-redesign .asset-rating-grid{grid-template-columns:1fr}.asset-redesign .asset-hero{padding:22px}.asset-redesign .asset-jump-nav{top:66px}}
 </style>
 </body>
 </html>
