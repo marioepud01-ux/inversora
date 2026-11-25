@@ -2257,7 +2257,7 @@ function invAssetGuideContent(i){
   ['Obras más caras o largas de lo previsto.','Precio de venta inferior al esperado o falta de compradores.','Problemas ocultos en el inmueble.','Financiación y gastos fijos mientras no se vende.'],
   'Quien conoce el mercado y las reformas, y dispone de dinero adicional para imprevistos.');
  }else if(c==='Inmobiliario'){
-  set('Compras un inmueble o un derecho sobre él para alquilarlo, utilizarlo o venderlo más adelante. La ubicación, el estado, el precio total y las normas aplicables suelen importar más que una estimación genérica de rentabilidad. La ubicación, el estado, el precio total y las normas aplicables suelen importar más que una estimación genérica de rentabilidad.',
+  set('Compras un inmueble o un derecho sobre él para alquilarlo, utilizarlo o venderlo más adelante. La ubicación, el estado, el precio total y las normas aplicables suelen importar más que una estimación genérica de rentabilidad.',
   'Puede generar alquileres si encuentra inquilino y aumentar de valor con el tiempo. Del alquiler hay que descontar periodos vacío, comunidad, impuestos, seguros, reparaciones, gestión y financiación.',
   'Una vivienda alquilada por 1.000 € al mes no deja 12.000 € limpios al año: hay que restar meses vacíos, mantenimiento, gastos, impuestos y, si existe, hipoteca.',
   ['Precio total de compra, impuestos y gastos de formalización.','Alquiler realista de la zona y meses sin inquilino.','Comunidad, IBI, seguro, mantenimiento y reformas.','Normativa local, licencias y límites del tipo de alquiler.','Financiación, cuota, tipo de interés y margen de seguridad.','Facilidad para vender el inmueble y plazo probable.'],
@@ -2277,7 +2277,7 @@ function invAssetGuideContent(i){
   ['Qué habilidad concreta aprenderás y para qué trabajos sirve.','Si empleadores o clientes valoran esa acreditación.','Calidad del temario, docentes y resultados verificables.','Coste total, tiempo necesario y materiales adicionales.','Alternativas más económicas y posibilidad de practicar.'],
   ['No garantiza empleo, ascenso ni aumento salarial.','La habilidad puede quedar desactualizada.','El coste incluye tiempo que podrías dedicar a otras opciones.','La certificación puede no estar reconocida por quien contrata.'],
   'Quien tiene un objetivo profesional concreto y comprueba que esa formación se demanda antes de pagarla.');
- }else if(c==='Empresas y negocios'&&/startup|capital semilla|venture|capital riesgo/.test(n)){
+ }else if(c==='Empresas y negocios'&&/startup|capital semilla|venture|capital riesgo|crear una empresa|empresa desde cero/.test(n)){
   set('Aportas capital a una empresa joven que todavía está construyendo su producto, encontrando clientes o creciendo. A cambio recibes una participación o un derecho económico definido por el acuerdo.',
   'Normalmente se gana si la empresa crece y más adelante alguien compra tu participación o la compañía reparte beneficios. No suele haber una salida rápida ni ingresos periódicos.',
   'Una startup puede multiplicar su valor si encuentra un mercado y crece, pero también puede quedarse sin financiación o no conseguir clientes y perder todo el capital invertido.',
@@ -2376,7 +2376,7 @@ function invAssetGuideContent(i){
  let extraCosts=c==='Inmobiliario'?'Reformas, derramas, averías, periodos sin inquilino y gastos de compra o venta.':c==='Empresas y negocios'?'Equipamiento, licencias, reformas, asesoría, lanzamiento y dinero para cubrir los primeros meses.':c==='Alternativos'?'Certificados, restauración, transporte, subastas, reparación y posibles pérdidas por daños.':'Diferencia entre precio de compra y venta, cambio de divisa, penalizaciones o costes de salida.';
  let entryCosts=c==='Inmobiliario'?'Impuestos y gastos de compra, agencia, notaría, registro y posible financiación.':c==='Empresas y negocios'?'Compra o traspaso, asesoría legal, licencias, equipamiento y puesta en marcha.':c==='Alternativos'?'Prima del vendedor, autenticación, comisiones de plataforma y transporte.':'Comisión de compra, diferencial de precio y posibles mínimos del intermediario.';
  if(!intro||intro.indexOf('Es una forma de invertir dentro de')===0) intro=mechanism;
- const tax=c==='Inmobiliario'?'En España, el alquiler, la compra y la venta pueden tener tratamientos distintos. Influyen el tipo de inmueble, el uso, si actúas como particular o empresa, la comunidad autónoma y los gastos deducibles.':'La tributación depende del instrumento o contrato, de cómo se obtiene el rendimiento y de tu situación fiscal. Intereses, dividendos, ganancias, actividad económica y transmisiones no siempre tributan igual.';
+ const tax=c==='Inmobiliario'?'En España, los impuestos cambian según alquiles, compres o vendas, el uso del inmueble y si actúas como particular o empresa. También influyen la comunidad autónoma y los gastos que puedas justificar.':'Los impuestos dependen de qué cobras o vendes y de si inviertes como particular o empresa. Los intereses, dividendos, alquileres, beneficios de un negocio y ganancias por venta pueden tener reglas distintas.';
  if(c==='Empresas y negocios') intro=mechanism;
  return {intro,mechanism,income,example,checks,risks,fit,tax,advantages,costs,extraCosts,entryCosts};
 }
