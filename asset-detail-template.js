@@ -572,9 +572,8 @@ if(typeof originalReviews==='function'){
 }
 const original=window.openDetail;
 window.openDetail=function(name){
- // Cuentas remuneradas tiene una ficha propia en index.html. No debe pasar por la plantilla genérica.
- if(name==='Cuentas remuneradas')return typeof original==='function'?original(name):undefined;
- if(investments.some(x=>x.name===name)){render(name);return}
+ // La ficha universal vive en index.html y debe utilizarse para los 137 activos.
+ // Esta plantilla piloto ya no debe interceptar ni sustituir la apertura de ninguna ficha.
  return typeof original==='function'?original(name):undefined;
 };
 })();
